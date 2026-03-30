@@ -53,6 +53,33 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "미친과학자",
+      "tag": "KR1",
+      "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
+      "solo_tier": "GOLD",
+      "solo_rank": "IV",
+      "solo_lp": 10,
+      "mmr": 1210,
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
