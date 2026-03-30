@@ -68,7 +68,7 @@ def get_puuid(game_name: str, tag_line: str) -> dict:
 def get_league_entries_by_puuid(puuid: str) -> dict:
     """
     PUUID로 랭크 정보 직접 조회 (League-V4 by PUUID)
-    반환: {"solo_tier": str, "solo_rank": str, "solo_lp": int, "wins": int, "losses": int} or {"error": str}
+    솔로 랭크(RANKED_SOLO_5x5)와 자유 랭크(RANKED_FLEX_SR) 정보를 모두 가져옵니다.
     """
     url = (
         f"https://{REGION_KR}.api.riotgames.com"
@@ -80,23 +80,24 @@ def get_league_entries_by_puuid(puuid: str) -> dict:
             return {"error": f"랭크 정보 조회 실패 (상태 코드: {resp.status_code})"}
 
         entries = resp.json()
-        for entry in entries:
-            if entry.get("queueType") == "RANKED_SOLO_5x5":
-                return {
-                    "solo_tier": entry.get("tier", "UNRANKED"),
-                    "solo_rank": entry.get("rank", ""),
-                    "solo_lp":   entry.get("leaguePoints", 0),
-                    "wins":      entry.get("wins", 0),
-                    "losses":    entry.get("losses", 0),
-                }
-        # 솔로랭크 항목 없음 → 언랭
-        return {
-            "solo_tier": "UNRANKED",
-            "solo_rank": "",
-            "solo_lp":   0,
-            "wins":      0,
-            "losses":    0,
+        res = {
+            "solo": None,
+            "flex": None
         }
+        for entry in entries:
+            data = {
+                "tier": entry.get("tier", "UNRANKED"),
+                "rank": entry.get("rank", ""),
+                "lp":   entry.get("leaguePoints", 0),
+                "wins":      entry.get("wins", 0),
+                "losses":    entry.get("losses", 0),
+            }
+            if entry.get("queueType") == "RANKED_SOLO_5x5":
+                res["solo"] = data
+            elif entry.get("queueType") == "RANKED_FLEX_SR":
+                res["flex"] = data
+        
+        return res
     except requests.exceptions.RequestException as e:
         return {"error": f"네트워크 오류: {str(e)}"}
 
@@ -132,7 +133,7 @@ def calculate_mmr(tier: str, rank: str, lp: int,
 def fetch_player_data(game_name: str, tag_line: str) -> dict:
     """
     Riot ID 입력 후 플레이어의 전체 정보를 조회하여 반환하는 통합 함수
-    반환: 플레이어 딕셔너리 or {"error": str}
+    - 솔로 랭크가 Unranked이면 자유 랭크 정보를 사용합니다.
     """
     # 1) PUUID 조회
     account_data = get_puuid(game_name, tag_line)
@@ -141,26 +142,44 @@ def fetch_player_data(game_name: str, tag_line: str) -> dict:
 
     puuid = account_data["puuid"]
 
-    # 2) 랭크 정보 조회 (PUUID 직접 사용 - Summoner ID 단계 불필요)
-    league_data = get_league_entries_by_puuid(puuid)
-    if "error" in league_data:
-        return league_data
+    # 2) 랭크 정보 조회
+    league_res = get_league_entries_by_puuid(puuid)
+    if "error" in league_res:
+        return league_res
 
-    tier  = league_data["solo_tier"]
-    rank  = league_data["solo_rank"]
-    lp    = league_data["solo_lp"]
+    # 솔로 랭크 우선, 없으면 자유 랭크 사용
+    solo = league_res.get("solo")
+    flex = league_res.get("flex")
 
-    # 4) MMR 초기 계산 (내전 전적 없음)
+    if solo and solo["tier"] != "UNRANKED":
+        target_league = solo
+        source_type = "SOLO"
+    elif flex and flex["tier"] != "UNRANKED":
+        target_league = flex
+        source_type = "FLEX"
+    else:
+        # 둘 다 없으면 그냥 Unranked Solo 기준
+        target_league = solo if solo else {
+            "tier": "UNRANKED", "rank": "", "lp": 0, "wins": 0, "losses": 0
+        }
+        source_type = "NONE"
+
+    tier  = target_league["tier"]
+    rank  = target_league["rank"]
+    lp    = target_league["lp"]
+
+    # 3) MMR 초기 계산
     mmr = calculate_mmr(tier, rank, lp)
 
     player = {
         "name":      game_name,
         "tag":       tag_line,
         "puuid":     puuid,
-        "solo_tier": tier,
+        "solo_tier": tier,      # UI 호환성을 위해 solo_tier 키 유지 (내용물은 Flex일 수 있음)
         "solo_rank": rank,
         "solo_lp":   lp,
         "mmr":       mmr,
+        "source_type": source_type, # 데이터 출처 기록
         "inhouse_stats": {
             "win":  0,
             "loss": 0,
