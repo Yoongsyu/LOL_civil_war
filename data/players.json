@@ -9,20 +9,20 @@
       "solo_lp": 55,
       "mmr": 955,
       "inhouse_stats": {
-        "win": 2,
+        "win": 3,
         "loss": 1,
         "positions": {
           "TOP": 0,
           "JNG": 0,
           "MID": 0,
-          "ADC": 3,
+          "ADC": 4,
           "SUP": 0
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 0,
           "MID": 0,
-          "ADC": 2,
+          "ADC": 3,
           "SUP": 0
         }
       }
@@ -37,10 +37,10 @@
       "mmr": 2265,
       "inhouse_stats": {
         "win": 1,
-        "loss": 2,
+        "loss": 3,
         "positions": {
           "TOP": 2,
-          "JNG": 1,
+          "JNG": 2,
           "MID": 0,
           "ADC": 0,
           "SUP": 0
@@ -64,12 +64,12 @@
       "mmr": 1210,
       "inhouse_stats": {
         "win": 1,
-        "loss": 2,
+        "loss": 3,
         "positions": {
           "TOP": 0,
           "JNG": 2,
           "MID": 0,
-          "ADC": 1,
+          "ADC": 2,
           "SUP": 0
         },
         "position_wins": {
@@ -90,19 +90,19 @@
       "solo_lp": 21,
       "mmr": 1621,
       "inhouse_stats": {
-        "win": 2,
+        "win": 3,
         "loss": 1,
         "positions": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 3,
+          "MID": 4,
           "ADC": 0,
           "SUP": 0
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 2,
+          "MID": 3,
           "ADC": 0,
           "SUP": 0
         }
@@ -117,18 +117,18 @@
       "solo_lp": 2,
       "mmr": 1902,
       "inhouse_stats": {
-        "win": 2,
+        "win": 3,
         "loss": 1,
         "positions": {
           "TOP": 0,
-          "JNG": 1,
+          "JNG": 2,
           "MID": 0,
           "ADC": 0,
           "SUP": 2
         },
         "position_wins": {
           "TOP": 0,
-          "JNG": 0,
+          "JNG": 1,
           "MID": 0,
           "ADC": 0,
           "SUP": 2
@@ -144,21 +144,21 @@
       "solo_lp": 85,
       "mmr": 1785,
       "inhouse_stats": {
-        "win": 2,
+        "win": 3,
         "loss": 1,
         "positions": {
           "TOP": 0,
           "JNG": 2,
           "MID": 0,
           "ADC": 0,
-          "SUP": 1
+          "SUP": 2
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 2,
           "MID": 0,
           "ADC": 0,
-          "SUP": 0
+          "SUP": 1
         }
       }
     },
@@ -173,13 +173,13 @@
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 1,
-        "loss": 2,
+        "loss": 3,
         "positions": {
           "TOP": 0,
           "JNG": 0,
           "MID": 2,
           "ADC": 0,
-          "SUP": 1
+          "SUP": 2
         },
         "position_wins": {
           "TOP": 0,
@@ -201,11 +201,11 @@
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 1,
-        "loss": 2,
+        "loss": 3,
         "positions": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 1,
+          "MID": 2,
           "ADC": 1,
           "SUP": 1
         },
@@ -229,9 +229,9 @@
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 1,
-        "loss": 2,
+        "loss": 3,
         "positions": {
-          "TOP": 1,
+          "TOP": 2,
           "JNG": 0,
           "MID": 0,
           "ADC": 1,
@@ -256,17 +256,17 @@
       "mmr": 0,
       "source_type": "NONE",
       "inhouse_stats": {
-        "win": 2,
+        "win": 3,
         "loss": 1,
         "positions": {
-          "TOP": 3,
+          "TOP": 4,
           "JNG": 0,
           "MID": 0,
           "ADC": 0,
           "SUP": 0
         },
         "position_wins": {
-          "TOP": 2,
+          "TOP": 3,
           "JNG": 0,
           "MID": 0,
           "ADC": 0,
