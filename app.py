@@ -62,6 +62,9 @@ if "admin_authed" not in st.session_state:
     st.session_state.admin_authed = False
 if "team_result" not in st.session_state:
     st.session_state.team_result = None
+# 이전 세션의 4-tuple 형식 호환 처리
+if isinstance(st.session_state.team_result, tuple) and len(st.session_state.team_result) == 4:
+    st.session_state.team_result = None
 if "chk_reset_count" not in st.session_state:
     st.session_state.chk_reset_count = 0
 
@@ -210,6 +213,21 @@ def get_players_cached():
 
 # ─── UI 헬퍼 ─────────────────────────────────────────────────────
 
+def with_pure_mmr(players: list) -> list:
+    """솔랭 티어/랭크/LP만으로 재계산한 MMR 복사본 반환 (내전 성적 가중치 제외)"""
+    result = []
+    for p in players:
+        copy = dict(p)
+        copy["mmr"] = calculate_mmr(
+            p.get("solo_tier", "UNRANKED"),
+            p.get("solo_rank", ""),
+            p.get("solo_lp", 0),
+            0, 0,  # 내전 전적 0으로 고정 → 가중치 미적용
+        )
+        result.append(copy)
+    return result
+
+
 def show_player_detail(player: dict):
     """플레이어 상세 정보 렌더링 (expander 안에서 호출)"""
     import pandas as pd
@@ -351,10 +369,17 @@ with tab1:
             help="이 값 이내의 MMR 차이를 가진 조합들 중 랜덤으로 팀을 구성합니다.",
         )
 
+        mmr_mode = st.radio(
+            "MMR 계산 방식",
+            ["📊 내전 성적 반영 (솔랭 + 내전 승률 가중치)", "🎮 솔랭 MMR만 반영 (내전 성적 무시)"],
+            horizontal=True,
+            help="내전 성적 반영: 5판 이상 시 승률에 따라 ±150점 보정 / 솔랭 MMR만: 티어·랭크·LP만 사용",
+        )
+        use_pure_mmr = mmr_mode.startswith("🎮")
+
         col_btn1, col_btn2, col_reset = st.columns([2, 2, 1])
         with col_reset:
             if st.button("선택 초기화", use_container_width=True):
-                # 카운터를 올려 새 키로 체크박스를 재생성 → 모두 False(기본값)로 초기화
                 st.session_state.chk_reset_count += 1
                 st.session_state.team_result = None
                 st.rerun()
@@ -364,29 +389,40 @@ with tab1:
                 f"{selected_count}/10명 선택됨. 정확히 10명을 선택해야 팀 구성이 가능합니다."
             )
         else:
+            target_players = with_pure_mmr(selected_players) if use_pure_mmr else selected_players
+
             with col_btn1:
                 if st.button("⚡ 팀 구성하기", type="primary", use_container_width=True):
-                    result = find_balanced_teams(selected_players, tolerance=tolerance)
-                    st.session_state.team_result = ("random", result, selected_players, tolerance)
+                    result = find_balanced_teams(target_players, tolerance=tolerance)
+                    st.session_state.team_result = (
+                        "random", result, selected_players, tolerance, use_pure_mmr
+                    )
 
             with col_btn2:
                 if st.button("📌 고정 포지션 팀 구성하기", use_container_width=True):
-                    result = find_balanced_teams_with_positions(selected_players, tolerance=tolerance)
-                    st.session_state.team_result = ("position", result, selected_players, tolerance)
+                    result = find_balanced_teams_with_positions(target_players, tolerance=tolerance)
+                    st.session_state.team_result = (
+                        "position", result, selected_players, tolerance, use_pure_mmr
+                    )
 
         # 팀 구성 결과 표시
         if st.session_state.team_result:
-            mode, result, saved_players, saved_tol = st.session_state.team_result
+            mode, result, saved_players, saved_tol, saved_pure = st.session_state.team_result
             st.markdown("---")
             st.subheader("팀 구성 결과")
+
+            badge = "🎮 솔랭 MMR 기준" if saved_pure else "📊 내전 성적 반영 기준"
+            st.caption(badge)
+
             show_team_result(result, with_positions=(mode == "position"))
 
             if st.button("🔀 다시 구성하기"):
+                t = with_pure_mmr(saved_players) if saved_pure else saved_players
                 if mode == "position":
-                    new_result = find_balanced_teams_with_positions(saved_players, tolerance=saved_tol)
+                    new_result = find_balanced_teams_with_positions(t, tolerance=saved_tol)
                 else:
-                    new_result = find_balanced_teams(saved_players, tolerance=saved_tol)
-                st.session_state.team_result = (mode, new_result, saved_players, saved_tol)
+                    new_result = find_balanced_teams(t, tolerance=saved_tol)
+                st.session_state.team_result = (mode, new_result, saved_players, saved_tol, saved_pure)
                 st.rerun()
 
 
