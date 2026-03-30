@@ -245,6 +245,34 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "검은고목나무1",
+      "tag": "KR1",
+      "puuid": "pqwBFlDErWmFSj0LJ27OHSaiLN9Svi8DGxT6I8iqXl21Q3xtEDCnw23vham_mwkdTKya_gxVHtnYsw",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "mmr": 0,
+      "source_type": "NONE",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
