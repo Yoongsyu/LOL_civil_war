@@ -134,6 +134,33 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "엄마찾는둘리",
+      "tag": "KR1",
+      "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "III",
+      "solo_lp": 85,
+      "mmr": 1785,
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
