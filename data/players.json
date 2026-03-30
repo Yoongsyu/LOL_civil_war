@@ -217,6 +217,34 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "호 균",
+      "tag": "kr2",
+      "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
+      "solo_tier": "EMERALD",
+      "solo_rank": "IV",
+      "solo_lp": 71,
+      "mmr": 2071,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
