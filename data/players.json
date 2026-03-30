@@ -80,6 +80,33 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "Izykite",
+      "tag": "사막여우",
+      "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 21,
+      "mmr": 1621,
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
