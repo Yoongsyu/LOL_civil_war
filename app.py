@@ -23,6 +23,32 @@ from balancer import (
 MATCHES_FILE = "data/matches.json"
 POSITION_KR = {"TOP": "탑", "JNG": "정글", "MID": "미드", "ADC": "원딜", "SUP": "서포터"}
 
+# 티어+랭크별 MMR (base + rank_offset + 평균 LP 50)
+# 각 항목: (표시 레이블, tier, rank, mmr)
+_TIER_BASE = [
+    ("IRON", 0), ("BRONZE", 400), ("SILVER", 800), ("GOLD", 1200),
+    ("PLATINUM", 1600), ("EMERALD", 2000), ("DIAMOND", 2400),
+]
+_RANK_OFFSET = {"IV": 0, "III": 100, "II": 200, "I": 300}
+
+TIER_RANK_OPTIONS: list[tuple[str, str, str, int]] = []
+for _tier, _base in _TIER_BASE:
+    for _rank in ["IV", "III", "II", "I"]:
+        _mmr = _base + _RANK_OFFSET[_rank] + 50
+        TIER_RANK_OPTIONS.append((f"{_tier.capitalize()} {_rank}", _tier, _rank, _mmr))
+
+# 마스터 이상은 랭크 구분 없음, LP 추정값 사용
+TIER_RANK_OPTIONS += [
+    ("Master",      "MASTER",      "", 2850),
+    ("Grandmaster", "GRANDMASTER", "", 3300),
+    ("Challenger",  "CHALLENGER",  "", 3900),
+]
+
+# (tier, rank) → 인덱스 역참조용
+_TIER_RANK_INDEX = {
+    (opt[1], opt[2]): i for i, opt in enumerate(TIER_RANK_OPTIONS)
+}
+
 # ─── 페이지 설정 ──────────────────────────────────────────────────
 st.set_page_config(
     page_title="LoL 내전 관리",
@@ -36,6 +62,8 @@ if "admin_authed" not in st.session_state:
     st.session_state.admin_authed = False
 if "team_result" not in st.session_state:
     st.session_state.team_result = None
+if "chk_reset_count" not in st.session_state:
+    st.session_state.chk_reset_count = 0
 
 
 # ─── matches.json 유틸리티 ────────────────────────────────────────
@@ -294,7 +322,7 @@ with tab1:
             with c_chk:
                 st.checkbox(
                     "선택",
-                    key=f"chk_{player['puuid']}",
+                    key=f"chk_{player['puuid']}_{st.session_state.chk_reset_count}",
                     label_visibility="collapsed",
                 )
             c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
@@ -313,7 +341,7 @@ with tab1:
 
         selected_players = [
             p for p in players
-            if st.session_state.get(f"chk_{p['puuid']}", False)
+            if st.session_state.get(f"chk_{p['puuid']}_{st.session_state.chk_reset_count}", False)
         ]
         selected_count = len(selected_players)
 
@@ -326,8 +354,8 @@ with tab1:
         col_btn1, col_btn2, col_reset = st.columns([2, 2, 1])
         with col_reset:
             if st.button("선택 초기화", use_container_width=True):
-                for p in players:
-                    st.session_state[f"chk_{p['puuid']}"] = False
+                # 카운터를 올려 새 키로 체크박스를 재생성 → 모두 False(기본값)로 초기화
+                st.session_state.chk_reset_count += 1
                 st.session_state.team_result = None
                 st.rerun()
 
@@ -554,7 +582,7 @@ with tab3:
                             else:
                                 st.error("삭제 중 오류가 발생했습니다.")
 
-        # ── 플레이어 관리 (삭제) ──────────────────────────────────
+        # ── 플레이어 관리 (MMR 수정 / 삭제) ─────────────────────────
         with admin_tab3:
             st.markdown("등록된 플레이어를 관리합니다.")
             mgmt_players = load_players()
@@ -562,29 +590,88 @@ with tab3:
             if not mgmt_players:
                 st.info("등록된 플레이어가 없습니다.")
             else:
-                _, h2, h3, h4, h5 = st.columns([0.3, 2.5, 2, 1.5, 1])
-                h2.markdown("**닉네임**")
-                h3.markdown("**솔랭 티어**")
-                h4.markdown("**내전 전적**")
-
                 for player in mgmt_players:
+                    puuid = player["puuid"]
                     stats = player.get("inhouse_stats", {})
                     win = stats.get("win", 0)
                     loss = stats.get("loss", 0)
-                    _, c1, c2, c3, c4 = st.columns([0.3, 2.5, 2, 1.5, 1])
+                    tier_key = f"mmr_tier_{puuid}"
+                    num_key  = f"mmr_num_{puuid}"
+
+                    # 처음 렌더링 시 현재 MMR로 number_input 초기화
+                    if num_key not in st.session_state:
+                        st.session_state[num_key] = player.get("mmr", 800)
+
+                    # 요약 행
+                    c1, c2, c3, c4 = st.columns([2.5, 2, 1.5, 1])
                     c1.markdown(f"**{player['name']}**#{player.get('tag', '')}")
                     c2.markdown(
                         f"{tier_emoji(player['solo_tier'])} "
                         f"{tier_label(player['solo_tier'], player.get('solo_rank',''), player.get('solo_lp',0))}"
                     )
-                    c3.markdown(f"{win}승 {loss}패")
+                    c3.markdown(f"{win}승 {loss}패 / MMR **{player.get('mmr',0):,}**")
                     with c4:
-                        if st.button("삭제", key=f"del_p_{player['puuid']}"):
+                        if st.button("삭제", key=f"del_p_{puuid}"):
                             with st.spinner("삭제 중..."):
-                                ok = delete_player(player["puuid"])
+                                ok = delete_player(puuid)
                             if ok:
                                 st.success(f"{player['name']} 삭제 완료!")
                                 st.cache_data.clear()
                                 st.rerun()
                             else:
                                 st.error("삭제 실패")
+
+                    # MMR 수동 수정 expander
+                    with st.expander(f"⚙️ {player['name']} MMR 수동 수정"):
+                        st.caption(
+                            "솔로/자유 랭크가 모두 없는 경우 이전 시즌 기준 티어를 선택해 MMR을 설정하세요."
+                        )
+
+                        # 현재 플레이어 tier+rank 기반 기본 인덱스
+                        cur_tier = player.get("solo_tier", "SILVER")
+                        cur_rank = player.get("solo_rank", "II")
+                        default_idx = _TIER_RANK_INDEX.get(
+                            (cur_tier, cur_rank),
+                            _TIER_RANK_INDEX.get((cur_tier, ""), 10),  # 마스터+ fallback
+                        )
+
+                        def _on_tier_rank_change(tk=tier_key, nk=num_key):
+                            idx = st.session_state[tk]
+                            st.session_state[nk] = TIER_RANK_OPTIONS[idx][3]
+
+                        st.selectbox(
+                            "기준 티어 / 랭크",
+                            options=range(len(TIER_RANK_OPTIONS)),
+                            index=default_idx,
+                            format_func=lambda i: (
+                                f"{tier_emoji(TIER_RANK_OPTIONS[i][1])} "
+                                f"{TIER_RANK_OPTIONS[i][0]}"
+                                f"  —  MMR {TIER_RANK_OPTIONS[i][3]:,}"
+                            ),
+                            key=tier_key,
+                            on_change=_on_tier_rank_change,
+                        )
+
+                        new_mmr = st.number_input(
+                            "적용할 MMR (직접 조정 가능)",
+                            min_value=0,
+                            max_value=6000,
+                            step=50,
+                            key=num_key,
+                        )
+
+                        if st.button("💾 MMR 저장", key=f"mmr_save_{puuid}", type="primary"):
+                            all_players = load_players()
+                            for p in all_players:
+                                if p["puuid"] == puuid:
+                                    p["mmr"] = int(new_mmr)
+                                    break
+                            ok = save_players(
+                                all_players,
+                                commit_message=f"update: manual MMR {player['name']} → {int(new_mmr)}",
+                            )
+                            if ok:
+                                st.success(f"MMR {int(new_mmr):,} 저장 완료!")
+                                st.cache_data.clear()
+                            else:
+                                st.error("저장 실패")
