@@ -254,7 +254,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1800,
+      "mmr": 1829,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 3,
@@ -273,7 +273,8 @@
           "ADC": 0,
           "SUP": 0
         }
-      }
+      },
+      "solo_mmr": 1800
     }
   ]
 }
