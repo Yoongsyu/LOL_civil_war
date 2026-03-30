@@ -161,6 +161,34 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "재 인 초 이",
+      "tag": "KR1",
+      "puuid": "PGDYOf8NwhOmZdRVeSrIXY9J4JFDVHmhu3C6JtSAxxLdP4z5Bob9hDBeXfovbcHIJgcbEYQCzq_Bag",
+      "solo_tier": "GOLD",
+      "solo_rank": "IV",
+      "solo_lp": 36,
+      "mmr": 1236,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
