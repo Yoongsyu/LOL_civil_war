@@ -107,6 +107,33 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "보드타는 햄스터",
+      "tag": "CUTE",
+      "puuid": "ed-0aFGSNHRCKv8yFlN3LlnXi4WtA8dKiwzXjmlcN1fmRHpFMlQI3aJoT4Tim765OFbWIG04LY0X6g",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "mmr": 0,
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
