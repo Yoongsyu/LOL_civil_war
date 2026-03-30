@@ -26,6 +26,33 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "아몬드봉봉초콜릿",
+      "tag": "KR1",
+      "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
+      "solo_tier": "EMERALD",
+      "solo_rank": "II",
+      "solo_lp": 65,
+      "mmr": 2265,
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
