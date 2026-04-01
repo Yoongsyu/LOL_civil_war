@@ -304,35 +304,6 @@
           "SUP": 0
         }
       }
-    },
-    {
-      "name": "팥충류",
-      "tag": "KR1",
-      "puuid": "QCDuOPCZCkMvXYr2z-hWvKzIdJ42_7rbVYd52N6svmavy8aerR5GLCcqO1FIcsvXWFLUOsEQGefiCg",
-      "solo_tier": "GOLD",
-      "solo_rank": "I",
-      "solo_lp": 48,
-      "solo_mmr": 1548,
-      "mmr": 1548,
-      "source_type": "FLEX",
-      "inhouse_stats": {
-        "win": 0,
-        "loss": 0,
-        "positions": {
-          "TOP": 0,
-          "JNG": 0,
-          "MID": 0,
-          "ADC": 0,
-          "SUP": 0
-        },
-        "position_wins": {
-          "TOP": 0,
-          "JNG": 0,
-          "MID": 0,
-          "ADC": 0,
-          "SUP": 0
-        }
-      }
     }
   ]
 }
