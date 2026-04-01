@@ -149,10 +149,14 @@ def record_match_batch(blue_team, red_team, winner, positions) -> bool:
                 else:
                     stats["loss"] = stats.get("loss", 0) + 1
                 stats["positions"][pos] = stats["positions"].get(pos, 0) + 1
-                p["mmr"] = calculate_mmr(
-                    p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0),
-                    stats.get("win", 0), stats.get("loss", 0),
-                )
+                win_cnt  = stats.get("win", 0)
+                loss_cnt = stats.get("loss", 0)
+                total    = win_cnt + loss_cnt
+                solo_mmr = p.get("solo_mmr", calculate_mmr(
+                    p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
+                ))
+                inhouse_adj = int((win_cnt / total - 0.5) * 300) if total >= 5 else 0
+                p["mmr"] = max(0, solo_mmr + inhouse_adj)
             match_record[f"{side}_team"].append({
                 "puuid": puuid,
                 "name": pi["name"],
@@ -193,10 +197,14 @@ def revert_match(match: dict) -> bool:
             pp = stats.get("positions", {})
             pp[pos] = max(0, pp.get(pos, 0) - 1)
             stats["positions"] = pp
-            p["mmr"] = calculate_mmr(
-                p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0),
-                stats.get("win", 0), stats.get("loss", 0),
-            )
+            win_cnt  = stats.get("win", 0)
+            loss_cnt = stats.get("loss", 0)
+            total    = win_cnt + loss_cnt
+            solo_mmr = p.get("solo_mmr", calculate_mmr(
+                p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
+            ))
+            inhouse_adj = int((win_cnt / total - 0.5) * 300) if total >= 5 else 0
+            p["mmr"] = max(0, solo_mmr + inhouse_adj)
 
     return save_players(
         list(player_map.values()),
@@ -214,16 +222,17 @@ def get_players_cached():
 # ─── UI 헬퍼 ─────────────────────────────────────────────────────
 
 def with_pure_mmr(players: list) -> list:
-    """솔랭 티어/랭크/LP만으로 재계산한 MMR 복사본 반환 (내전 성적 가중치 제외)"""
+    """솔랭 MMR만으로 팀 구성할 때 사용하는 복사본 반환 (내전 보정치 제외)"""
     result = []
     for p in players:
         copy = dict(p)
-        copy["mmr"] = calculate_mmr(
+        # solo_mmr 필드가 있으면 그대로, 없으면 tier 기반 재계산
+        copy["mmr"] = p.get("solo_mmr", calculate_mmr(
             p.get("solo_tier", "UNRANKED"),
             p.get("solo_rank", ""),
             p.get("solo_lp", 0),
-            0, 0,  # 내전 전적 0으로 고정 → 가중치 미적용
-        )
+            0, 0,
+        ))
         result.append(copy)
     return result
 
@@ -318,10 +327,11 @@ with tab1:
     else:
         # ── 기능 1·2·3: 리스트 + 티어 + 상세 정보 ─────────────────
         # 헤더 행
-        _, h_name, h_tier, h_mmr, h_record = st.columns([0.5, 2.5, 2, 1.5, 2])
+        _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
         h_name.markdown("**닉네임**")
         h_tier.markdown("**솔랭 티어**")
-        h_mmr.markdown("**MMR**")
+        h_solo.markdown("**솔랭 MMR**")
+        h_inhouse.markdown("**내전 MMR**")
         h_record.markdown("**내전 전적**")
 
         for player in players:
@@ -335,8 +345,18 @@ with tab1:
             )
             emoji = tier_emoji(player["solo_tier"])
 
-            # 요약 행 (체크박스 + 기본 정보)
-            c_chk, c_name, c_tier, c_mmr, c_rec = st.columns([0.5, 2.5, 2, 1.5, 2])
+            # 솔랭 MMR (solo_mmr 필드 없는 기존 데이터 호환)
+            solo_mmr = player.get("solo_mmr", calculate_mmr(
+                player.get("solo_tier", "UNRANKED"),
+                player.get("solo_rank", ""),
+                player.get("solo_lp", 0), 0, 0,
+            ))
+            final_mmr = player.get("mmr", solo_mmr)
+            adj = final_mmr - solo_mmr
+            adj_str = f" ({'+' if adj >= 0 else ''}{adj:,})" if adj != 0 else ""
+
+            # 요약 행
+            c_chk, c_name, c_tier, c_solo, c_inhouse, c_rec = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
             with c_chk:
                 st.checkbox(
                     "선택",
@@ -345,7 +365,8 @@ with tab1:
                 )
             c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
             c_tier.markdown(f"{emoji} {tier_str}")
-            c_mmr.markdown(f"**{player.get('mmr', 0):,}**")
+            c_solo.markdown(f"**{solo_mmr:,}**")
+            c_inhouse.markdown(f"**{final_mmr:,}**{adj_str}")
             c_rec.markdown(f"{win}승 {loss}패 ({total}판) {wr_str}")
 
             # 상세 정보 - 전체 너비 expander (컬럼 밖에 배치)
@@ -436,19 +457,16 @@ with tab2:
     )
 
     with st.form("register_form"):
-        c_name, c_tag = st.columns([3, 1])
-        with c_name:
-            game_name = st.text_input("닉네임", placeholder="Hide on bush")
-        with c_tag:
-            tag_line = st.text_input("태그", placeholder="KR1")
+        riot_id = st.text_input("Riot ID", placeholder="Hide on bush#KR1")
         submitted = st.form_submit_button("등록하기", type="primary", use_container_width=True)
 
     if submitted:
-        if not game_name or not tag_line:
-            st.error("닉네임과 태그를 모두 입력해주세요.")
+        if not riot_id or "#" not in riot_id:
+            st.error("닉네임과 태그를 '#'으로 구분하여 정확히 입력해주세요. (예: Hide on bush#KR1)")
         else:
-            with st.spinner(f"{game_name}#{tag_line} 조회 중..."):
-                player_data = fetch_player_data(game_name.strip(), tag_line.strip())
+            name_part, tag_part = riot_id.rsplit("#", 1)
+            with st.spinner(f"{name_part}#{tag_part} 조회 중..."):
+                player_data = fetch_player_data(name_part.strip(), tag_part.strip())
 
             if "error" in player_data:
                 st.error(player_data["error"])
@@ -700,14 +718,22 @@ with tab3:
                             all_players = load_players()
                             for p in all_players:
                                 if p["puuid"] == puuid:
-                                    p["mmr"] = int(new_mmr)
+                                    p["solo_mmr"] = int(new_mmr)
+                                    # 내전 보정치 재적용하여 최종 mmr 계산
+                                    s = p.get("inhouse_stats", {})
+                                    w = s.get("win", 0)
+                                    l = s.get("loss", 0)
+                                    t = w + l
+                                    inhouse_adj = int((w / t - 0.5) * 300) if t >= 5 else 0
+                                    p["mmr"] = max(0, int(new_mmr) + inhouse_adj)
                                     break
                             ok = save_players(
                                 all_players,
-                                commit_message=f"update: manual MMR {player['name']} → {int(new_mmr)}",
+                                commit_message=f"update: manual solo_mmr {player['name']} → {int(new_mmr)}",
                             )
                             if ok:
-                                st.success(f"MMR {int(new_mmr):,} 저장 완료!")
+                                adj_msg = f" (내전 보정 적용 시 최종 {max(0, int(new_mmr) + (int((w/t-0.5)*300) if t >= 5 else 0)):,})" if t >= 5 else ""
+                                st.success(f"솔랭 MMR {int(new_mmr):,} 저장 완료!{adj_msg}")
                                 st.cache_data.clear()
                             else:
                                 st.error("저장 실패")

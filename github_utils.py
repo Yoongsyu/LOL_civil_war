@@ -144,14 +144,20 @@ def update_inhouse_result(
             if result == "WIN":
                 stats["position_wins"][position] = stats["position_wins"].get(position, 0) + 1
 
-            # MMR 재계산
-            player["mmr"] = calculate_mmr(
-                player["solo_tier"],
-                player["solo_rank"],
-                player["solo_lp"],
-                stats.get("win", 0),
-                stats.get("loss", 0),
+            # MMR 재계산: solo_mmr 기준 + 내전 보정치
+            win_cnt  = stats.get("win", 0)
+            loss_cnt = stats.get("loss", 0)
+            total    = win_cnt + loss_cnt
+            solo_mmr = player.get(
+                "solo_mmr",
+                calculate_mmr(player["solo_tier"], player["solo_rank"],
+                              player.get("solo_lp", 0), 0, 0),
             )
+            if total >= 5:
+                inhouse_adj = int((win_cnt / total - 0.5) * 300)
+            else:
+                inhouse_adj = 0
+            player["mmr"] = max(0, solo_mmr + inhouse_adj)
             break
 
     return save_players(

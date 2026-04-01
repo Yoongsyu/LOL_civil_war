@@ -4,6 +4,7 @@ Riot API 연동 모듈: PUUID, 소환사 정보, 솔로 랭크 티어/LP/전적 
 """
 
 import requests
+import urllib.parse
 import streamlit as st
 
 # ─── 상수 정의 ────────────────────────────────────────────────
@@ -36,7 +37,7 @@ REGION_KR     = "kr"
 
 def _get_headers() -> dict:
     """Riot API 요청 헤더 반환"""
-    api_key = st.secrets.get("RIOT_API_KEY", "")
+    api_key = st.secrets.get("RIOT_API_KEY", "").strip()
     return {"X-Riot-Token": api_key}
 
 
@@ -45,9 +46,11 @@ def get_puuid(game_name: str, tag_line: str) -> dict:
     Riot ID(닉네임#태그)로 PUUID 조회 (Account-V1)
     반환: {"puuid": str, "gameName": str, "tagLine": str} or {"error": str}
     """
+    game_name_encoded = urllib.parse.quote(game_name)
+    tag_line_encoded = urllib.parse.quote(tag_line)
     url = (
         f"https://{REGION_ASIA}.api.riotgames.com"
-        f"/riot/account/v1/accounts/by-riot-id/{game_name}/{tag_line}"
+        f"/riot/account/v1/accounts/by-riot-id/{game_name_encoded}/{tag_line_encoded}"
     )
     try:
         resp = requests.get(url, headers=_get_headers(), timeout=10)
@@ -57,6 +60,8 @@ def get_puuid(game_name: str, tag_line: str) -> dict:
             return {"error": "플레이어를 찾을 수 없습니다. 닉네임과 태그를 확인해 주세요."}
         elif resp.status_code == 401:
             return {"error": "Riot API 키가 유효하지 않습니다."}
+        elif resp.status_code == 403:
+            return {"error": "API 오류 발생 (403 Forbidden): API 키가 만료되었거나, 권한이 없습니다. (오늘 갱신했더라도 대시보드 Secrets 설정을 다시 확인해 보세요.)"}
         else:
             return {"error": f"API 오류 발생 (상태 코드: {resp.status_code})"}
     except requests.exceptions.Timeout:
@@ -168,23 +173,24 @@ def fetch_player_data(game_name: str, tag_line: str) -> dict:
     rank  = target_league["rank"]
     lp    = target_league["lp"]
 
-    # 3) MMR 초기 계산
-    mmr = calculate_mmr(tier, rank, lp)
+    # 3) MMR 초기 계산 (등록 시점에는 내전 전적 없으므로 solo_mmr = mmr)
+    solo_mmr = calculate_mmr(tier, rank, lp)
 
     player = {
-        "name":      game_name,
-        "tag":       tag_line,
-        "puuid":     puuid,
-        "solo_tier": tier,      # UI 호환성을 위해 solo_tier 키 유지 (내용물은 Flex일 수 있음)
-        "solo_rank": rank,
-        "solo_lp":   lp,
-        "mmr":       mmr,
-        "source_type": source_type, # 데이터 출처 기록
+        "name":        game_name,
+        "tag":         tag_line,
+        "puuid":       puuid,
+        "solo_tier":   tier,
+        "solo_rank":   rank,
+        "solo_lp":     lp,
+        "solo_mmr":    solo_mmr,   # 티어 기반 순수 MMR (수동 조정 가능)
+        "mmr":         solo_mmr,   # 팀 구성용 최종 MMR = solo_mmr + 내전 보정
+        "source_type": source_type,
         "inhouse_stats": {
             "win":  0,
             "loss": 0,
-            "positions": {p: 0 for p in POSITIONS},
-            "position_wins": {p: 0 for p in POSITIONS},
+            "positions":    {p: 0 for p in POSITIONS},
+            "position_wins":{p: 0 for p in POSITIONS},
         },
     }
     return player
