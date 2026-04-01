@@ -275,6 +275,35 @@
         }
       },
       "solo_mmr": 1800
+    },
+    {
+      "name": "케인",
+      "tag": "좀 봐줘라",
+      "puuid": "qemhELAjjrpHHwWiibHqe7VOJZ9Eat4lgVhAeEI2jdVHLILwRHX3Hxd2yIwfK0MflwlRMgm8QHJAug",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 60,
+      "solo_mmr": 1660,
+      "mmr": 1660,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
