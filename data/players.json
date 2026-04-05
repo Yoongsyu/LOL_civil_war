@@ -7,16 +7,16 @@
       "solo_tier": "SILVER",
       "solo_rank": "III",
       "solo_lp": 55,
-      "mmr": 992,
+      "mmr": 971,
       "inhouse_stats": {
         "win": 5,
-        "loss": 3,
+        "loss": 4,
         "positions": {
           "TOP": 0,
           "JNG": 0,
           "MID": 0,
           "ADC": 5,
-          "SUP": 3
+          "SUP": 4
         },
         "position_wins": {
           "TOP": 0,
@@ -34,23 +34,23 @@
       "solo_tier": "EMERALD",
       "solo_rank": "II",
       "solo_lp": 65,
-      "mmr": 2228,
+      "mmr": 2249,
       "inhouse_stats": {
-        "win": 3,
+        "win": 4,
         "loss": 5,
         "positions": {
           "TOP": 4,
           "JNG": 3,
           "MID": 0,
           "ADC": 0,
-          "SUP": 1
+          "SUP": 2
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 2,
           "MID": 0,
           "ADC": 0,
-          "SUP": 1
+          "SUP": 2
         }
       }
     },
@@ -61,20 +61,20 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1173,
+      "mmr": 1194,
       "inhouse_stats": {
-        "win": 3,
+        "win": 4,
         "loss": 5,
         "positions": {
           "TOP": 1,
-          "JNG": 3,
+          "JNG": 4,
           "MID": 2,
           "ADC": 2,
           "SUP": 0
         },
         "position_wins": {
           "TOP": 1,
-          "JNG": 1,
+          "JNG": 2,
           "MID": 0,
           "ADC": 1,
           "SUP": 0
@@ -88,14 +88,14 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 21,
-      "mmr": 1658,
+      "mmr": 1637,
       "inhouse_stats": {
         "win": 5,
-        "loss": 3,
+        "loss": 4,
         "positions": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 8,
+          "MID": 9,
           "ADC": 0,
           "SUP": 0
         },
@@ -115,13 +115,13 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "I",
       "solo_lp": 2,
-      "mmr": 1939,
+      "mmr": 1918,
       "inhouse_stats": {
         "win": 5,
-        "loss": 3,
+        "loss": 4,
         "positions": {
           "TOP": 0,
-          "JNG": 6,
+          "JNG": 7,
           "MID": 0,
           "ADC": 0,
           "SUP": 2
@@ -142,19 +142,19 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "III",
       "solo_lp": 85,
-      "mmr": 1785,
+      "mmr": 1801,
       "inhouse_stats": {
-        "win": 4,
+        "win": 5,
         "loss": 4,
         "positions": {
-          "TOP": 1,
+          "TOP": 2,
           "JNG": 4,
           "MID": 0,
           "ADC": 0,
           "SUP": 3
         },
         "position_wins": {
-          "TOP": 1,
+          "TOP": 2,
           "JNG": 2,
           "MID": 0,
           "ADC": 0,
@@ -197,22 +197,22 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1013,
+      "mmr": 1034,
       "source_type": "NONE",
       "inhouse_stats": {
-        "win": 3,
+        "win": 4,
         "loss": 5,
         "positions": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 3,
+          "MID": 4,
           "ADC": 1,
           "SUP": 4
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 2,
+          "MID": 3,
           "ADC": 0,
           "SUP": 1
         }
@@ -226,16 +226,16 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 71,
-      "mmr": 2071,
+      "mmr": 2055,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 4,
-        "loss": 4,
+        "loss": 5,
         "positions": {
           "TOP": 2,
           "JNG": 0,
           "MID": 0,
-          "ADC": 5,
+          "ADC": 6,
           "SUP": 1
         },
         "position_wins": {
@@ -316,20 +316,20 @@
       "mmr": 2057,
       "source_type": "SOLO",
       "inhouse_stats": {
-        "win": 1,
+        "win": 2,
         "loss": 2,
         "positions": {
           "TOP": 0,
           "JNG": 0,
           "MID": 0,
-          "ADC": 3,
+          "ADC": 4,
           "SUP": 0
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 0,
           "MID": 0,
-          "ADC": 1,
+          "ADC": 2,
           "SUP": 0
         }
       }
@@ -346,9 +346,9 @@
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
-        "loss": 1,
+        "loss": 2,
         "positions": {
-          "TOP": 3,
+          "TOP": 4,
           "JNG": 0,
           "MID": 0,
           "ADC": 0,
