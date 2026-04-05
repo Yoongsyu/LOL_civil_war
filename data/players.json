@@ -333,6 +333,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "물단지",
+      "tag": "항아리",
+      "puuid": "NuU_wxZFKdz2cwZFEyYkVtxB2B8pN_4uNvZf7pwIyea2Is74L7sxCpgrBERuSanDD3K6VdwpUrFuhw",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 24,
+      "solo_mmr": 1624,
+      "mmr": 1624,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
