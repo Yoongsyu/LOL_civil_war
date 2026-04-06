@@ -62,15 +62,15 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* ══ 배경: 우주 & 별빛 ═══════════════════════════════════════════ */
+/* ══ 페이지 배경: 우주 그라데이션 ═══════════════════════════════ */
 .stApp {
-    background-color: #0C0A28;
+    background-color: #120F3A;
     background-image:
-        radial-gradient(ellipse at 15% 40%, rgba(200,130,255,0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 20%, rgba(255,180,220,0.10) 0%, transparent 45%),
-        radial-gradient(ellipse at 50% 85%, rgba(80,160,255,0.10) 0%, transparent 45%),
-        radial-gradient(ellipse at 70% 55%, rgba(255,220,80,0.06) 0%, transparent 35%);
-    color: #F0E8FF;
+        radial-gradient(ellipse at 10% 30%, rgba(255,133,192,0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 15%, rgba(150,100,255,0.10) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 90%, rgba(80,180,255,0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 60%, rgba(255,210,80,0.06) 0%, transparent 35%);
+    color: #F5F0FF;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .main .block-container {
@@ -79,22 +79,43 @@ st.markdown("""
     max-width: 1200px;
 }
 
-/* ══ 헤더 ════════════════════════════════════════════════════════ */
+/* ══ 좌측 고정 챔피언 장식 (Soraka) ════════════════════════════ */
+.sg-deco-left {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 200px;
+    background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg')
+                center top / cover no-repeat;
+    opacity: 0.20;
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    mask-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    z-index: 0; pointer-events: none;
+}
+/* ══ 우측 고정 챔피언 장식 (Lulu) ══════════════════════════════ */
+.sg-deco-right {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 200px;
+    background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg')
+                center top / cover no-repeat;
+    opacity: 0.20;
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    z-index: 0; pointer-events: none;
+}
+
+/* ══ 헤더 텍스트 ════════════════════════════════════════════════ */
 h2, h3 {
     font-family: 'Cinzel', serif !important;
-    color: #FF9DD8 !important;
+    color: #FFB8DA !important;
     letter-spacing: 2px;
-    text-shadow: 0 0 14px rgba(255,157,216,0.5);
+    text-shadow: 0 0 16px rgba(255,133,192,0.45);
 }
 
 /* ══ 탭 ══════════════════════════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] {
-    background: rgba(20,15,55,0.85);
-    border-bottom: 1px solid rgba(255,157,216,0.25);
+    background: rgba(18,15,58,0.88);
+    border-bottom: 1px solid rgba(255,133,192,0.22);
     gap: 0;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #8878C8 !important;
+    color: #7A6EBA !important;
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
@@ -105,20 +126,20 @@ h2, h3 {
     background: transparent !important;
     transition: all 0.2s;
 }
-.stTabs [data-baseweb="tab"]:hover { color: #FF9DD8 !important; }
+.stTabs [data-baseweb="tab"]:hover { color: #FFB8DA !important; }
 .stTabs [aria-selected="true"] {
-    color: #FF9DD8 !important;
-    border-bottom: 3px solid #FF9DD8 !important;
-    background: rgba(255,157,216,0.06) !important;
-    text-shadow: 0 0 10px rgba(255,157,216,0.5);
+    color: #FFB8DA !important;
+    border-bottom: 3px solid #FFB8DA !important;
+    background: rgba(255,133,192,0.07) !important;
+    text-shadow: 0 0 10px rgba(255,133,192,0.5);
 }
 .stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
 
 /* ══ 버튼 ════════════════════════════════════════════════════════ */
 .stButton > button {
-    background: linear-gradient(180deg, rgba(30,20,75,0.9) 0%, rgba(18,12,55,0.9) 100%);
-    color: #C0AAEA;
-    border: 1px solid rgba(255,157,216,0.3);
+    background: linear-gradient(180deg, rgba(35,25,85,0.92) 0%, rgba(22,15,65,0.92) 100%);
+    color: #C8B8F8;
+    border: 1px solid rgba(255,133,192,0.28);
     border-radius: 4px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
@@ -126,107 +147,178 @@ h2, h3 {
     transition: all 0.18s ease;
 }
 .stButton > button:hover {
-    background: linear-gradient(180deg, rgba(50,30,110,0.95) 0%, rgba(30,20,75,0.95) 100%);
-    color: #FFD8EE;
-    border-color: #FF9DD8;
-    box-shadow: 0 0 14px rgba(255,157,216,0.3), inset 0 0 8px rgba(255,157,216,0.06);
+    background: linear-gradient(180deg, rgba(60,35,120,0.95) 0%, rgba(35,25,85,0.95) 100%);
+    color: #FFDAEE;
+    border-color: #FFB8DA;
+    box-shadow: 0 0 14px rgba(255,133,192,0.28), inset 0 0 8px rgba(255,133,192,0.06);
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(180deg, #C45FA0 0%, #8A3070 100%);
-    color: #FFF0FA !important;
+    background: linear-gradient(180deg, #D468A8 0%, #903870 100%);
+    color: #FFF5FA !important;
     font-weight: 700;
-    border: 1px solid #FF9DD8;
+    border: 1px solid #FFB8DA;
 }
 .stButton > button[kind="primary"]:hover {
-    background: linear-gradient(180deg, #FF9DD8 0%, #C45FA0 100%);
-    box-shadow: 0 0 22px rgba(255,157,216,0.6);
-    color: #1A0840 !important;
+    background: linear-gradient(180deg, #FFB8DA 0%, #D468A8 100%);
+    box-shadow: 0 0 22px rgba(255,133,192,0.55);
+    color: #1A0845 !important;
 }
 
 /* ══ 입력 ════════════════════════════════════════════════════════ */
 .stTextInput input, .stNumberInput input {
-    background: rgba(18,12,55,0.85) !important;
-    color: #F0E8FF !important;
-    border: 1px solid rgba(255,157,216,0.3) !important;
+    background: rgba(22,16,65,0.88) !important;
+    color: #F5F0FF !important;
+    border: 1px solid rgba(255,133,192,0.28) !important;
     border-radius: 4px !important;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .stTextInput input:focus, .stNumberInput input:focus {
-    border-color: #FF9DD8 !important;
-    box-shadow: 0 0 10px rgba(255,157,216,0.3) !important;
+    border-color: #FFB8DA !important;
+    box-shadow: 0 0 10px rgba(255,133,192,0.28) !important;
 }
-.stTextInput input::placeholder { color: rgba(255,157,216,0.3) !important; }
+.stTextInput input::placeholder { color: rgba(255,133,192,0.28) !important; }
 
 /* selectbox */
 .stSelectbox > div > div {
-    background: rgba(18,12,55,0.85) !important;
-    border: 1px solid rgba(255,157,216,0.3) !important;
+    background: rgba(22,16,65,0.88) !important;
+    border: 1px solid rgba(255,133,192,0.28) !important;
     border-radius: 4px !important;
-    color: #F0E8FF !important;
+    color: #F5F0FF !important;
 }
-.stSelectbox > div > div:focus-within { border-color: #FF9DD8 !important; }
-[data-baseweb="popover"] { background: #1A1048 !important; border: 1px solid rgba(255,157,216,0.25) !important; }
-[data-baseweb="menu"]    { background: #1A1048 !important; }
-[data-baseweb="option"]  { background: #1A1048 !important; color: #C0AAEA !important; }
+.stSelectbox > div > div:focus-within { border-color: #FFB8DA !important; }
+[data-baseweb="popover"] { background: #1C1558 !important; border: 1px solid rgba(255,133,192,0.22) !important; }
+[data-baseweb="menu"]    { background: #1C1558 !important; }
+[data-baseweb="option"]  { background: #1C1558 !important; color: #C8B8F8 !important; }
 [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-    background: #2A1868 !important; color: #FF9DD8 !important;
+    background: #2C2278 !important; color: #FFB8DA !important;
 }
 
 /* ══ 슬라이더 ════════════════════════════════════════════════════ */
 .stSlider [data-baseweb="slider"] div[role="slider"] {
-    background: #FF9DD8 !important; border: 2px solid #FFF0FA !important;
+    background: #FFB8DA !important; border: 2px solid #FFF5FA !important;
 }
-.stSlider [data-testid="stSliderTrackActive"] { background: #C45FA0 !important; }
+.stSlider [data-testid="stSliderTrackActive"] { background: #D468A8 !important; }
 
 /* ══ 라디오 ══════════════════════════════════════════════════════ */
-.stRadio label { color: #C0AAEA !important; }
-.stRadio [data-baseweb="radio"] div { border-color: rgba(255,157,216,0.4) !important; }
-.stRadio [aria-checked="true"] div { background: #FF9DD8 !important; border-color: #FF9DD8 !important; }
+.stRadio label { color: #C8B8F8 !important; }
+.stRadio [data-baseweb="radio"] div { border-color: rgba(255,133,192,0.4) !important; }
+.stRadio [aria-checked="true"] div { background: #FFB8DA !important; border-color: #FFB8DA !important; }
 
 /* ══ 체크박스 ════════════════════════════════════════════════════ */
-.stCheckbox label { color: #C0AAEA !important; }
-.stCheckbox [data-baseweb="checkbox"] div { border-color: rgba(255,157,216,0.4) !important; background: rgba(18,12,55,0.8) !important; }
-.stCheckbox [aria-checked="true"] div { background: #FF9DD8 !important; border-color: #FF9DD8 !important; }
+.stCheckbox label { color: #C8B8F8 !important; }
+.stCheckbox [data-baseweb="checkbox"] div {
+    border-color: rgba(255,133,192,0.4) !important;
+    background: rgba(22,16,65,0.85) !important;
+}
+.stCheckbox [aria-checked="true"] div { background: #FFB8DA !important; border-color: #FFB8DA !important; }
 
 /* ══ expander ════════════════════════════════════════════════════ */
 .stExpander {
-    border: 1px solid rgba(255,157,216,0.2) !important;
+    border: 1px solid rgba(255,133,192,0.18) !important;
     border-radius: 4px !important;
-    background: rgba(20,14,58,0.6) !important;
+    background: rgba(22,16,65,0.55) !important;
 }
-.stExpander summary { color: #C0AAEA !important; font-size: 0.85rem; }
-.stExpander summary:hover { color: #FF9DD8 !important; background: rgba(255,157,216,0.06) !important; }
+.stExpander summary { color: #C8B8F8 !important; font-size: 0.85rem; }
+.stExpander summary:hover { color: #FFB8DA !important; background: rgba(255,133,192,0.06) !important; }
 
 /* ══ 알림 박스 ═══════════════════════════════════════════════════ */
 div[data-testid="stNotification"] {
-    background: rgba(20,14,58,0.85) !important;
-    border: 1px solid rgba(255,157,216,0.25) !important;
-    border-left: 3px solid #FF9DD8 !important;
-    color: #F0E8FF !important;
+    background: rgba(22,16,65,0.88) !important;
+    border: 1px solid rgba(255,133,192,0.22) !important;
+    border-left: 3px solid #FFB8DA !important;
+    color: #F5F0FF !important;
     border-radius: 4px !important;
 }
 
 /* ══ 텍스트 / 구분선 ═════════════════════════════════════════════ */
-hr { border-color: rgba(255,157,216,0.15) !important; }
-p, span, label, .stMarkdown { color: #C8B8F0; }
+hr { border-color: rgba(255,133,192,0.14) !important; }
+p, span, label, .stMarkdown { color: #D8CCFF; }
 .stCaption, small { color: #8878C8 !important; font-size: 0.78rem; }
 
 /* ══ dataframe ═══════════════════════════════════════════════════ */
-.stDataFrame { border: 1px solid rgba(255,157,216,0.2); border-radius: 4px; }
+.stDataFrame { border: 1px solid rgba(255,133,192,0.18); border-radius: 4px; }
 .stDataFrame thead tr th {
-    background: rgba(15,10,50,0.9) !important; color: #FF9DD8 !important;
+    background: rgba(18,12,55,0.92) !important; color: #FFB8DA !important;
     font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255,157,216,0.25) !important;
+    border-bottom: 1px solid rgba(255,133,192,0.22) !important;
 }
-.stDataFrame tbody tr td { background: rgba(12,10,40,0.7) !important; color: #C8B8F0 !important; }
-.stDataFrame tbody tr:hover td { background: rgba(30,20,75,0.8) !important; color: #F0E8FF !important; }
+.stDataFrame tbody tr td { background: rgba(14,10,44,0.75) !important; color: #D8CCFF !important; }
+.stDataFrame tbody tr:hover td { background: rgba(35,25,85,0.85) !important; color: #F5F0FF !important; }
 
 /* ══ 스크롤바 ════════════════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #0C0A28; }
-::-webkit-scrollbar-thumb { background: rgba(255,157,216,0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #FF9DD8; }
+::-webkit-scrollbar-track { background: #120F3A; }
+::-webkit-scrollbar-thumb { background: rgba(255,133,192,0.28); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #FFB8DA; }
 </style>
+""", unsafe_allow_html=True)
+
+# ─── 좌우 챔피언 장식 & 상단 배너 ────────────────────────────────
+st.markdown("""
+<div class="sg-deco-left"></div>
+<div class="sg-deco-right"></div>
+
+<!-- ══ 별수호자 파노라마 헤더 ══ -->
+<div style="position:relative; overflow:hidden; height:230px;
+            margin-bottom:0.5rem; border-radius:6px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.6);">
+
+    <!-- 챔피언 파노라마 (5개 구역) -->
+    <div style="display:flex; position:absolute; inset:0;">
+        <div style="flex:1;
+                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg')
+                    25% 18%/cover no-repeat; opacity:0.55;"></div>
+        <div style="flex:1;
+                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg')
+                    40% 12%/cover no-repeat; opacity:0.55;"></div>
+        <div style="flex:1.3;
+                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg')
+                    50% 8%/cover no-repeat; opacity:0.65;"></div>
+        <div style="flex:1;
+                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg')
+                    60% 12%/cover no-repeat; opacity:0.55;"></div>
+        <div style="flex:1;
+                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg')
+                    75% 18%/cover no-repeat; opacity:0.55;"></div>
+    </div>
+
+    <!-- 좌우 페이드 -->
+    <div style="position:absolute; inset:0;
+                background:linear-gradient(90deg,
+                    rgba(18,15,58,0.6) 0%, transparent 12%,
+                    transparent 88%, rgba(18,15,58,0.6) 100%);
+                pointer-events:none;"></div>
+    <!-- 하단 페이드 -->
+    <div style="position:absolute; bottom:0; left:0; right:0; height:60px;
+                background:linear-gradient(transparent, #120F3A);
+                pointer-events:none;"></div>
+    <!-- 중앙 어두운 오버레이 (텍스트 가독성) -->
+    <div style="position:absolute; inset:0;
+                background:radial-gradient(ellipse at 50% 50%,
+                    rgba(18,15,58,0.55) 0%, rgba(18,15,58,0.25) 60%, transparent 100%);
+                pointer-events:none;"></div>
+
+    <!-- 타이틀 콘텐츠 -->
+    <div style="position:absolute; inset:0; display:flex; flex-direction:column;
+                align-items:center; justify-content:center; gap:0.35rem;">
+        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700;
+                    color:#FFFFFF; letter-spacing:8px; text-transform:uppercase;
+                    text-shadow: 0 0 28px rgba(255,133,192,0.75),
+                                 0 0 60px rgba(180,120,255,0.35),
+                                 0 2px 8px rgba(0,0,0,0.9);">
+            ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
+        </div>
+        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
+                    color:#E8DCFF; letter-spacing:5px;
+                    text-shadow: 0 1px 6px rgba(0,0,0,0.8);">
+            STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
+        </div>
+        <div style="width:50%; height:1px; margin-top:0.5rem;
+                    background:linear-gradient(90deg,
+                        transparent, #FFD700, #FFB8DA, #80C8FF, #FFB8DA, #FFD700, transparent);
+                    box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
+    </div>
+</div>
 """, unsafe_allow_html=True)
 
 # ─── 세션 초기화 ──────────────────────────────────────────────────
@@ -526,56 +618,6 @@ def show_team_result(result: dict, with_positions: bool):
 # 메인 앱
 # ══════════════════════════════════════════════════════════════════
 
-st.markdown("""
-<div style="text-align:center; padding:1.6rem 0 0.4rem; position:relative;
-            border-bottom:1px solid rgba(255,157,216,0.2); margin-bottom:0.5rem;
-            background: radial-gradient(ellipse at 50% 0%, rgba(200,130,255,0.1) 0%, transparent 70%);">
-
-    <!-- 별수호자 챔피언 초상화 -->
-    <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:1rem;">
-        <!-- Star Guardian Lux -->
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_5.jpg"
-             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
-                    border:2px solid #FFD700; box-shadow:0 0 14px rgba(255,215,0,0.5);"
-             onerror="this.style.display='none'">
-        <!-- Star Guardian Poppy -->
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg"
-             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
-                    border:2px solid #FF9DD8; box-shadow:0 0 14px rgba(255,157,216,0.5);"
-             onerror="this.style.display='none'">
-        <!-- Star Guardian Ahri -->
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg"
-             style="width:78px; height:78px; border-radius:50%; object-fit:cover; object-position:center top;
-                    border:3px solid #FF9DD8; box-shadow:0 0 20px rgba(255,157,216,0.7);"
-             onerror="this.style.display='none'">
-        <!-- Star Guardian Neeko -->
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg"
-             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
-                    border:2px solid #70C8FF; box-shadow:0 0 14px rgba(112,200,255,0.5);"
-             onerror="this.style.display='none'">
-        <!-- Star Guardian Miss Fortune -->
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg"
-             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
-                    border:2px solid #FFD700; box-shadow:0 0 14px rgba(255,215,0,0.5);"
-             onerror="this.style.display='none'">
-    </div>
-
-    <!-- 타이틀 -->
-    <div style="font-family:'Cinzel',serif; font-size:2rem; font-weight:700;
-                color:#FF9DD8; letter-spacing:7px; text-transform:uppercase;
-                text-shadow: 0 0 24px rgba(255,157,216,0.7), 0 0 50px rgba(200,130,255,0.3), 0 2px 6px #000;">
-        ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
-    </div>
-    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
-                color:#8878C8; letter-spacing:5px; margin-top:0.35rem;">
-        STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
-    </div>
-    <div style="margin:0.8rem auto 0; width:55%; height:1px;
-                background: linear-gradient(90deg, transparent, #FFD700, #FF9DD8, #70C8FF, #FF9DD8, #FFD700, transparent);
-                box-shadow: 0 0 8px rgba(255,157,216,0.4);">
-    </div>
-</div>
-""", unsafe_allow_html=True)
 tab1, tab2, tab3 = st.tabs(["🏠 플레이어 & 팀 구성", "➕ 플레이어 등록", "🔧 관리자"])
 
 
