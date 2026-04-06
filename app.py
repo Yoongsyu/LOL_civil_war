@@ -154,6 +154,12 @@ def record_match_batch(blue_team, red_team, winner, positions, champions=None) -
                 else:
                     stats["loss"] = stats.get("loss", 0) + 1
                 stats["positions"][pos] = stats["positions"].get(pos, 0) + 1
+                # 포지션별 챔피언 픽 카운트
+                champ = champions.get(puuid, "")
+                if champ:
+                    pos_champs = stats.setdefault("position_champions", {})
+                    pos_champs.setdefault(pos, {})
+                    pos_champs[pos][champ] = pos_champs[pos].get(champ, 0) + 1
                 win_cnt  = stats.get("win", 0)
                 loss_cnt = stats.get("loss", 0)
                 total    = win_cnt + loss_cnt
@@ -203,6 +209,14 @@ def revert_match(match: dict) -> bool:
             pp = stats.get("positions", {})
             pp[pos] = max(0, pp.get(pos, 0) - 1)
             stats["positions"] = pp
+            # 포지션별 챔피언 픽 카운트 차감
+            champ = pi.get("champion", "")
+            if champ:
+                pos_champs = stats.get("position_champions", {})
+                if pos_champs.get(pos, {}).get(champ, 0) > 0:
+                    pos_champs[pos][champ] -= 1
+                    if pos_champs[pos][champ] == 0:
+                        del pos_champs[pos][champ]
             win_cnt  = stats.get("win", 0)
             loss_cnt = stats.get("loss", 0)
             total    = win_cnt + loss_cnt
@@ -271,16 +285,21 @@ def show_player_detail(player: dict):
 
     # 포지션별 통계 (전적 있을 때만)
     if total > 0:
+        pos_champs = stats.get("position_champions", {})
         rows = []
         for pos in POSITIONS:
             played = stats.get("positions", {}).get(pos, 0)
             wins = stats.get("position_wins", {}).get(pos, 0)
+            # 모스트 챔피언: 해당 포지션에서 가장 많이 픽한 챔피언
+            champ_counts = pos_champs.get(pos, {})
+            most_champ = max(champ_counts, key=champ_counts.get) if champ_counts else "-"
             rows.append({
                 "포지션": POSITION_KR[pos],
                 "판수": played,
                 "승": wins,
                 "패": played - wins,
                 "승률": f"{wins / played * 100:.1f}%" if played > 0 else "-",
+                "모스트 챔피언": most_champ,
             })
         st.dataframe(
             pd.DataFrame(rows),
