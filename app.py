@@ -57,200 +57,176 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ─── LoL 테마 CSS ────────────────────────────────────────────────
+# ─── Arcane 테마 CSS ─────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* ── 배경 ───────────────────────────────────────── */
+/* ══ 배경 ════════════════════════════════════════════════════════ */
 .stApp {
-    background-color: #010A13;
+    background-color: #07050F;
     background-image:
-        radial-gradient(ellipse at 50% -10%, rgba(12,40,80,0.7) 0%, transparent 60%),
-        url("https://raw.githubusercontent.com/nicehash/NiceHashQuickMiner/master/icons/nh_logo_shield.png");
-    color: #C8AA6E;
+        radial-gradient(ellipse at 20% 50%, rgba(138,0,180,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255,77,196,0.06) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 80%, rgba(0,200,255,0.05) 0%, transparent 40%);
+    color: #E8C8FF;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .main .block-container {
     background: transparent;
-    padding-top: 1.5rem;
+    padding-top: 0;
     max-width: 1200px;
 }
 
-/* ── 제목 ───────────────────────────────────────── */
-h1 {
-    font-family: 'Cinzel', serif !important;
-    color: #C8AA6E !important;
-    text-align: center;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    text-shadow: 0 0 30px rgba(200,170,110,0.6), 0 2px 4px #000;
-    padding-bottom: 0.6rem;
-    border-bottom: 2px solid;
-    border-image: linear-gradient(90deg, transparent, #785A28, #C8AA6E, #785A28, transparent) 1;
-    margin-bottom: 1.5rem;
-}
+/* ══ 헤더 ════════════════════════════════════════════════════════ */
 h2, h3 {
     font-family: 'Cinzel', serif !important;
-    color: #C8AA6E !important;
+    color: #FF4DC4 !important;
     letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255,77,196,0.4);
 }
 
-/* ── 탭 ─────────────────────────────────────────── */
+/* ══ 탭 ══════════════════════════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] {
-    background: linear-gradient(180deg, #0A1628 0%, #06101E 100%);
-    border-bottom: 2px solid #785A28;
+    background: rgba(13,5,25,0.9);
+    border-bottom: 1px solid #3D1A5A;
     gap: 0;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #7A7062 !important;
+    color: #6B4A8A !important;
     font-family: 'Cinzel', serif;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 0.6rem 1.4rem;
+    padding: 0.65rem 1.4rem;
     border-radius: 0 !important;
     border-bottom: 3px solid transparent;
     background: transparent !important;
-    transition: color 0.2s, border-color 0.2s;
+    transition: all 0.2s;
 }
-.stTabs [data-baseweb="tab"]:hover { color: #C8AA6E !important; }
+.stTabs [data-baseweb="tab"]:hover { color: #FF4DC4 !important; }
 .stTabs [aria-selected="true"] {
-    color: #C8AA6E !important;
-    border-bottom: 3px solid #C8AA6E !important;
-    background: rgba(200,170,110,0.06) !important;
+    color: #FF4DC4 !important;
+    border-bottom: 3px solid #FF4DC4 !important;
+    background: rgba(255,77,196,0.05) !important;
+    text-shadow: 0 0 10px rgba(255,77,196,0.5);
 }
-.stTabs [data-baseweb="tab-panel"] {
-    background: transparent;
-    padding-top: 1.2rem;
-}
+.stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
 
-/* ── 버튼 ───────────────────────────────────────── */
+/* ══ 버튼 ════════════════════════════════════════════════════════ */
 .stButton > button {
-    background: linear-gradient(180deg, #1B2A40 0%, #0D1B2E 100%);
-    color: #A0988A;
-    border: 1px solid #463714;
-    border-radius: 2px;
+    background: linear-gradient(180deg, #1A0B2E 0%, #100720 100%);
+    color: #9B7ABF;
+    border: 1px solid #3D1A5A;
+    border-radius: 3px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     padding: 0.35rem 0.9rem;
     transition: all 0.18s ease;
 }
 .stButton > button:hover {
-    background: linear-gradient(180deg, #2A3F5A 0%, #1B2A40 100%);
-    color: #C8AA6E;
-    border-color: #785A28;
-    box-shadow: 0 0 12px rgba(200,170,110,0.25), inset 0 0 8px rgba(200,170,110,0.05);
+    background: linear-gradient(180deg, #2D1050 0%, #1A0B2E 100%);
+    color: #FF4DC4;
+    border-color: #9B2E8A;
+    box-shadow: 0 0 14px rgba(255,77,196,0.25), inset 0 0 8px rgba(255,77,196,0.05);
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(180deg, #C89B3C 0%, #7A5C1E 100%);
-    color: #010A13 !important;
+    background: linear-gradient(180deg, #CC2288 0%, #8A1060 100%);
+    color: #FFE8F8 !important;
     font-weight: 700;
-    border: 1px solid #C8AA6E;
-    letter-spacing: 1px;
-    text-shadow: none;
+    border: 1px solid #FF4DC4;
+    letter-spacing: 0.5px;
 }
 .stButton > button[kind="primary"]:hover {
-    background: linear-gradient(180deg, #F0C060 0%, #C89B3C 100%);
-    box-shadow: 0 0 20px rgba(200,170,110,0.5);
+    background: linear-gradient(180deg, #FF4DC4 0%, #CC2288 100%);
+    box-shadow: 0 0 22px rgba(255,77,196,0.55);
+    color: #07050F !important;
 }
 
-/* ── 입력 ───────────────────────────────────────── */
+/* ══ 입력 ════════════════════════════════════════════════════════ */
 .stTextInput input, .stNumberInput input {
-    background: #0A1628 !important;
-    color: #C8AA6E !important;
-    border: 1px solid #463714 !important;
-    border-radius: 2px !important;
+    background: #100720 !important;
+    color: #E8C8FF !important;
+    border: 1px solid #3D1A5A !important;
+    border-radius: 3px !important;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .stTextInput input:focus, .stNumberInput input:focus {
-    border-color: #C8AA6E !important;
-    box-shadow: 0 0 8px rgba(200,170,110,0.3) !important;
+    border-color: #FF4DC4 !important;
+    box-shadow: 0 0 10px rgba(255,77,196,0.3) !important;
 }
-.stTextInput input::placeholder { color: #4A4030 !important; }
+.stTextInput input::placeholder { color: #3D1A5A !important; }
 
 /* selectbox */
 .stSelectbox > div > div {
-    background: #0A1628 !important;
-    border: 1px solid #463714 !important;
-    border-radius: 2px !important;
-    color: #C8AA6E !important;
+    background: #100720 !important;
+    border: 1px solid #3D1A5A !important;
+    border-radius: 3px !important;
+    color: #E8C8FF !important;
 }
-.stSelectbox > div > div:focus-within { border-color: #C8AA6E !important; }
-[data-baseweb="popover"] { background: #0D1B2E !important; border: 1px solid #785A28 !important; }
-[data-baseweb="menu"] { background: #0D1B2E !important; }
-[data-baseweb="option"] { background: #0D1B2E !important; color: #A0988A !important; }
+.stSelectbox > div > div:focus-within { border-color: #FF4DC4 !important; }
+[data-baseweb="popover"] { background: #130928 !important; border: 1px solid #3D1A5A !important; }
+[data-baseweb="menu"]    { background: #130928 !important; }
+[data-baseweb="option"]  { background: #130928 !important; color: #9B7ABF !important; }
 [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-    background: #1B2A40 !important;
-    color: #C8AA6E !important;
+    background: #1A0B2E !important; color: #FF4DC4 !important;
 }
 
-/* ── 슬라이더 ───────────────────────────────────── */
+/* ══ 슬라이더 ════════════════════════════════════════════════════ */
 .stSlider [data-baseweb="slider"] div[role="slider"] {
-    background: #C89B3C !important;
-    border: 2px solid #F0E6D2 !important;
+    background: #FF4DC4 !important; border: 2px solid #FFE8F8 !important;
 }
-.stSlider [data-testid="stSliderTrackActive"] { background: #785A28 !important; }
+.stSlider [data-testid="stSliderTrackActive"] { background: #8A1060 !important; }
 
-/* ── 라디오 ─────────────────────────────────────── */
-.stRadio label { color: #A0988A !important; }
-.stRadio [data-baseweb="radio"] div { border-color: #785A28 !important; }
-.stRadio [aria-checked="true"] div { background: #C89B3C !important; border-color: #C8AA6E !important; }
+/* ══ 라디오 ══════════════════════════════════════════════════════ */
+.stRadio label { color: #9B7ABF !important; }
+.stRadio [data-baseweb="radio"] div { border-color: #3D1A5A !important; }
+.stRadio [aria-checked="true"] div { background: #FF4DC4 !important; border-color: #FF4DC4 !important; }
 
-/* ── 체크박스 ───────────────────────────────────── */
-.stCheckbox label { color: #A0988A !important; }
-.stCheckbox [data-baseweb="checkbox"] div { border-color: #785A28 !important; background: #0A1628 !important; }
-.stCheckbox [aria-checked="true"] div { background: #C89B3C !important; border-color: #C8AA6E !important; }
+/* ══ 체크박스 ════════════════════════════════════════════════════ */
+.stCheckbox label { color: #9B7ABF !important; }
+.stCheckbox [data-baseweb="checkbox"] div { border-color: #3D1A5A !important; background: #100720 !important; }
+.stCheckbox [aria-checked="true"] div { background: #FF4DC4 !important; border-color: #FF4DC4 !important; }
 
-/* ── expander ───────────────────────────────────── */
+/* ══ expander ════════════════════════════════════════════════════ */
 .stExpander {
-    border: 1px solid #1E2D3D !important;
-    border-radius: 2px !important;
-    background: #06101E !important;
+    border: 1px solid #1E0A35 !important;
+    border-radius: 3px !important;
+    background: rgba(13,5,25,0.7) !important;
 }
-.stExpander summary {
-    color: #A0988A !important;
-    font-size: 0.85rem;
-}
-.stExpander summary:hover { color: #C8AA6E !important; background: rgba(200,170,110,0.05) !important; }
+.stExpander summary { color: #9B7ABF !important; font-size: 0.85rem; }
+.stExpander summary:hover { color: #FF4DC4 !important; background: rgba(255,77,196,0.05) !important; }
 
-/* ── 알림 박스 ──────────────────────────────────── */
-.stAlert[data-baseweb="notification"] {
-    background: #0A1628 !important;
-    border-left: 3px solid #785A28 !important;
-    color: #C8AA6E !important;
-    border-radius: 2px !important;
-}
+/* ══ 알림 박스 ═══════════════════════════════════════════════════ */
 div[data-testid="stNotification"] {
-    background: #0D1B2E !important;
-    border: 1px solid #463714 !important;
-    color: #C8AA6E !important;
+    background: #130928 !important;
+    border: 1px solid #3D1A5A !important;
+    border-left: 3px solid #FF4DC4 !important;
+    color: #E8C8FF !important;
+    border-radius: 3px !important;
 }
 
-/* ── 구분선 / 캡션 / 레이블 ────────────────────── */
-hr { border-color: #1E2D3D !important; }
-p, span, label, .stMarkdown { color: #A0988A; }
-.stCaption, small { color: #5A5040 !important; font-size: 0.78rem; }
+/* ══ 텍스트 / 구분선 ═════════════════════════════════════════════ */
+hr { border-color: #1E0A35 !important; }
+p, span, label, .stMarkdown { color: #9B7ABF; }
+.stCaption, small { color: #4A2A6A !important; font-size: 0.78rem; }
 
-/* ── dataframe ──────────────────────────────────── */
-.stDataFrame { border: 1px solid #1E2D3D; }
+/* ══ dataframe ═══════════════════════════════════════════════════ */
+.stDataFrame { border: 1px solid #1E0A35; border-radius: 3px; }
 .stDataFrame thead tr th {
-    background: #0D1B2E !important;
-    color: #C8AA6E !important;
-    font-family: 'Cinzel', serif;
-    font-size: 0.78rem;
-    letter-spacing: 1px;
-    border-bottom: 1px solid #463714 !important;
+    background: #0D0520 !important; color: #FF4DC4 !important;
+    font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
+    border-bottom: 1px solid #3D1A5A !important;
 }
-.stDataFrame tbody tr td { background: #06101E !important; color: #A0988A !important; }
-.stDataFrame tbody tr:hover td { background: #0D1B2E !important; color: #C8AA6E !important; }
+.stDataFrame tbody tr td { background: #07050F !important; color: #9B7ABF !important; }
+.stDataFrame tbody tr:hover td { background: #130928 !important; color: #E8C8FF !important; }
 
-/* ── 스크롤바 ───────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #010A13; }
-::-webkit-scrollbar-thumb { background: #463714; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #785A28; }
+/* ══ 스크롤바 ════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #07050F; }
+::-webkit-scrollbar-thumb { background: #3D1A5A; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9B2E8A; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -552,18 +528,30 @@ def show_team_result(result: dict, with_positions: bool):
 # ══════════════════════════════════════════════════════════════════
 
 st.markdown("""
-<div style="text-align:center; padding: 1.2rem 0 0.5rem;">
-    <div style="font-family:'Cinzel',serif; font-size:2rem; font-weight:700;
-                color:#C8AA6E; letter-spacing:8px; text-transform:uppercase;
-                text-shadow: 0 0 30px rgba(200,170,110,0.7), 0 2px 6px #000;">
-        ⚔ &nbsp; 내전 관리 시스템 &nbsp; ⚔
-    </div>
-    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.75rem;
-                color:#5A5040; letter-spacing:4px; margin-top:0.3rem;">
-        LEAGUE OF LEGENDS INHOUSE MANAGER
-    </div>
-    <div style="margin:0.8rem auto 0; width:60%; height:2px;
-                background: linear-gradient(90deg, transparent, #785A28, #C8AA6E, #785A28, transparent);">
+<div style="position:relative; text-align:center; padding:0; overflow:hidden;
+            border-bottom: 1px solid #3D1A5A; margin-bottom:0.5rem;">
+    <!-- Jinx splash background -->
+    <div style="position:absolute; inset:0;
+                background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_0.jpg') center 20%/cover no-repeat;
+                opacity:0.18; filter:saturate(1.4) hue-rotate(-10deg);"></div>
+    <!-- neon glow overlays -->
+    <div style="position:absolute; inset:0;
+                background: linear-gradient(180deg, rgba(7,5,15,0.4) 0%, rgba(7,5,15,0.85) 100%);"></div>
+    <div style="position:relative; padding:1.6rem 0 1.1rem;">
+        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700;
+                    color:#FF4DC4; letter-spacing:8px; text-transform:uppercase;
+                    text-shadow: 0 0 30px rgba(255,77,196,0.8), 0 0 60px rgba(255,77,196,0.4), 0 2px 8px #000;">
+            ⚡ &nbsp; 내전 관리 시스템 &nbsp; ⚡
+        </div>
+        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
+                    color:#9B7ABF; letter-spacing:5px; margin-top:0.4rem;
+                    text-shadow: 0 0 10px rgba(0,217,255,0.4);">
+            ARCANE &nbsp;·&nbsp; INHOUSE MANAGER &nbsp;·&nbsp; LEAGUE OF LEGENDS
+        </div>
+        <div style="margin:0.9rem auto 0; width:55%; height:1px;
+                    background: linear-gradient(90deg, transparent, #FF4DC4, #00D9FF, #FF4DC4, transparent);
+                    box-shadow: 0 0 8px rgba(255,77,196,0.6);">
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -600,6 +588,38 @@ with tab1:
                 st.session_state.chk_reset_count += 1
                 st.session_state.chk_all_default = False
                 st.rerun()
+
+        # ── 정렬 옵션 ─────────────────────────────────────────────
+        sort_col, _ = st.columns([2, 5])
+        with sort_col:
+            sort_by = st.selectbox(
+                "정렬 기준",
+                ["내전 MMR 높은순", "내전 MMR 낮은순", "솔랭 MMR 높은순", "솔랭 MMR 낮은순",
+                 "이름순", "승률 높은순", "승률 낮은순", "내전 판수 많은순"],
+                label_visibility="collapsed",
+                key="player_sort",
+            )
+
+        def _sort_key(p):
+            stats = p.get("inhouse_stats", {})
+            win = stats.get("win", 0)
+            loss = stats.get("loss", 0)
+            total = win + loss
+            wr = win / total if total > 0 else 0.0
+            smr = p.get("solo_mmr", p.get("mmr", 0))
+            mmr = p.get("mmr", smr)
+            name = p.get("name", "")
+            if sort_by == "내전 MMR 높은순":   return -mmr
+            if sort_by == "내전 MMR 낮은순":   return mmr
+            if sort_by == "솔랭 MMR 높은순":   return -smr
+            if sort_by == "솔랭 MMR 낮은순":   return smr
+            if sort_by == "이름순":            return name
+            if sort_by == "승률 높은순":        return -wr
+            if sort_by == "승률 낮은순":        return wr
+            if sort_by == "내전 판수 많은순":   return -total
+            return -mmr
+
+        players = sorted(players, key=_sort_key)
 
         # 헤더 행
         _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
