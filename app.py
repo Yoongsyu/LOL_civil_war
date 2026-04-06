@@ -83,39 +83,47 @@ st.markdown("""
 .sg-bg { position:fixed; pointer-events:none; z-index:0; background-size:cover; background-repeat:no-repeat; background-position:center top; }
 
 /* 좌측 3개 */
-.sg-neeko  { left:0; top:80px;  width:155px; height:215px; opacity:0.16;
+/* 좌측: 상=Neeko, 중=Soraka, 하=Syndra */
+.sg-neeko  { left:0; top:80px;   width:155px; height:215px; opacity:0.16;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg');
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
     mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
-.sg-soraka { left:0; top:42%;   width:150px; height:205px; opacity:0.14;
+.sg-soraka { left:0; top:42%;    width:150px; height:205px; opacity:0.14;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg');
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
     mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
-.sg-ahri   { left:0; bottom:70px; width:155px; height:215px; opacity:0.16;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg');
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
 
-/* 우측 3개 */
+/* 우측: 상=Lulu, 중=Poppy, 중하=Ahri, 하=Xayah */
 .sg-lulu   { right:0; top:80px;  width:150px; height:205px; opacity:0.14;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
     mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
-.sg-poppy  { right:0; top:42%;   width:155px; height:215px; opacity:0.16;
+.sg-poppy  { right:0; top:40%;   width:155px; height:215px; opacity:0.16;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
     mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
-.sg-mf     { right:0; bottom:70px; width:150px; height:205px; opacity:0.14;
+.sg-ahri   { right:0; bottom:280px; width:150px; height:205px; opacity:0.14;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg');
+    background-position:center 10%;
+    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+.sg-mf     { left:0; bottom:280px; width:150px; height:205px; opacity:0.14;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg');
+    background-position:center 10%;
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+
+/* 우측 하단 Xayah */
+.sg-xayah  { right:0; bottom:70px; width:150px; height:205px; opacity:0.14;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
     mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
 
-/* 중앙 하단 Xayah (매우 희미) */
-.sg-xayah  { left:50%; bottom:0; transform:translateX(-50%); width:220px; height:180px; opacity:0.09;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg');
-    background-position:center 20%;
-    -webkit-mask-image:radial-gradient(ellipse at 50% 80%,rgba(0,0,0,.7) 0%,transparent 70%);
-    mask-image:radial-gradient(ellipse at 50% 80%,rgba(0,0,0,.7) 0%,transparent 70%); }
+/* 좌측 하단 Syndra */
+.sg-syndra { left:0; bottom:70px; width:155px; height:215px; opacity:0.15;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Syndra_6.jpg');
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
 
 /* ══ 헤더 텍스트 ════════════════════════════════════════════════ */
 h2, h3 {
@@ -274,10 +282,11 @@ p, span, label, .stMarkdown { color: #D8CCFF; }
 st.html("""
 <div class="sg-bg sg-neeko"></div>
 <div class="sg-bg sg-soraka"></div>
-<div class="sg-bg sg-ahri"></div>
+<div class="sg-bg sg-mf"></div>
+<div class="sg-bg sg-syndra"></div>
 <div class="sg-bg sg-lulu"></div>
 <div class="sg-bg sg-poppy"></div>
-<div class="sg-bg sg-mf"></div>
+<div class="sg-bg sg-ahri"></div>
 <div class="sg-bg sg-xayah"></div>
 
 <div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid rgba(255,133,192,0.15); margin-bottom:0.5rem;">
