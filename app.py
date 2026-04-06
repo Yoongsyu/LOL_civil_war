@@ -67,6 +67,8 @@ if isinstance(st.session_state.team_result, tuple) and len(st.session_state.team
     st.session_state.team_result = None
 if "chk_reset_count" not in st.session_state:
     st.session_state.chk_reset_count = 0
+if "chk_all_default" not in st.session_state:
+    st.session_state.chk_all_default = False
 
 
 # ─── matches.json 유틸리티 ────────────────────────────────────────
@@ -112,12 +114,15 @@ def save_matches(matches: list, commit_msg: str = "update: matches data") -> boo
         return False
 
 
-def record_match_batch(blue_team, red_team, winner, positions) -> bool:
+def record_match_batch(blue_team, red_team, winner, positions, champions=None) -> bool:
     """
     모든 플레이어 stats 일괄 업데이트 + matches.json 저장 (총 2회 GitHub 커밋)
     positions: {puuid: position_str}
+    champions: {puuid: champion_name}  (optional)
     winner: "blue" or "red"
     """
+    if champions is None:
+        champions = {}
     players = load_players()
     player_map = {p["puuid"]: p for p in players}
 
@@ -158,10 +163,11 @@ def record_match_batch(blue_team, red_team, winner, positions) -> bool:
                 inhouse_adj = int((win_cnt / total - 0.5) * 300) if total >= 5 else 0
                 p["mmr"] = max(0, solo_mmr + inhouse_adj)
             match_record[f"{side}_team"].append({
-                "puuid": puuid,
-                "name": pi["name"],
-                "tag": pi.get("tag", ""),
+                "puuid":    puuid,
+                "name":     pi["name"],
+                "tag":      pi.get("tag", ""),
                 "position": pos,
+                "champion": champions.get(puuid, ""),
             })
 
     ok1 = save_players(list(player_map.values()), commit_message=f"update: match {match_id}")
@@ -238,31 +244,33 @@ def with_pure_mmr(players: list) -> list:
 
 
 def show_player_detail(player: dict):
-    """플레이어 상세 정보 렌더링 (expander 안에서 호출)"""
+    """플레이어 상세 정보 렌더링 (컴팩트 버전)"""
     import pandas as pd
 
     stats = player.get("inhouse_stats", {})
     win = stats.get("win", 0)
     loss = stats.get("loss", 0)
     total = win + loss
-    wr = f"{win / total * 100:.1f}%" if total > 0 else "기록 없음"
+    wr = f"{win / total * 100:.1f}%" if total > 0 else "-"
+    most = get_most_played_position(player)
+    solo_mmr = player.get("solo_mmr", player.get("mmr", 0))
+    final_mmr = player.get("mmr", solo_mmr)
+    adj = final_mmr - solo_mmr
+    adj_str = f" ({'+' if adj >= 0 else ''}{adj:,})" if adj != 0 else ""
+    tier_str = tier_label(player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0))
+    emoji = tier_emoji(player["solo_tier"])
 
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.metric(
-            "솔랭 티어",
-            tier_label(player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0)),
-        )
-        st.metric("MMR", f"{player.get('mmr', 0):,}")
-    with c2:
-        st.metric("내전 승률", wr)
-        st.metric("내전 전적", f"{win}승 {loss}패 ({total}판)")
-    with c3:
-        most = get_most_played_position(player)
-        st.metric("모스트 포지션", POSITION_KR.get(most, most))
+    # 요약 한 줄
+    st.markdown(
+        f"{emoji} **{tier_str}**&ensp;|&ensp;"
+        f"솔랭 MMR **{solo_mmr:,}**&ensp;|&ensp;"
+        f"내전 MMR **{final_mmr:,}**{adj_str}&ensp;|&ensp;"
+        f"승률 **{wr}** ({win}승 {loss}패 {total}판)&ensp;|&ensp;"
+        f"모스트 **{POSITION_KR.get(most, most)}**"
+    )
 
+    # 포지션별 통계 (전적 있을 때만)
     if total > 0:
-        st.markdown("**포지션별 통계**")
         rows = []
         for pos in POSITIONS:
             played = stats.get("positions", {}).get(pos, 0)
@@ -274,7 +282,12 @@ def show_player_detail(player: dict):
                 "패": played - wins,
                 "승률": f"{wins / played * 100:.1f}%" if played > 0 else "-",
             })
-        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+        st.dataframe(
+            pd.DataFrame(rows),
+            use_container_width=True,
+            hide_index=True,
+            height=210,
+        )
 
 
 def show_team_result(result: dict, with_positions: bool):
@@ -326,6 +339,19 @@ with tab1:
         st.info("등록된 플레이어가 없습니다. '플레이어 등록' 탭에서 먼저 추가해주세요.")
     else:
         # ── 기능 1·2·3: 리스트 + 티어 + 상세 정보 ─────────────────
+        # 전체선택/해제 버튼
+        btn_all, btn_none, _ = st.columns([1, 1, 6])
+        with btn_all:
+            if st.button("☑ 전체선택", use_container_width=True):
+                st.session_state.chk_reset_count += 1
+                st.session_state.chk_all_default = True
+                st.rerun()
+        with btn_none:
+            if st.button("☐ 전체해제", use_container_width=True):
+                st.session_state.chk_reset_count += 1
+                st.session_state.chk_all_default = False
+                st.rerun()
+
         # 헤더 행
         _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
         h_name.markdown("**닉네임**")
@@ -361,6 +387,7 @@ with tab1:
                 st.checkbox(
                     "선택",
                     key=f"chk_{player['puuid']}_{st.session_state.chk_reset_count}",
+                    value=st.session_state.chk_all_default,
                     label_visibility="collapsed",
                 )
             c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
@@ -402,6 +429,7 @@ with tab1:
         with col_reset:
             if st.button("선택 초기화", use_container_width=True):
                 st.session_state.chk_reset_count += 1
+                st.session_state.chk_all_default = False
                 st.session_state.team_result = None
                 st.rerun()
 
@@ -530,9 +558,9 @@ with tab3:
                 labels = list(label_to_player.keys())
 
                 st.markdown("**🔵 블루팀 (5명)**")
-                blue_picks, blue_pos_picks = [], []
+                blue_picks, blue_pos_picks, blue_champ_picks = [], [], []
                 for i in range(5):
-                    c1, c2 = st.columns([3, 1])
+                    c1, c2, c3 = st.columns([2.5, 1, 1.5])
                     blue_picks.append(
                         c1.selectbox(f"블루팀 {i+1}번", labels, key=f"b_pick_{i}")
                     )
@@ -544,11 +572,14 @@ with tab3:
                             key=f"b_pos_{i}",
                         )
                     )
+                    blue_champ_picks.append(
+                        c3.text_input("챔피언", placeholder="징크스", key=f"b_champ_{i}")
+                    )
 
                 st.markdown("**🔴 레드팀 (5명)**")
-                red_picks, red_pos_picks = [], []
+                red_picks, red_pos_picks, red_champ_picks = [], [], []
                 for i in range(5):
-                    c1, c2 = st.columns([3, 1])
+                    c1, c2, c3 = st.columns([2.5, 1, 1.5])
                     red_picks.append(
                         c1.selectbox(f"레드팀 {i+1}번", labels, key=f"r_pick_{i}")
                     )
@@ -560,6 +591,9 @@ with tab3:
                             key=f"r_pos_{i}",
                         )
                     )
+                    red_champ_picks.append(
+                        c3.text_input("챔피언", placeholder="징크스", key=f"r_champ_{i}")
+                    )
 
                 winner = st.radio("승리팀", ["블루팀", "레드팀"], horizontal=True)
                 winner_key = "blue" if winner == "블루팀" else "red"
@@ -567,20 +601,23 @@ with tab3:
                 if st.button("전적 등록", type="primary"):
                     all_picks = blue_picks + red_picks
                     if len(set(all_picks)) < 10:
-                        st.error(
-                            "10명이 모두 달라야 합니다. 중복 선택을 확인해주세요."
-                        )
+                        st.error("10명이 모두 달라야 합니다. 중복 선택을 확인해주세요.")
                     else:
                         blue_team = [label_to_player[l] for l in blue_picks]
-                        red_team = [label_to_player[l] for l in red_picks]
+                        red_team  = [label_to_player[l] for l in red_picks]
                         positions = {}
-                        for p, pos in zip(blue_team, blue_pos_picks):
+                        champions = {}
+                        for p, pos, champ in zip(blue_team, blue_pos_picks, blue_champ_picks):
                             positions[p["puuid"]] = pos
-                        for p, pos in zip(red_team, red_pos_picks):
+                            if champ.strip():
+                                champions[p["puuid"]] = champ.strip()
+                        for p, pos, champ in zip(red_team, red_pos_picks, red_champ_picks):
                             positions[p["puuid"]] = pos
+                            if champ.strip():
+                                champions[p["puuid"]] = champ.strip()
 
                         with st.spinner("전적 등록 중... (GitHub 저장에 잠시 시간이 걸릴 수 있습니다)"):
-                            ok = record_match_batch(blue_team, red_team, winner_key, positions)
+                            ok = record_match_batch(blue_team, red_team, winner_key, positions, champions)
 
                         if ok:
                             st.success("✅ 전적이 등록되었습니다!")
@@ -606,15 +643,19 @@ with tab3:
                             st.markdown("**🔵 블루팀**")
                             for pm in match["blue_team"]:
                                 pos_kr = POSITION_KR.get(pm.get("position", ""), "")
+                                champ = pm.get("champion", "")
+                                champ_str = f" · {champ}" if champ else ""
                                 st.markdown(
-                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr})"
+                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr}{champ_str})"
                                 )
                         with cr:
                             st.markdown("**🔴 레드팀**")
                             for pm in match["red_team"]:
                                 pos_kr = POSITION_KR.get(pm.get("position", ""), "")
+                                champ = pm.get("champion", "")
+                                champ_str = f" · {champ}" if champ else ""
                                 st.markdown(
-                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr})"
+                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr}{champ_str})"
                                 )
 
                         st.markdown("---")
