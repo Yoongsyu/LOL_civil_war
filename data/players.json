@@ -440,6 +440,35 @@
           }
         }
       }
+    },
+    {
+      "name": "호브론 제임스",
+      "tag": "KR1",
+      "puuid": "IJXeARSJhYwTZO49pnVyY4tu9cB6oyRDcp7uofRryWs_IDl8RSl09ygguJpq68heQEdxZPuxpaEoIA",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "III",
+      "solo_lp": 91,
+      "solo_mmr": 1791,
+      "mmr": 1791,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
