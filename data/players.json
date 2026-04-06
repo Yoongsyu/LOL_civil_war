@@ -469,6 +469,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "쇠망치 박민규 TV",
+      "tag": "KR1",
+      "puuid": "PcRJKLZ-wUYcWfnCUKcFCN7O1eUE5MEOVbaEX3CzEV1qLJ3J0ia7yKDRE3As8_a2csrlWLR9RE-WAA",
+      "solo_tier": "GOLD",
+      "solo_rank": "III",
+      "solo_lp": 85,
+      "solo_mmr": 1385,
+      "mmr": 1385,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
