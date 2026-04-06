@@ -254,72 +254,35 @@ p, span, label, .stMarkdown { color: #D8CCFF; }
 """, unsafe_allow_html=True)
 
 # ─── 좌우 챔피언 장식 & 상단 배너 ────────────────────────────────
-st.markdown("""
+st.html("""
 <div class="sg-deco-left"></div>
 <div class="sg-deco-right"></div>
 
-<!-- ══ 별수호자 파노라마 헤더 ══ -->
-<div style="position:relative; overflow:hidden; height:230px;
-            margin-bottom:0.5rem; border-radius:6px;
-            box-shadow: 0 4px 32px rgba(0,0,0,0.6);">
-
-    <!-- 챔피언 파노라마 (5개 구역) -->
-    <div style="display:flex; position:absolute; inset:0;">
-        <div style="flex:1;
-                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg')
-                    25% 18%/cover no-repeat; opacity:0.55;"></div>
-        <div style="flex:1;
-                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg')
-                    40% 12%/cover no-repeat; opacity:0.55;"></div>
-        <div style="flex:1.3;
-                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg')
-                    50% 8%/cover no-repeat; opacity:0.65;"></div>
-        <div style="flex:1;
-                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg')
-                    60% 12%/cover no-repeat; opacity:0.55;"></div>
-        <div style="flex:1;
-                    background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg')
-                    75% 18%/cover no-repeat; opacity:0.55;"></div>
-    </div>
-
-    <!-- 좌우 페이드 -->
-    <div style="position:absolute; inset:0;
-                background:linear-gradient(90deg,
-                    rgba(18,15,58,0.6) 0%, transparent 12%,
-                    transparent 88%, rgba(18,15,58,0.6) 100%);
-                pointer-events:none;"></div>
-    <!-- 하단 페이드 -->
-    <div style="position:absolute; bottom:0; left:0; right:0; height:60px;
-                background:linear-gradient(transparent, #120F3A);
-                pointer-events:none;"></div>
-    <!-- 중앙 어두운 오버레이 (텍스트 가독성) -->
-    <div style="position:absolute; inset:0;
-                background:radial-gradient(ellipse at 50% 50%,
-                    rgba(18,15,58,0.55) 0%, rgba(18,15,58,0.25) 60%, transparent 100%);
-                pointer-events:none;"></div>
-
-    <!-- 타이틀 콘텐츠 -->
-    <div style="position:absolute; inset:0; display:flex; flex-direction:column;
-                align-items:center; justify-content:center; gap:0.35rem;">
-        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700;
-                    color:#FFFFFF; letter-spacing:8px; text-transform:uppercase;
-                    text-shadow: 0 0 28px rgba(255,133,192,0.75),
-                                 0 0 60px rgba(180,120,255,0.35),
-                                 0 2px 8px rgba(0,0,0,0.9);">
+<div style="position:relative; overflow:hidden; height:230px; margin-bottom:0.5rem; border-radius:6px; box-shadow:0 4px 32px rgba(0,0,0,0.6);">
+    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg"
+         style="position:absolute; left:0; top:0; width:20%; height:100%; object-fit:cover; object-position:25% 18%; opacity:0.55;">
+    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg"
+         style="position:absolute; left:20%; top:0; width:20%; height:100%; object-fit:cover; object-position:40% 12%; opacity:0.55;">
+    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg"
+         style="position:absolute; left:40%; top:0; width:26%; height:100%; object-fit:cover; object-position:50% 8%; opacity:0.65;">
+    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg"
+         style="position:absolute; left:66%; top:0; width:17%; height:100%; object-fit:cover; object-position:60% 12%; opacity:0.55;">
+    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg"
+         style="position:absolute; left:83%; top:0; width:17%; height:100%; object-fit:cover; object-position:75% 18%; opacity:0.55;">
+    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(18,15,58,0.6) 0%, transparent 12%, transparent 88%, rgba(18,15,58,0.6) 100%); pointer-events:none;"></div>
+    <div style="position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(transparent, #120F3A); pointer-events:none;"></div>
+    <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%, rgba(18,15,58,0.5) 0%, rgba(18,15,58,0.2) 60%, transparent 100%); pointer-events:none;"></div>
+    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.35rem;">
+        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#FFFFFF; letter-spacing:8px; text-transform:uppercase; text-shadow:0 0 28px rgba(255,133,192,0.75), 0 0 60px rgba(180,120,255,0.35), 0 2px 8px rgba(0,0,0,0.9);">
             ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
         </div>
-        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
-                    color:#E8DCFF; letter-spacing:5px;
-                    text-shadow: 0 1px 6px rgba(0,0,0,0.8);">
+        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#E8DCFF; letter-spacing:5px; text-shadow:0 1px 6px rgba(0,0,0,0.8);">
             STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
         </div>
-        <div style="width:50%; height:1px; margin-top:0.5rem;
-                    background:linear-gradient(90deg,
-                        transparent, #FFD700, #FFB8DA, #80C8FF, #FFB8DA, #FFD700, transparent);
-                    box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
+        <div style="width:50%; height:1px; margin-top:0.5rem; background:linear-gradient(90deg, transparent, #FFD700, #FFB8DA, #80C8FF, #FFB8DA, #FFD700, transparent); box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ─── 세션 초기화 ──────────────────────────────────────────────────
 if "admin_authed" not in st.session_state:
