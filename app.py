@@ -79,26 +79,43 @@ st.markdown("""
     max-width: 1200px;
 }
 
-/* ══ 좌측 고정 챔피언 장식 (Soraka) ════════════════════════════ */
-.sg-deco-left {
-    position: fixed; left: 0; top: 0; bottom: 0; width: 200px;
-    background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg')
-                center top / cover no-repeat;
-    opacity: 0.20;
-    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-    mask-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-    z-index: 0; pointer-events: none;
-}
-/* ══ 우측 고정 챔피언 장식 (Lulu) ══════════════════════════════ */
-.sg-deco-right {
-    position: fixed; right: 0; top: 0; bottom: 0; width: 200px;
-    background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg')
-                center top / cover no-repeat;
-    opacity: 0.20;
-    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-    mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-    z-index: 0; pointer-events: none;
-}
+/* ══ 배경 챔피언 공통 ════════════════════════════════════════════ */
+.sg-bg { position:fixed; pointer-events:none; z-index:0; background-size:cover; background-repeat:no-repeat; background-position:center top; }
+
+/* 좌측 3개 */
+.sg-neeko  { left:0; top:80px;  width:155px; height:215px; opacity:0.16;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg');
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+.sg-soraka { left:0; top:42%;   width:150px; height:205px; opacity:0.14;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg');
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+.sg-ahri   { left:0; bottom:70px; width:155px; height:215px; opacity:0.16;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg');
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+
+/* 우측 3개 */
+.sg-lulu   { right:0; top:80px;  width:150px; height:205px; opacity:0.14;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg');
+    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+.sg-poppy  { right:0; top:42%;   width:155px; height:215px; opacity:0.16;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg');
+    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+.sg-mf     { right:0; bottom:70px; width:150px; height:205px; opacity:0.14;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg');
+    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+    mask-image:linear-gradient(to left,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 55%,transparent 100%); }
+
+/* 중앙 하단 Xayah (매우 희미) */
+.sg-xayah  { left:50%; bottom:0; transform:translateX(-50%); width:220px; height:180px; opacity:0.09;
+    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg');
+    background-position:center 20%;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 80%,rgba(0,0,0,.7) 0%,transparent 70%);
+    mask-image:radial-gradient(ellipse at 50% 80%,rgba(0,0,0,.7) 0%,transparent 70%); }
 
 /* ══ 헤더 텍스트 ════════════════════════════════════════════════ */
 h2, h3 {
@@ -255,32 +272,22 @@ p, span, label, .stMarkdown { color: #D8CCFF; }
 
 # ─── 좌우 챔피언 장식 & 상단 배너 ────────────────────────────────
 st.html("""
-<div class="sg-deco-left"></div>
-<div class="sg-deco-right"></div>
+<div class="sg-bg sg-neeko"></div>
+<div class="sg-bg sg-soraka"></div>
+<div class="sg-bg sg-ahri"></div>
+<div class="sg-bg sg-lulu"></div>
+<div class="sg-bg sg-poppy"></div>
+<div class="sg-bg sg-mf"></div>
+<div class="sg-bg sg-xayah"></div>
 
-<div style="position:relative; overflow:hidden; height:230px; margin-bottom:0.5rem; border-radius:6px; box-shadow:0 4px 32px rgba(0,0,0,0.6);">
-    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg"
-         style="position:absolute; left:0; top:0; width:20%; height:100%; object-fit:cover; object-position:25% 18%; opacity:0.55;">
-    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg"
-         style="position:absolute; left:20%; top:0; width:20%; height:100%; object-fit:cover; object-position:40% 12%; opacity:0.55;">
-    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg"
-         style="position:absolute; left:40%; top:0; width:26%; height:100%; object-fit:cover; object-position:50% 8%; opacity:0.65;">
-    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg"
-         style="position:absolute; left:66%; top:0; width:17%; height:100%; object-fit:cover; object-position:60% 12%; opacity:0.55;">
-    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg"
-         style="position:absolute; left:83%; top:0; width:17%; height:100%; object-fit:cover; object-position:75% 18%; opacity:0.55;">
-    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(18,15,58,0.6) 0%, transparent 12%, transparent 88%, rgba(18,15,58,0.6) 100%); pointer-events:none;"></div>
-    <div style="position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(transparent, #120F3A); pointer-events:none;"></div>
-    <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%, rgba(18,15,58,0.5) 0%, rgba(18,15,58,0.2) 60%, transparent 100%); pointer-events:none;"></div>
-    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.35rem;">
-        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#FFFFFF; letter-spacing:8px; text-transform:uppercase; text-shadow:0 0 28px rgba(255,133,192,0.75), 0 0 60px rgba(180,120,255,0.35), 0 2px 8px rgba(0,0,0,0.9);">
-            ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
-        </div>
-        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#E8DCFF; letter-spacing:5px; text-shadow:0 1px 6px rgba(0,0,0,0.8);">
-            STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
-        </div>
-        <div style="width:50%; height:1px; margin-top:0.5rem; background:linear-gradient(90deg, transparent, #FFD700, #FFB8DA, #80C8FF, #FFB8DA, #FFD700, transparent); box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
+<div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid rgba(255,133,192,0.15); margin-bottom:0.5rem;">
+    <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#FFFFFF; letter-spacing:8px; text-transform:uppercase; text-shadow:0 0 28px rgba(255,133,192,0.75),0 0 60px rgba(180,120,255,0.35),0 2px 8px rgba(0,0,0,0.9);">
+        ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
     </div>
+    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#C8B8F8; letter-spacing:5px; margin-top:0.4rem;">
+        STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
+    </div>
+    <div style="width:50%; height:1px; margin:0.7rem auto 0; background:linear-gradient(90deg,transparent,#FFD700,#FFB8DA,#80C8FF,#FFB8DA,#FFD700,transparent); box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
 </div>
 """)
 
