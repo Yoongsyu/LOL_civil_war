@@ -57,19 +57,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ─── Arcane 테마 CSS ─────────────────────────────────────────────
+# ─── 별수호자 테마 CSS ────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* ══ 배경 ════════════════════════════════════════════════════════ */
+/* ══ 배경: 우주 & 별빛 ═══════════════════════════════════════════ */
 .stApp {
-    background-color: #07050F;
+    background-color: #0C0A28;
     background-image:
-        radial-gradient(ellipse at 20% 50%, rgba(138,0,180,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(255,77,196,0.06) 0%, transparent 45%),
-        radial-gradient(ellipse at 60% 80%, rgba(0,200,255,0.05) 0%, transparent 40%);
-    color: #E8C8FF;
+        radial-gradient(ellipse at 15% 40%, rgba(200,130,255,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 20%, rgba(255,180,220,0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 85%, rgba(80,160,255,0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 55%, rgba(255,220,80,0.06) 0%, transparent 35%);
+    color: #F0E8FF;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .main .block-container {
@@ -81,19 +82,19 @@ st.markdown("""
 /* ══ 헤더 ════════════════════════════════════════════════════════ */
 h2, h3 {
     font-family: 'Cinzel', serif !important;
-    color: #FF4DC4 !important;
+    color: #FF9DD8 !important;
     letter-spacing: 2px;
-    text-shadow: 0 0 12px rgba(255,77,196,0.4);
+    text-shadow: 0 0 14px rgba(255,157,216,0.5);
 }
 
 /* ══ 탭 ══════════════════════════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] {
-    background: rgba(13,5,25,0.9);
-    border-bottom: 1px solid #3D1A5A;
+    background: rgba(20,15,55,0.85);
+    border-bottom: 1px solid rgba(255,157,216,0.25);
     gap: 0;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #6B4A8A !important;
+    color: #8878C8 !important;
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
@@ -104,129 +105,127 @@ h2, h3 {
     background: transparent !important;
     transition: all 0.2s;
 }
-.stTabs [data-baseweb="tab"]:hover { color: #FF4DC4 !important; }
+.stTabs [data-baseweb="tab"]:hover { color: #FF9DD8 !important; }
 .stTabs [aria-selected="true"] {
-    color: #FF4DC4 !important;
-    border-bottom: 3px solid #FF4DC4 !important;
-    background: rgba(255,77,196,0.05) !important;
-    text-shadow: 0 0 10px rgba(255,77,196,0.5);
+    color: #FF9DD8 !important;
+    border-bottom: 3px solid #FF9DD8 !important;
+    background: rgba(255,157,216,0.06) !important;
+    text-shadow: 0 0 10px rgba(255,157,216,0.5);
 }
 .stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
 
 /* ══ 버튼 ════════════════════════════════════════════════════════ */
 .stButton > button {
-    background: linear-gradient(180deg, #1A0B2E 0%, #100720 100%);
-    color: #9B7ABF;
-    border: 1px solid #3D1A5A;
-    border-radius: 3px;
+    background: linear-gradient(180deg, rgba(30,20,75,0.9) 0%, rgba(18,12,55,0.9) 100%);
+    color: #C0AAEA;
+    border: 1px solid rgba(255,157,216,0.3);
+    border-radius: 4px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
-    letter-spacing: 0.3px;
     padding: 0.35rem 0.9rem;
     transition: all 0.18s ease;
 }
 .stButton > button:hover {
-    background: linear-gradient(180deg, #2D1050 0%, #1A0B2E 100%);
-    color: #FF4DC4;
-    border-color: #9B2E8A;
-    box-shadow: 0 0 14px rgba(255,77,196,0.25), inset 0 0 8px rgba(255,77,196,0.05);
+    background: linear-gradient(180deg, rgba(50,30,110,0.95) 0%, rgba(30,20,75,0.95) 100%);
+    color: #FFD8EE;
+    border-color: #FF9DD8;
+    box-shadow: 0 0 14px rgba(255,157,216,0.3), inset 0 0 8px rgba(255,157,216,0.06);
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(180deg, #CC2288 0%, #8A1060 100%);
-    color: #FFE8F8 !important;
+    background: linear-gradient(180deg, #C45FA0 0%, #8A3070 100%);
+    color: #FFF0FA !important;
     font-weight: 700;
-    border: 1px solid #FF4DC4;
-    letter-spacing: 0.5px;
+    border: 1px solid #FF9DD8;
 }
 .stButton > button[kind="primary"]:hover {
-    background: linear-gradient(180deg, #FF4DC4 0%, #CC2288 100%);
-    box-shadow: 0 0 22px rgba(255,77,196,0.55);
-    color: #07050F !important;
+    background: linear-gradient(180deg, #FF9DD8 0%, #C45FA0 100%);
+    box-shadow: 0 0 22px rgba(255,157,216,0.6);
+    color: #1A0840 !important;
 }
 
 /* ══ 입력 ════════════════════════════════════════════════════════ */
 .stTextInput input, .stNumberInput input {
-    background: #100720 !important;
-    color: #E8C8FF !important;
-    border: 1px solid #3D1A5A !important;
-    border-radius: 3px !important;
+    background: rgba(18,12,55,0.85) !important;
+    color: #F0E8FF !important;
+    border: 1px solid rgba(255,157,216,0.3) !important;
+    border-radius: 4px !important;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .stTextInput input:focus, .stNumberInput input:focus {
-    border-color: #FF4DC4 !important;
-    box-shadow: 0 0 10px rgba(255,77,196,0.3) !important;
+    border-color: #FF9DD8 !important;
+    box-shadow: 0 0 10px rgba(255,157,216,0.3) !important;
 }
-.stTextInput input::placeholder { color: #3D1A5A !important; }
+.stTextInput input::placeholder { color: rgba(255,157,216,0.3) !important; }
 
 /* selectbox */
 .stSelectbox > div > div {
-    background: #100720 !important;
-    border: 1px solid #3D1A5A !important;
-    border-radius: 3px !important;
-    color: #E8C8FF !important;
+    background: rgba(18,12,55,0.85) !important;
+    border: 1px solid rgba(255,157,216,0.3) !important;
+    border-radius: 4px !important;
+    color: #F0E8FF !important;
 }
-.stSelectbox > div > div:focus-within { border-color: #FF4DC4 !important; }
-[data-baseweb="popover"] { background: #130928 !important; border: 1px solid #3D1A5A !important; }
-[data-baseweb="menu"]    { background: #130928 !important; }
-[data-baseweb="option"]  { background: #130928 !important; color: #9B7ABF !important; }
+.stSelectbox > div > div:focus-within { border-color: #FF9DD8 !important; }
+[data-baseweb="popover"] { background: #1A1048 !important; border: 1px solid rgba(255,157,216,0.25) !important; }
+[data-baseweb="menu"]    { background: #1A1048 !important; }
+[data-baseweb="option"]  { background: #1A1048 !important; color: #C0AAEA !important; }
 [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-    background: #1A0B2E !important; color: #FF4DC4 !important;
+    background: #2A1868 !important; color: #FF9DD8 !important;
 }
 
 /* ══ 슬라이더 ════════════════════════════════════════════════════ */
 .stSlider [data-baseweb="slider"] div[role="slider"] {
-    background: #FF4DC4 !important; border: 2px solid #FFE8F8 !important;
+    background: #FF9DD8 !important; border: 2px solid #FFF0FA !important;
 }
-.stSlider [data-testid="stSliderTrackActive"] { background: #8A1060 !important; }
+.stSlider [data-testid="stSliderTrackActive"] { background: #C45FA0 !important; }
 
 /* ══ 라디오 ══════════════════════════════════════════════════════ */
-.stRadio label { color: #9B7ABF !important; }
-.stRadio [data-baseweb="radio"] div { border-color: #3D1A5A !important; }
-.stRadio [aria-checked="true"] div { background: #FF4DC4 !important; border-color: #FF4DC4 !important; }
+.stRadio label { color: #C0AAEA !important; }
+.stRadio [data-baseweb="radio"] div { border-color: rgba(255,157,216,0.4) !important; }
+.stRadio [aria-checked="true"] div { background: #FF9DD8 !important; border-color: #FF9DD8 !important; }
 
 /* ══ 체크박스 ════════════════════════════════════════════════════ */
-.stCheckbox label { color: #9B7ABF !important; }
-.stCheckbox [data-baseweb="checkbox"] div { border-color: #3D1A5A !important; background: #100720 !important; }
-.stCheckbox [aria-checked="true"] div { background: #FF4DC4 !important; border-color: #FF4DC4 !important; }
+.stCheckbox label { color: #C0AAEA !important; }
+.stCheckbox [data-baseweb="checkbox"] div { border-color: rgba(255,157,216,0.4) !important; background: rgba(18,12,55,0.8) !important; }
+.stCheckbox [aria-checked="true"] div { background: #FF9DD8 !important; border-color: #FF9DD8 !important; }
 
 /* ══ expander ════════════════════════════════════════════════════ */
 .stExpander {
-    border: 1px solid #1E0A35 !important;
-    border-radius: 3px !important;
-    background: rgba(13,5,25,0.7) !important;
+    border: 1px solid rgba(255,157,216,0.2) !important;
+    border-radius: 4px !important;
+    background: rgba(20,14,58,0.6) !important;
 }
-.stExpander summary { color: #9B7ABF !important; font-size: 0.85rem; }
-.stExpander summary:hover { color: #FF4DC4 !important; background: rgba(255,77,196,0.05) !important; }
+.stExpander summary { color: #C0AAEA !important; font-size: 0.85rem; }
+.stExpander summary:hover { color: #FF9DD8 !important; background: rgba(255,157,216,0.06) !important; }
 
 /* ══ 알림 박스 ═══════════════════════════════════════════════════ */
 div[data-testid="stNotification"] {
-    background: #130928 !important;
-    border: 1px solid #3D1A5A !important;
-    border-left: 3px solid #FF4DC4 !important;
-    color: #E8C8FF !important;
-    border-radius: 3px !important;
+    background: rgba(20,14,58,0.85) !important;
+    border: 1px solid rgba(255,157,216,0.25) !important;
+    border-left: 3px solid #FF9DD8 !important;
+    color: #F0E8FF !important;
+    border-radius: 4px !important;
 }
 
 /* ══ 텍스트 / 구분선 ═════════════════════════════════════════════ */
-hr { border-color: #1E0A35 !important; }
-p, span, label, .stMarkdown { color: #9B7ABF; }
-.stCaption, small { color: #4A2A6A !important; font-size: 0.78rem; }
+hr { border-color: rgba(255,157,216,0.15) !important; }
+p, span, label, .stMarkdown { color: #C8B8F0; }
+.stCaption, small { color: #8878C8 !important; font-size: 0.78rem; }
 
 /* ══ dataframe ═══════════════════════════════════════════════════ */
-.stDataFrame { border: 1px solid #1E0A35; border-radius: 3px; }
+.stDataFrame { border: 1px solid rgba(255,157,216,0.2); border-radius: 4px; }
 .stDataFrame thead tr th {
-    background: #0D0520 !important; color: #FF4DC4 !important;
+    background: rgba(15,10,50,0.9) !important; color: #FF9DD8 !important;
     font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
-    border-bottom: 1px solid #3D1A5A !important;
+    border-bottom: 1px solid rgba(255,157,216,0.25) !important;
 }
-.stDataFrame tbody tr td { background: #07050F !important; color: #9B7ABF !important; }
-.stDataFrame tbody tr:hover td { background: #130928 !important; color: #E8C8FF !important; }
+.stDataFrame tbody tr td { background: rgba(12,10,40,0.7) !important; color: #C8B8F0 !important; }
+.stDataFrame tbody tr:hover td { background: rgba(30,20,75,0.8) !important; color: #F0E8FF !important; }
 
 /* ══ 스크롤바 ════════════════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #07050F; }
-::-webkit-scrollbar-thumb { background: #3D1A5A; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9B2E8A; }
+::-webkit-scrollbar-track { background: #0C0A28; }
+::-webkit-scrollbar-thumb { background: rgba(255,157,216,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #FF9DD8; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -528,30 +527,52 @@ def show_team_result(result: dict, with_positions: bool):
 # ══════════════════════════════════════════════════════════════════
 
 st.markdown("""
-<div style="position:relative; text-align:center; padding:0; overflow:hidden;
-            border-bottom: 1px solid #3D1A5A; margin-bottom:0.5rem;">
-    <!-- Jinx splash background -->
-    <div style="position:absolute; inset:0;
-                background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_0.jpg') center 20%/cover no-repeat;
-                opacity:0.18; filter:saturate(1.4) hue-rotate(-10deg);"></div>
-    <!-- neon glow overlays -->
-    <div style="position:absolute; inset:0;
-                background: linear-gradient(180deg, rgba(7,5,15,0.4) 0%, rgba(7,5,15,0.85) 100%);"></div>
-    <div style="position:relative; padding:1.6rem 0 1.1rem;">
-        <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700;
-                    color:#FF4DC4; letter-spacing:8px; text-transform:uppercase;
-                    text-shadow: 0 0 30px rgba(255,77,196,0.8), 0 0 60px rgba(255,77,196,0.4), 0 2px 8px #000;">
-            ⚡ &nbsp; 내전 관리 시스템 &nbsp; ⚡
-        </div>
-        <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
-                    color:#9B7ABF; letter-spacing:5px; margin-top:0.4rem;
-                    text-shadow: 0 0 10px rgba(0,217,255,0.4);">
-            ARCANE &nbsp;·&nbsp; INHOUSE MANAGER &nbsp;·&nbsp; LEAGUE OF LEGENDS
-        </div>
-        <div style="margin:0.9rem auto 0; width:55%; height:1px;
-                    background: linear-gradient(90deg, transparent, #FF4DC4, #00D9FF, #FF4DC4, transparent);
-                    box-shadow: 0 0 8px rgba(255,77,196,0.6);">
-        </div>
+<div style="text-align:center; padding:1.6rem 0 0.4rem; position:relative;
+            border-bottom:1px solid rgba(255,157,216,0.2); margin-bottom:0.5rem;
+            background: radial-gradient(ellipse at 50% 0%, rgba(200,130,255,0.1) 0%, transparent 70%);">
+
+    <!-- 별수호자 챔피언 초상화 -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:1rem;">
+        <!-- Star Guardian Lux -->
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_5.jpg"
+             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
+                    border:2px solid #FFD700; box-shadow:0 0 14px rgba(255,215,0,0.5);"
+             onerror="this.style.display='none'">
+        <!-- Star Guardian Poppy -->
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg"
+             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
+                    border:2px solid #FF9DD8; box-shadow:0 0 14px rgba(255,157,216,0.5);"
+             onerror="this.style.display='none'">
+        <!-- Star Guardian Ahri -->
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg"
+             style="width:78px; height:78px; border-radius:50%; object-fit:cover; object-position:center top;
+                    border:3px solid #FF9DD8; box-shadow:0 0 20px rgba(255,157,216,0.7);"
+             onerror="this.style.display='none'">
+        <!-- Star Guardian Neeko -->
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg"
+             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
+                    border:2px solid #70C8FF; box-shadow:0 0 14px rgba(112,200,255,0.5);"
+             onerror="this.style.display='none'">
+        <!-- Star Guardian Miss Fortune -->
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg"
+             style="width:62px; height:62px; border-radius:50%; object-fit:cover; object-position:center top;
+                    border:2px solid #FFD700; box-shadow:0 0 14px rgba(255,215,0,0.5);"
+             onerror="this.style.display='none'">
+    </div>
+
+    <!-- 타이틀 -->
+    <div style="font-family:'Cinzel',serif; font-size:2rem; font-weight:700;
+                color:#FF9DD8; letter-spacing:7px; text-transform:uppercase;
+                text-shadow: 0 0 24px rgba(255,157,216,0.7), 0 0 50px rgba(200,130,255,0.3), 0 2px 6px #000;">
+        ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
+    </div>
+    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem;
+                color:#8878C8; letter-spacing:5px; margin-top:0.35rem;">
+        STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
+    </div>
+    <div style="margin:0.8rem auto 0; width:55%; height:1px;
+                background: linear-gradient(90deg, transparent, #FFD700, #FF9DD8, #70C8FF, #FF9DD8, #FFD700, transparent);
+                box-shadow: 0 0 8px rgba(255,157,216,0.4);">
     </div>
 </div>
 """, unsafe_allow_html=True)
