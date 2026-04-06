@@ -57,6 +57,203 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# ─── LoL 테마 CSS ────────────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+/* ── 배경 ───────────────────────────────────────── */
+.stApp {
+    background-color: #010A13;
+    background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(12,40,80,0.7) 0%, transparent 60%),
+        url("https://raw.githubusercontent.com/nicehash/NiceHashQuickMiner/master/icons/nh_logo_shield.png");
+    color: #C8AA6E;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.main .block-container {
+    background: transparent;
+    padding-top: 1.5rem;
+    max-width: 1200px;
+}
+
+/* ── 제목 ───────────────────────────────────────── */
+h1 {
+    font-family: 'Cinzel', serif !important;
+    color: #C8AA6E !important;
+    text-align: center;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-shadow: 0 0 30px rgba(200,170,110,0.6), 0 2px 4px #000;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, transparent, #785A28, #C8AA6E, #785A28, transparent) 1;
+    margin-bottom: 1.5rem;
+}
+h2, h3 {
+    font-family: 'Cinzel', serif !important;
+    color: #C8AA6E !important;
+    letter-spacing: 2px;
+}
+
+/* ── 탭 ─────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] {
+    background: linear-gradient(180deg, #0A1628 0%, #06101E 100%);
+    border-bottom: 2px solid #785A28;
+    gap: 0;
+}
+.stTabs [data-baseweb="tab"] {
+    color: #7A7062 !important;
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    border-radius: 0 !important;
+    border-bottom: 3px solid transparent;
+    background: transparent !important;
+    transition: color 0.2s, border-color 0.2s;
+}
+.stTabs [data-baseweb="tab"]:hover { color: #C8AA6E !important; }
+.stTabs [aria-selected="true"] {
+    color: #C8AA6E !important;
+    border-bottom: 3px solid #C8AA6E !important;
+    background: rgba(200,170,110,0.06) !important;
+}
+.stTabs [data-baseweb="tab-panel"] {
+    background: transparent;
+    padding-top: 1.2rem;
+}
+
+/* ── 버튼 ───────────────────────────────────────── */
+.stButton > button {
+    background: linear-gradient(180deg, #1B2A40 0%, #0D1B2E 100%);
+    color: #A0988A;
+    border: 1px solid #463714;
+    border-radius: 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    padding: 0.35rem 0.9rem;
+    transition: all 0.18s ease;
+}
+.stButton > button:hover {
+    background: linear-gradient(180deg, #2A3F5A 0%, #1B2A40 100%);
+    color: #C8AA6E;
+    border-color: #785A28;
+    box-shadow: 0 0 12px rgba(200,170,110,0.25), inset 0 0 8px rgba(200,170,110,0.05);
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(180deg, #C89B3C 0%, #7A5C1E 100%);
+    color: #010A13 !important;
+    font-weight: 700;
+    border: 1px solid #C8AA6E;
+    letter-spacing: 1px;
+    text-shadow: none;
+}
+.stButton > button[kind="primary"]:hover {
+    background: linear-gradient(180deg, #F0C060 0%, #C89B3C 100%);
+    box-shadow: 0 0 20px rgba(200,170,110,0.5);
+}
+
+/* ── 입력 ───────────────────────────────────────── */
+.stTextInput input, .stNumberInput input {
+    background: #0A1628 !important;
+    color: #C8AA6E !important;
+    border: 1px solid #463714 !important;
+    border-radius: 2px !important;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.stTextInput input:focus, .stNumberInput input:focus {
+    border-color: #C8AA6E !important;
+    box-shadow: 0 0 8px rgba(200,170,110,0.3) !important;
+}
+.stTextInput input::placeholder { color: #4A4030 !important; }
+
+/* selectbox */
+.stSelectbox > div > div {
+    background: #0A1628 !important;
+    border: 1px solid #463714 !important;
+    border-radius: 2px !important;
+    color: #C8AA6E !important;
+}
+.stSelectbox > div > div:focus-within { border-color: #C8AA6E !important; }
+[data-baseweb="popover"] { background: #0D1B2E !important; border: 1px solid #785A28 !important; }
+[data-baseweb="menu"] { background: #0D1B2E !important; }
+[data-baseweb="option"] { background: #0D1B2E !important; color: #A0988A !important; }
+[data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
+    background: #1B2A40 !important;
+    color: #C8AA6E !important;
+}
+
+/* ── 슬라이더 ───────────────────────────────────── */
+.stSlider [data-baseweb="slider"] div[role="slider"] {
+    background: #C89B3C !important;
+    border: 2px solid #F0E6D2 !important;
+}
+.stSlider [data-testid="stSliderTrackActive"] { background: #785A28 !important; }
+
+/* ── 라디오 ─────────────────────────────────────── */
+.stRadio label { color: #A0988A !important; }
+.stRadio [data-baseweb="radio"] div { border-color: #785A28 !important; }
+.stRadio [aria-checked="true"] div { background: #C89B3C !important; border-color: #C8AA6E !important; }
+
+/* ── 체크박스 ───────────────────────────────────── */
+.stCheckbox label { color: #A0988A !important; }
+.stCheckbox [data-baseweb="checkbox"] div { border-color: #785A28 !important; background: #0A1628 !important; }
+.stCheckbox [aria-checked="true"] div { background: #C89B3C !important; border-color: #C8AA6E !important; }
+
+/* ── expander ───────────────────────────────────── */
+.stExpander {
+    border: 1px solid #1E2D3D !important;
+    border-radius: 2px !important;
+    background: #06101E !important;
+}
+.stExpander summary {
+    color: #A0988A !important;
+    font-size: 0.85rem;
+}
+.stExpander summary:hover { color: #C8AA6E !important; background: rgba(200,170,110,0.05) !important; }
+
+/* ── 알림 박스 ──────────────────────────────────── */
+.stAlert[data-baseweb="notification"] {
+    background: #0A1628 !important;
+    border-left: 3px solid #785A28 !important;
+    color: #C8AA6E !important;
+    border-radius: 2px !important;
+}
+div[data-testid="stNotification"] {
+    background: #0D1B2E !important;
+    border: 1px solid #463714 !important;
+    color: #C8AA6E !important;
+}
+
+/* ── 구분선 / 캡션 / 레이블 ────────────────────── */
+hr { border-color: #1E2D3D !important; }
+p, span, label, .stMarkdown { color: #A0988A; }
+.stCaption, small { color: #5A5040 !important; font-size: 0.78rem; }
+
+/* ── dataframe ──────────────────────────────────── */
+.stDataFrame { border: 1px solid #1E2D3D; }
+.stDataFrame thead tr th {
+    background: #0D1B2E !important;
+    color: #C8AA6E !important;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #463714 !important;
+}
+.stDataFrame tbody tr td { background: #06101E !important; color: #A0988A !important; }
+.stDataFrame tbody tr:hover td { background: #0D1B2E !important; color: #C8AA6E !important; }
+
+/* ── 스크롤바 ───────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #010A13; }
+::-webkit-scrollbar-thumb { background: #463714; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #785A28; }
+</style>
+""", unsafe_allow_html=True)
+
 # ─── 세션 초기화 ──────────────────────────────────────────────────
 if "admin_authed" not in st.session_state:
     st.session_state.admin_authed = False
@@ -354,7 +551,22 @@ def show_team_result(result: dict, with_positions: bool):
 # 메인 앱
 # ══════════════════════════════════════════════════════════════════
 
-st.title("⚔️ LoL 내전 관리 시스템")
+st.markdown("""
+<div style="text-align:center; padding: 1.2rem 0 0.5rem;">
+    <div style="font-family:'Cinzel',serif; font-size:2rem; font-weight:700;
+                color:#C8AA6E; letter-spacing:8px; text-transform:uppercase;
+                text-shadow: 0 0 30px rgba(200,170,110,0.7), 0 2px 6px #000;">
+        ⚔ &nbsp; 내전 관리 시스템 &nbsp; ⚔
+    </div>
+    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.75rem;
+                color:#5A5040; letter-spacing:4px; margin-top:0.3rem;">
+        LEAGUE OF LEGENDS INHOUSE MANAGER
+    </div>
+    <div style="margin:0.8rem auto 0; width:60%; height:2px;
+                background: linear-gradient(90deg, transparent, #785A28, #C8AA6E, #785A28, transparent);">
+    </div>
+</div>
+""", unsafe_allow_html=True)
 tab1, tab2, tab3 = st.tabs(["🏠 플레이어 & 팀 구성", "➕ 플레이어 등록", "🔧 관리자"])
 
 
