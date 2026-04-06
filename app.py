@@ -6,24 +6,10 @@ app.py
 
 import json
 import uuid
-import base64
-from pathlib import Path
 from datetime import datetime
 
 import streamlit as st
 from github import GithubException
-
-
-def _load_bg_image() -> str:
-    """assets/background.png 를 base64로 인코딩해서 반환. 없으면 빈 문자열."""
-    bg = Path(__file__).parent / "assets" / "background.png"
-    if bg.exists():
-        return base64.b64encode(bg.read_bytes()).decode()
-    # jpg도 시도
-    bg = Path(__file__).parent / "assets" / "background.jpg"
-    if bg.exists():
-        return base64.b64encode(bg.read_bytes()).decode()
-    return ""
 
 from github_utils import load_players, add_player, save_players, delete_player
 from riot_api import fetch_player_data, tier_label, tier_emoji, calculate_mmr, POSITIONS
@@ -72,95 +58,33 @@ st.set_page_config(
 )
 
 # ─── 별수호자 테마 CSS ────────────────────────────────────────────
-_bg_b64 = _load_bg_image()
-_bg_css = (
-    f"background-image: url('data:image/png;base64,{_bg_b64}') !important;"
-    "background-size: cover !important;"
-    "background-position: center center !important;"
-    "background-attachment: fixed !important;"
-    "background-repeat: no-repeat !important;"
-) if _bg_b64 else (
-    "background-color: #2A1F5E;"
-    "background-image:"
-    "radial-gradient(ellipse at 20% 20%, rgba(255,180,220,0.28) 0%, transparent 50%),"
-    "radial-gradient(ellipse at 80% 10%, rgba(180,140,255,0.25) 0%, transparent 45%),"
-    "radial-gradient(ellipse at 50% 60%, rgba(120,200,255,0.18) 0%, transparent 50%);"
-)
-st.markdown(f"""
+st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* ══ 페이지 배경 ════════════════════════════════════════════════ */
-.stApp {{
-    {_bg_css}
+.stApp {
+    background-color: #FFE8F0;
     color: #3A1A4A;
     font-family: 'Noto Sans KR', sans-serif;
-}}
-.main .block-container {{
-    background: rgba(255,255,255,0.72) !important;
-    backdrop-filter: blur(2px);
+}
+.main .block-container {
+    background: rgba(255,255,255,0.78);
     border-radius: 12px;
     padding: 1.2rem 2rem 2rem !important;
     max-width: 1200px;
-    box-shadow: 0 4px 32px rgba(180,80,160,0.15);
-}}
-
-/* ══ 배경 챔피언 공통 ════════════════════════════════════════════ */
-.sg-bg {{ position:fixed; pointer-events:none; z-index:0; background-size:cover; background-repeat:no-repeat; background-position:center top; }}
-
-/* 좌측: 상=Neeko, 중=Soraka, 중하=MissFortune, 하=Syndra */
-.sg-neeko  {{ left:0; top:80px;    width:170px; height:235px; opacity:0.32;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg');
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-soraka {{ left:0; top:40%;     width:165px; height:225px; opacity:0.28;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg');
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-mf     {{ left:0; bottom:260px; width:165px; height:225px; opacity:0.28;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg');
-    background-position:center 10%;
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-syndra {{ left:0; bottom:60px;  width:170px; height:235px; opacity:0.30;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Syndra_6.jpg');
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-
-/* 우측: 상=Lulu, 중=Poppy, 중하=Ahri, 하=Xayah */
-.sg-lulu   {{ right:0; top:80px;    width:165px; height:225px; opacity:0.28;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg');
-    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-poppy  {{ right:0; top:40%;     width:170px; height:235px; opacity:0.32;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg');
-    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-ahri   {{ right:0; bottom:260px; width:165px; height:225px; opacity:0.28;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg');
-    background-position:center 10%;
-    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-.sg-xayah  {{ right:0; bottom:60px;  width:165px; height:225px; opacity:0.28;
-    background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg');
-    -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
-
-/* ══ 헤더 텍스트 ════════════════════════════════════════════════ */
-h2, h3 {{
+    box-shadow: 0 4px 24px rgba(200,80,140,0.10);
+}
+h2, h3 {
     font-family: 'Cinzel', serif !important;
-    color: #8B2060 !important;
+    color: #B03878 !important;
     letter-spacing: 2px;
-    text-shadow: 0 1px 4px rgba(180,80,140,0.2);
-}}
-
-/* ══ 탭 ══════════════════════════════════════════════════════════ */
-.stTabs [data-baseweb="tab-list"] {{
-    background: rgba(255,255,255,0.6);
-    border-bottom: 2px solid rgba(210,100,160,0.3);
+}
+.stTabs [data-baseweb="tab-list"] {
+    background: rgba(255,255,255,0.7);
+    border-bottom: 2px solid rgba(210,100,160,0.25);
     gap: 0;
-}}
-.stTabs [data-baseweb="tab"] {{
+}
+.stTabs [data-baseweb="tab"] {
     color: #9B4A80 !important;
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
@@ -171,153 +95,111 @@ h2, h3 {{
     border-bottom: 3px solid transparent;
     background: transparent !important;
     transition: all 0.2s;
-}}
-.stTabs [data-baseweb="tab"]:hover {{ color: #C0387A !important; }}
-.stTabs [aria-selected="true"] {{
+}
+.stTabs [data-baseweb="tab"]:hover { color: #C0387A !important; }
+.stTabs [aria-selected="true"] {
     color: #C0387A !important;
     border-bottom: 3px solid #C0387A !important;
-    background: rgba(220,100,160,0.08) !important;
-}}
-.stTabs [data-baseweb="tab-panel"] {{ background: transparent; padding-top: 1rem; }}
-
-/* ══ 버튼 ════════════════════════════════════════════════════════ */
-.stButton > button {{
-    background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,230,245,0.85) 100%);
+    background: rgba(220,100,160,0.07) !important;
+}
+.stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
+.stButton > button {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFE8F4 100%);
     color: #8B2060;
-    border: 1px solid rgba(210,100,160,0.45);
+    border: 1px solid rgba(210,100,160,0.4);
     border-radius: 6px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
     padding: 0.35rem 0.9rem;
     transition: all 0.18s ease;
-    box-shadow: 0 2px 8px rgba(180,80,140,0.12);
-}}
-.stButton > button:hover {{
+    box-shadow: 0 2px 6px rgba(200,80,140,0.10);
+}
+.stButton > button:hover {
     background: linear-gradient(180deg, #FFE0F0 0%, #FFD0E8 100%);
-    color: #6A1050;
     border-color: #D060A0;
-    box-shadow: 0 4px 16px rgba(200,80,150,0.3);
-}}
-.stButton > button[kind="primary"] {{
+    box-shadow: 0 4px 14px rgba(200,80,150,0.25);
+}
+.stButton > button[kind="primary"] {
     background: linear-gradient(180deg, #E070B0 0%, #B03880 100%);
     color: #FFFFFF !important;
     font-weight: 700;
     border: none;
-    box-shadow: 0 4px 16px rgba(180,60,120,0.4);
-}}
-.stButton > button[kind="primary"]:hover {{
+    box-shadow: 0 4px 14px rgba(180,60,120,0.35);
+}
+.stButton > button[kind="primary"]:hover {
     background: linear-gradient(180deg, #F090C8 0%, #D060A0 100%);
-    box-shadow: 0 6px 22px rgba(200,80,150,0.5);
-}}
-
-/* ══ 입력 ════════════════════════════════════════════════════════ */
-.stTextInput input, .stNumberInput input {{
-    background: rgba(255,255,255,0.88) !important;
+    box-shadow: 0 6px 20px rgba(200,80,150,0.45);
+}
+.stTextInput input, .stNumberInput input {
+    background: #FFFFFF !important;
     color: #3A1A4A !important;
-    border: 1px solid rgba(210,100,160,0.4) !important;
+    border: 1px solid rgba(210,100,160,0.35) !important;
     border-radius: 6px !important;
-    font-family: 'Noto Sans KR', sans-serif;
-}}
-.stTextInput input:focus, .stNumberInput input:focus {{
+}
+.stTextInput input:focus, .stNumberInput input:focus {
     border-color: #D060A0 !important;
-    box-shadow: 0 0 10px rgba(210,100,160,0.25) !important;
-}}
-.stTextInput input::placeholder {{ color: rgba(180,100,150,0.5) !important; }}
-
-/* selectbox */
-.stSelectbox > div > div {{
-    background: rgba(255,255,255,0.88) !important;
-    border: 1px solid rgba(210,100,160,0.4) !important;
+    box-shadow: 0 0 8px rgba(210,100,160,0.20) !important;
+}
+.stTextInput input::placeholder { color: rgba(180,100,150,0.45) !important; }
+.stSelectbox > div > div {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(210,100,160,0.35) !important;
     border-radius: 6px !important;
     color: #3A1A4A !important;
-}}
-.stSelectbox > div > div:focus-within {{ border-color: #D060A0 !important; }}
-[data-baseweb="popover"] {{ background: #FFF0F8 !important; border: 1px solid rgba(210,100,160,0.3) !important; }}
-[data-baseweb="menu"]    {{ background: #FFF0F8 !important; }}
-[data-baseweb="option"]  {{ background: #FFF0F8 !important; color: #6A2050 !important; }}
-[data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {{
+}
+.stSelectbox > div > div:focus-within { border-color: #D060A0 !important; }
+[data-baseweb="popover"] { background: #FFF5FA !important; border: 1px solid rgba(210,100,160,0.25) !important; }
+[data-baseweb="menu"]    { background: #FFF5FA !important; }
+[data-baseweb="option"]  { background: #FFF5FA !important; color: #6A2050 !important; }
+[data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
     background: #FFD8EC !important; color: #8B2060 !important;
-}}
-
-/* ══ 슬라이더 ════════════════════════════════════════════════════ */
-.stSlider [data-baseweb="slider"] div[role="slider"] {{
-    background: #D060A0 !important; border: 2px solid #FFFFFF !important;
-}}
-.stSlider [data-testid="stSliderTrackActive"] {{ background: #E090C0 !important; }}
-
-/* ══ 라디오 ══════════════════════════════════════════════════════ */
-.stRadio label {{ color: #6A2050 !important; }}
-.stRadio [data-baseweb="radio"] div {{ border-color: rgba(210,100,160,0.5) !important; }}
-.stRadio [aria-checked="true"] div {{ background: #D060A0 !important; border-color: #D060A0 !important; }}
-
-/* ══ 체크박스 ════════════════════════════════════════════════════ */
-.stCheckbox label {{ color: #6A2050 !important; }}
-.stCheckbox [data-baseweb="checkbox"] div {{
-    border-color: rgba(210,100,160,0.5) !important;
-    background: rgba(255,255,255,0.8) !important;
-}}
-.stCheckbox [aria-checked="true"] div {{ background: #D060A0 !important; border-color: #D060A0 !important; }}
-
-/* ══ expander ════════════════════════════════════════════════════ */
-.stExpander {{
+}
+.stSlider [data-baseweb="slider"] div[role="slider"] { background: #D060A0 !important; border: 2px solid #FFFFFF !important; }
+.stSlider [data-testid="stSliderTrackActive"] { background: #E090C0 !important; }
+.stRadio label { color: #6A2050 !important; }
+.stRadio [data-baseweb="radio"] div { border-color: rgba(210,100,160,0.45) !important; }
+.stRadio [aria-checked="true"] div { background: #D060A0 !important; border-color: #D060A0 !important; }
+.stCheckbox label { color: #6A2050 !important; }
+.stCheckbox [data-baseweb="checkbox"] div { border-color: rgba(210,100,160,0.45) !important; background: #FFFFFF !important; }
+.stCheckbox [aria-checked="true"] div { background: #D060A0 !important; border-color: #D060A0 !important; }
+.stExpander { border: 1px solid rgba(210,100,160,0.2) !important; border-radius: 6px !important; background: rgba(255,255,255,0.7) !important; }
+.stExpander summary { color: #7A2858 !important; font-size: 0.85rem; }
+.stExpander summary:hover { color: #C0387A !important; }
+div[data-testid="stNotification"] {
+    background: #FFF5FA !important;
     border: 1px solid rgba(210,100,160,0.25) !important;
-    border-radius: 6px !important;
-    background: rgba(255,255,255,0.65) !important;
-}}
-.stExpander summary {{ color: #7A2858 !important; font-size: 0.85rem; }}
-.stExpander summary:hover {{ color: #C0387A !important; background: rgba(220,100,160,0.06) !important; }}
-
-/* ══ 알림 박스 ═══════════════════════════════════════════════════ */
-div[data-testid="stNotification"] {{
-    background: rgba(255,240,250,0.92) !important;
-    border: 1px solid rgba(210,100,160,0.3) !important;
     border-left: 3px solid #D060A0 !important;
     color: #3A1A4A !important;
     border-radius: 6px !important;
-}}
-
-/* ══ 텍스트 / 구분선 ═════════════════════════════════════════════ */
-hr {{ border-color: rgba(210,100,160,0.2) !important; }}
-p, span, label, .stMarkdown {{ color: #4A1A3A; }}
-.stCaption, small {{ color: #9B5080 !important; font-size: 0.78rem; }}
-
-/* ══ dataframe ═══════════════════════════════════════════════════ */
-.stDataFrame {{ border: 1px solid rgba(210,100,160,0.25); border-radius: 6px; }}
-.stDataFrame thead tr th {{
-    background: rgba(255,220,240,0.9) !important; color: #8B2060 !important;
+}
+hr { border-color: rgba(210,100,160,0.18) !important; }
+p, span, label, .stMarkdown { color: #4A1A3A; }
+.stCaption, small { color: #9B5080 !important; font-size: 0.78rem; }
+.stDataFrame { border: 1px solid rgba(210,100,160,0.2); border-radius: 6px; }
+.stDataFrame thead tr th {
+    background: #FFE0EE !important; color: #8B2060 !important;
     font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
-    border-bottom: 1px solid rgba(210,100,160,0.3) !important;
-}}
-.stDataFrame tbody tr td {{ background: rgba(255,240,250,0.7) !important; color: #4A1A3A !important; }}
-.stDataFrame tbody tr:hover td {{ background: rgba(255,210,235,0.85) !important; color: #3A1A4A !important; }}
-
-/* ══ 스크롤바 ════════════════════════════════════════════════════ */
-::-webkit-scrollbar {{ width: 5px; height: 5px; }}
-::-webkit-scrollbar-track {{ background: rgba(255,220,240,0.3); }}
-::-webkit-scrollbar-thumb {{ background: rgba(210,100,160,0.4); border-radius: 3px; }}
-::-webkit-scrollbar-thumb:hover {{ background: #D060A0; }}
+    border-bottom: 1px solid rgba(210,100,160,0.25) !important;
+}
+.stDataFrame tbody tr td { background: #FFFAFC !important; color: #4A1A3A !important; }
+.stDataFrame tbody tr:hover td { background: #FFE8F4 !important; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #FFE8F0; }
+::-webkit-scrollbar-thumb { background: rgba(210,100,160,0.35); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #D060A0; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─── 좌우 챔피언 장식 & 상단 배너 ────────────────────────────────
+# ─── 타이틀 배너 ──────────────────────────────────────────────────
 st.html("""
-<div class="sg-bg sg-neeko"></div>
-<div class="sg-bg sg-soraka"></div>
-<div class="sg-bg sg-mf"></div>
-<div class="sg-bg sg-syndra"></div>
-<div class="sg-bg sg-lulu"></div>
-<div class="sg-bg sg-poppy"></div>
-<div class="sg-bg sg-ahri"></div>
-<div class="sg-bg sg-xayah"></div>
-
-<div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid rgba(255,133,192,0.15); margin-bottom:0.5rem;">
-    <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#FFFFFF; letter-spacing:8px; text-transform:uppercase; text-shadow:0 0 28px rgba(255,133,192,0.75),0 0 60px rgba(180,120,255,0.35),0 2px 8px rgba(0,0,0,0.9);">
+<div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid rgba(210,100,160,0.2); margin-bottom:0.5rem;">
+    <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#B03878; letter-spacing:8px; text-transform:uppercase; text-shadow:0 2px 8px rgba(200,80,140,0.2);">
         ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
     </div>
-    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#C8B8F8; letter-spacing:5px; margin-top:0.4rem;">
+    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#C070A0; letter-spacing:5px; margin-top:0.4rem;">
         STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
     </div>
-    <div style="width:50%; height:1px; margin:0.7rem auto 0; background:linear-gradient(90deg,transparent,#FFD700,#FFB8DA,#80C8FF,#FFB8DA,#FFD700,transparent); box-shadow:0 0 10px rgba(255,133,192,0.5);"></div>
+    <div style="width:50%; height:1px; margin:0.7rem auto 0; background:linear-gradient(90deg,transparent,#F0A0C8,#FFB8DA,#F0A0C8,transparent);"></div>
 </div>
 """)
 
