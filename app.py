@@ -232,11 +232,29 @@ def revert_match(match: dict) -> bool:
     )
 
 
-# ─── 캐시된 플레이어 로더 ─────────────────────────────────────────
+# ─── 캐시된 로더 ─────────────────────────────────────────────────
 
 @st.cache_data(ttl=300)
 def get_players_cached():
     return load_players()
+
+
+@st.cache_data(ttl=3600 * 24)  # 24시간 캐시 (챔피언 목록은 자주 안 바뀜)
+def get_champion_list() -> list[str]:
+    """Riot Data Dragon에서 최신 챔피언 목록(한국어)을 가져옴. 실패 시 빈 목록."""
+    try:
+        import requests as _req
+        ver = _req.get(
+            "https://ddragon.leagueoflegends.com/api/versions.json", timeout=5
+        ).json()[0]
+        data = _req.get(
+            f"https://ddragon.leagueoflegends.com/cdn/{ver}/data/ko_KR/champion.json",
+            timeout=10,
+        ).json()
+        names = sorted(c["name"] for c in data["data"].values())
+        return [""] + names          # 첫 항목 빈 문자열 = 선택 안 함
+    except Exception:
+        return [""]
 
 
 # ─── UI 헬퍼 ─────────────────────────────────────────────────────
@@ -576,6 +594,8 @@ with tab3:
                 }
                 labels = list(label_to_player.keys())
 
+                champ_list = get_champion_list()
+
                 st.markdown("**🔵 블루팀 (5명)**")
                 blue_picks, blue_pos_picks, blue_champ_picks = [], [], []
                 for i in range(5):
@@ -592,7 +612,12 @@ with tab3:
                         )
                     )
                     blue_champ_picks.append(
-                        c3.text_input("챔피언", placeholder="징크스", key=f"b_champ_{i}")
+                        c3.selectbox(
+                            "챔피언",
+                            champ_list,
+                            key=f"b_champ_{i}",
+                            format_func=lambda x: x if x else "선택 안 함",
+                        )
                     )
 
                 st.markdown("**🔴 레드팀 (5명)**")
@@ -611,7 +636,12 @@ with tab3:
                         )
                     )
                     red_champ_picks.append(
-                        c3.text_input("챔피언", placeholder="징크스", key=f"r_champ_{i}")
+                        c3.selectbox(
+                            "챔피언",
+                            champ_list,
+                            key=f"r_champ_{i}",
+                            format_func=lambda x: x if x else "선택 안 함",
+                        )
                     )
 
                 winner = st.radio("승리팀", ["블루팀", "레드팀"], horizontal=True)
