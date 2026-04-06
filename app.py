@@ -6,10 +6,24 @@ app.py
 
 import json
 import uuid
+import base64
+from pathlib import Path
 from datetime import datetime
 
 import streamlit as st
 from github import GithubException
+
+
+def _load_bg_image() -> str:
+    """assets/background.png 를 base64로 인코딩해서 반환. 없으면 빈 문자열."""
+    bg = Path(__file__).parent / "assets" / "background.png"
+    if bg.exists():
+        return base64.b64encode(bg.read_bytes()).decode()
+    # jpg도 시도
+    bg = Path(__file__).parent / "assets" / "background.jpg"
+    if bg.exists():
+        return base64.b64encode(bg.read_bytes()).decode()
+    return ""
 
 from github_utils import load_players, add_player, save_players, delete_player
 from riot_api import fetch_player_data, tier_label, tier_emoji, calculate_mmr, POSITIONS
@@ -58,85 +72,96 @@ st.set_page_config(
 )
 
 # ─── 별수호자 테마 CSS ────────────────────────────────────────────
-st.markdown("""
+_bg_b64 = _load_bg_image()
+_bg_css = (
+    f"background-image: url('data:image/png;base64,{_bg_b64}') !important;"
+    "background-size: cover !important;"
+    "background-position: center center !important;"
+    "background-attachment: fixed !important;"
+    "background-repeat: no-repeat !important;"
+) if _bg_b64 else (
+    "background-color: #2A1F5E;"
+    "background-image:"
+    "radial-gradient(ellipse at 20% 20%, rgba(255,180,220,0.28) 0%, transparent 50%),"
+    "radial-gradient(ellipse at 80% 10%, rgba(180,140,255,0.25) 0%, transparent 45%),"
+    "radial-gradient(ellipse at 50% 60%, rgba(120,200,255,0.18) 0%, transparent 50%);"
+)
+st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* ══ 페이지 배경: 별수호자 파스텔 우주 ══════════════════════════ */
-.stApp {
-    background-color: #2A1F5E;
-    background-image:
-        radial-gradient(ellipse at 20% 20%, rgba(255,180,220,0.28) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 10%, rgba(180,140,255,0.25) 0%, transparent 45%),
-        radial-gradient(ellipse at 50% 60%, rgba(120,200,255,0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at 30% 80%, rgba(255,220,120,0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 70% 90%, rgba(255,140,200,0.20) 0%, transparent 45%);
-    color: #F5F0FF;
+/* ══ 페이지 배경 ════════════════════════════════════════════════ */
+.stApp {{
+    {_bg_css}
+    color: #3A1A4A;
     font-family: 'Noto Sans KR', sans-serif;
-}
-.main .block-container {
-    background: transparent;
-    padding-top: 0;
+}}
+.main .block-container {{
+    background: rgba(255,255,255,0.72) !important;
+    backdrop-filter: blur(2px);
+    border-radius: 12px;
+    padding: 1.2rem 2rem 2rem !important;
     max-width: 1200px;
-}
+    box-shadow: 0 4px 32px rgba(180,80,160,0.15);
+}}
 
 /* ══ 배경 챔피언 공통 ════════════════════════════════════════════ */
-.sg-bg { position:fixed; pointer-events:none; z-index:0; background-size:cover; background-repeat:no-repeat; background-position:center top; }
+.sg-bg {{ position:fixed; pointer-events:none; z-index:0; background-size:cover; background-repeat:no-repeat; background-position:center top; }}
 
 /* 좌측: 상=Neeko, 중=Soraka, 중하=MissFortune, 하=Syndra */
-.sg-neeko  { left:0; top:80px;    width:170px; height:235px; opacity:0.32;
+.sg-neeko  {{ left:0; top:80px;    width:170px; height:235px; opacity:0.32;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Neeko_2.jpg');
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-soraka { left:0; top:40%;     width:165px; height:225px; opacity:0.28;
+    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-soraka {{ left:0; top:40%;     width:165px; height:225px; opacity:0.28;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_3.jpg');
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-mf     { left:0; bottom:260px; width:165px; height:225px; opacity:0.28;
+    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-mf     {{ left:0; bottom:260px; width:165px; height:225px; opacity:0.28;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_8.jpg');
     background-position:center 10%;
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-syndra { left:0; bottom:60px;  width:170px; height:235px; opacity:0.30;
+    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-syndra {{ left:0; bottom:60px;  width:170px; height:235px; opacity:0.30;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Syndra_6.jpg');
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
+    mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
 
 /* 우측: 상=Lulu, 중=Poppy, 중하=Ahri, 하=Xayah */
-.sg-lulu   { right:0; top:80px;    width:165px; height:225px; opacity:0.28;
+.sg-lulu   {{ right:0; top:80px;    width:165px; height:225px; opacity:0.28;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lulu_4.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-poppy  { right:0; top:40%;     width:170px; height:235px; opacity:0.32;
+    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-poppy  {{ right:0; top:40%;     width:170px; height:235px; opacity:0.32;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Poppy_5.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-ahri   { right:0; bottom:260px; width:165px; height:225px; opacity:0.28;
+    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-ahri   {{ right:0; bottom:260px; width:165px; height:225px; opacity:0.28;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_7.jpg');
     background-position:center 10%;
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
-.sg-xayah  { right:0; bottom:60px;  width:165px; height:225px; opacity:0.28;
+    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
+.sg-xayah  {{ right:0; bottom:60px;  width:165px; height:225px; opacity:0.28;
     background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Xayah_3.jpg');
     -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%);
-    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }
+    mask-image:linear-gradient(to left,rgba(0,0,0,1) 0%,rgba(0,0,0,.6) 50%,transparent 100%); }}
 
 /* ══ 헤더 텍스트 ════════════════════════════════════════════════ */
-h2, h3 {
+h2, h3 {{
     font-family: 'Cinzel', serif !important;
-    color: #FFB8DA !important;
+    color: #8B2060 !important;
     letter-spacing: 2px;
-    text-shadow: 0 0 16px rgba(255,133,192,0.45);
-}
+    text-shadow: 0 1px 4px rgba(180,80,140,0.2);
+}}
 
 /* ══ 탭 ══════════════════════════════════════════════════════════ */
-.stTabs [data-baseweb="tab-list"] {
-    background: rgba(60,45,120,0.55);
-    border-bottom: 1px solid rgba(255,180,220,0.35);
+.stTabs [data-baseweb="tab-list"] {{
+    background: rgba(255,255,255,0.6);
+    border-bottom: 2px solid rgba(210,100,160,0.3);
     gap: 0;
-}
-.stTabs [data-baseweb="tab"] {
-    color: #C8A8E8 !important;
+}}
+.stTabs [data-baseweb="tab"] {{
+    color: #9B4A80 !important;
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
@@ -146,132 +171,131 @@ h2, h3 {
     border-bottom: 3px solid transparent;
     background: transparent !important;
     transition: all 0.2s;
-}
-.stTabs [data-baseweb="tab"]:hover { color: #FFD0EC !important; }
-.stTabs [aria-selected="true"] {
-    color: #FFD0EC !important;
-    border-bottom: 3px solid #FFD0EC !important;
-    background: rgba(255,180,220,0.12) !important;
-    text-shadow: 0 0 10px rgba(255,160,210,0.6);
-}
-.stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
+}}
+.stTabs [data-baseweb="tab"]:hover {{ color: #C0387A !important; }}
+.stTabs [aria-selected="true"] {{
+    color: #C0387A !important;
+    border-bottom: 3px solid #C0387A !important;
+    background: rgba(220,100,160,0.08) !important;
+}}
+.stTabs [data-baseweb="tab-panel"] {{ background: transparent; padding-top: 1rem; }}
 
 /* ══ 버튼 ════════════════════════════════════════════════════════ */
-.stButton > button {
-    background: linear-gradient(180deg, rgba(100,70,180,0.55) 0%, rgba(70,45,140,0.55) 100%);
-    color: #F0E0FF;
-    border: 1px solid rgba(255,180,220,0.45);
-    border-radius: 4px;
+.stButton > button {{
+    background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,230,245,0.85) 100%);
+    color: #8B2060;
+    border: 1px solid rgba(210,100,160,0.45);
+    border-radius: 6px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
     padding: 0.35rem 0.9rem;
     transition: all 0.18s ease;
-}
-.stButton > button:hover {
-    background: linear-gradient(180deg, rgba(140,90,220,0.7) 0%, rgba(100,70,180,0.7) 100%);
-    color: #FFEEFF;
-    border-color: #FFB8DA;
-    box-shadow: 0 0 16px rgba(255,160,210,0.4);
-}
-.stButton > button[kind="primary"] {
-    background: linear-gradient(180deg, #E078B8 0%, #A848A0 100%);
-    color: #FFF5FA !important;
+    box-shadow: 0 2px 8px rgba(180,80,140,0.12);
+}}
+.stButton > button:hover {{
+    background: linear-gradient(180deg, #FFE0F0 0%, #FFD0E8 100%);
+    color: #6A1050;
+    border-color: #D060A0;
+    box-shadow: 0 4px 16px rgba(200,80,150,0.3);
+}}
+.stButton > button[kind="primary"] {{
+    background: linear-gradient(180deg, #E070B0 0%, #B03880 100%);
+    color: #FFFFFF !important;
     font-weight: 700;
-    border: 1px solid #FFD0EC;
-}
-.stButton > button[kind="primary"]:hover {
-    background: linear-gradient(180deg, #FFD0EC 0%, #E078B8 100%);
-    box-shadow: 0 0 22px rgba(255,160,210,0.65);
-    color: #3A0858 !important;
-}
+    border: none;
+    box-shadow: 0 4px 16px rgba(180,60,120,0.4);
+}}
+.stButton > button[kind="primary"]:hover {{
+    background: linear-gradient(180deg, #F090C8 0%, #D060A0 100%);
+    box-shadow: 0 6px 22px rgba(200,80,150,0.5);
+}}
 
 /* ══ 입력 ════════════════════════════════════════════════════════ */
-.stTextInput input, .stNumberInput input {
-    background: rgba(60,40,120,0.45) !important;
-    color: #FFFFFF !important;
-    border: 1px solid rgba(255,180,220,0.45) !important;
-    border-radius: 4px !important;
+.stTextInput input, .stNumberInput input {{
+    background: rgba(255,255,255,0.88) !important;
+    color: #3A1A4A !important;
+    border: 1px solid rgba(210,100,160,0.4) !important;
+    border-radius: 6px !important;
     font-family: 'Noto Sans KR', sans-serif;
-}
-.stTextInput input:focus, .stNumberInput input:focus {
-    border-color: #FFD0EC !important;
-    box-shadow: 0 0 12px rgba(255,160,210,0.4) !important;
-}
-.stTextInput input::placeholder { color: rgba(255,180,220,0.45) !important; }
+}}
+.stTextInput input:focus, .stNumberInput input:focus {{
+    border-color: #D060A0 !important;
+    box-shadow: 0 0 10px rgba(210,100,160,0.25) !important;
+}}
+.stTextInput input::placeholder {{ color: rgba(180,100,150,0.5) !important; }}
 
 /* selectbox */
-.stSelectbox > div > div {
-    background: rgba(60,40,120,0.45) !important;
-    border: 1px solid rgba(255,180,220,0.45) !important;
-    border-radius: 4px !important;
-    color: #FFFFFF !important;
-}
-.stSelectbox > div > div:focus-within { border-color: #FFD0EC !important; }
-[data-baseweb="popover"] { background: #3C2878 !important; border: 1px solid rgba(255,180,220,0.35) !important; }
-[data-baseweb="menu"]    { background: #3C2878 !important; }
-[data-baseweb="option"]  { background: #3C2878 !important; color: #ECD8FF !important; }
-[data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-    background: #5A3AAA !important; color: #FFD0EC !important;
-}
+.stSelectbox > div > div {{
+    background: rgba(255,255,255,0.88) !important;
+    border: 1px solid rgba(210,100,160,0.4) !important;
+    border-radius: 6px !important;
+    color: #3A1A4A !important;
+}}
+.stSelectbox > div > div:focus-within {{ border-color: #D060A0 !important; }}
+[data-baseweb="popover"] {{ background: #FFF0F8 !important; border: 1px solid rgba(210,100,160,0.3) !important; }}
+[data-baseweb="menu"]    {{ background: #FFF0F8 !important; }}
+[data-baseweb="option"]  {{ background: #FFF0F8 !important; color: #6A2050 !important; }}
+[data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {{
+    background: #FFD8EC !important; color: #8B2060 !important;
+}}
 
 /* ══ 슬라이더 ════════════════════════════════════════════════════ */
-.stSlider [data-baseweb="slider"] div[role="slider"] {
-    background: #FFD0EC !important; border: 2px solid #FFFFFF !important;
-}
-.stSlider [data-testid="stSliderTrackActive"] { background: #E078B8 !important; }
+.stSlider [data-baseweb="slider"] div[role="slider"] {{
+    background: #D060A0 !important; border: 2px solid #FFFFFF !important;
+}}
+.stSlider [data-testid="stSliderTrackActive"] {{ background: #E090C0 !important; }}
 
 /* ══ 라디오 ══════════════════════════════════════════════════════ */
-.stRadio label { color: #ECD8FF !important; }
-.stRadio [data-baseweb="radio"] div { border-color: rgba(255,180,220,0.55) !important; }
-.stRadio [aria-checked="true"] div { background: #FFD0EC !important; border-color: #FFD0EC !important; }
+.stRadio label {{ color: #6A2050 !important; }}
+.stRadio [data-baseweb="radio"] div {{ border-color: rgba(210,100,160,0.5) !important; }}
+.stRadio [aria-checked="true"] div {{ background: #D060A0 !important; border-color: #D060A0 !important; }}
 
 /* ══ 체크박스 ════════════════════════════════════════════════════ */
-.stCheckbox label { color: #ECD8FF !important; }
-.stCheckbox [data-baseweb="checkbox"] div {
-    border-color: rgba(255,180,220,0.55) !important;
-    background: rgba(60,40,120,0.45) !important;
-}
-.stCheckbox [aria-checked="true"] div { background: #FFD0EC !important; border-color: #FFD0EC !important; }
+.stCheckbox label {{ color: #6A2050 !important; }}
+.stCheckbox [data-baseweb="checkbox"] div {{
+    border-color: rgba(210,100,160,0.5) !important;
+    background: rgba(255,255,255,0.8) !important;
+}}
+.stCheckbox [aria-checked="true"] div {{ background: #D060A0 !important; border-color: #D060A0 !important; }}
 
 /* ══ expander ════════════════════════════════════════════════════ */
-.stExpander {
-    border: 1px solid rgba(255,180,220,0.3) !important;
-    border-radius: 4px !important;
-    background: rgba(60,40,120,0.30) !important;
-}
-.stExpander summary { color: #ECD8FF !important; font-size: 0.85rem; }
-.stExpander summary:hover { color: #FFD0EC !important; background: rgba(255,160,210,0.10) !important; }
+.stExpander {{
+    border: 1px solid rgba(210,100,160,0.25) !important;
+    border-radius: 6px !important;
+    background: rgba(255,255,255,0.65) !important;
+}}
+.stExpander summary {{ color: #7A2858 !important; font-size: 0.85rem; }}
+.stExpander summary:hover {{ color: #C0387A !important; background: rgba(220,100,160,0.06) !important; }}
 
 /* ══ 알림 박스 ═══════════════════════════════════════════════════ */
-div[data-testid="stNotification"] {
-    background: rgba(60,40,120,0.55) !important;
-    border: 1px solid rgba(255,180,220,0.35) !important;
-    border-left: 3px solid #FFD0EC !important;
-    color: #FFFFFF !important;
-    border-radius: 4px !important;
-}
+div[data-testid="stNotification"] {{
+    background: rgba(255,240,250,0.92) !important;
+    border: 1px solid rgba(210,100,160,0.3) !important;
+    border-left: 3px solid #D060A0 !important;
+    color: #3A1A4A !important;
+    border-radius: 6px !important;
+}}
 
 /* ══ 텍스트 / 구분선 ═════════════════════════════════════════════ */
-hr { border-color: rgba(255,180,220,0.25) !important; }
-p, span, label, .stMarkdown { color: #ECD8FF; }
-.stCaption, small { color: #C8A8E8 !important; font-size: 0.78rem; }
+hr {{ border-color: rgba(210,100,160,0.2) !important; }}
+p, span, label, .stMarkdown {{ color: #4A1A3A; }}
+.stCaption, small {{ color: #9B5080 !important; font-size: 0.78rem; }}
 
 /* ══ dataframe ═══════════════════════════════════════════════════ */
-.stDataFrame { border: 1px solid rgba(255,180,220,0.28); border-radius: 4px; }
-.stDataFrame thead tr th {
-    background: rgba(50,30,100,0.75) !important; color: #FFD0EC !important;
+.stDataFrame {{ border: 1px solid rgba(210,100,160,0.25); border-radius: 6px; }}
+.stDataFrame thead tr th {{
+    background: rgba(255,220,240,0.9) !important; color: #8B2060 !important;
     font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255,180,220,0.35) !important;
-}
-.stDataFrame tbody tr td { background: rgba(14,10,44,0.75) !important; color: #D8CCFF !important; }
-.stDataFrame tbody tr td { background: rgba(50,30,110,0.35) !important; color: #ECD8FF !important; }
-.stDataFrame tbody tr:hover td { background: rgba(90,58,170,0.55) !important; color: #FFFFFF !important; }
+    border-bottom: 1px solid rgba(210,100,160,0.3) !important;
+}}
+.stDataFrame tbody tr td {{ background: rgba(255,240,250,0.7) !important; color: #4A1A3A !important; }}
+.stDataFrame tbody tr:hover td {{ background: rgba(255,210,235,0.85) !important; color: #3A1A4A !important; }}
 
 /* ══ 스크롤바 ════════════════════════════════════════════════════ */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #2A1F5E; }
-::-webkit-scrollbar-thumb { background: rgba(255,180,220,0.45); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #FFD0EC; }
+::-webkit-scrollbar {{ width: 5px; height: 5px; }}
+::-webkit-scrollbar-track {{ background: rgba(255,220,240,0.3); }}
+::-webkit-scrollbar-thumb {{ background: rgba(210,100,160,0.4); border-radius: 3px; }}
+::-webkit-scrollbar-thumb:hover {{ background: #D060A0; }}
 </style>
 """, unsafe_allow_html=True)
 
