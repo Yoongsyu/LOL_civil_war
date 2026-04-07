@@ -6,13 +6,21 @@ app.py
 
 import json
 import uuid
+import time
 from datetime import datetime
 
 import streamlit as st
 from github import GithubException
 
 from github_utils import load_players, add_player, save_players, delete_player
-from riot_api import fetch_player_data, tier_label, tier_emoji, calculate_mmr, POSITIONS
+from riot_api import (
+    fetch_player_data,
+    tier_label,
+    tier_emoji,
+    calculate_mmr,
+    POSITIONS,
+    get_league_entries_by_puuid,
+)
 from balancer import (
     find_balanced_teams,
     find_balanced_teams_with_positions,
@@ -63,29 +71,29 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 .stApp {
-    background-color: #FFE8F0;
-    color: #3A1A4A;
+    background-color: #F8FAFC;
+    color: #1E293B;
     font-family: 'Noto Sans KR', sans-serif;
 }
 .main .block-container {
-    background: rgba(255,255,255,0.78);
+    background: rgba(255,255,255,0.95);
     border-radius: 12px;
     padding: 1.2rem 2rem 2rem !important;
     max-width: 1200px;
-    box-shadow: 0 4px 24px rgba(200,80,140,0.10);
+    box-shadow: 0 4px 24px rgba(15,23,42,0.06);
 }
 h2, h3 {
     font-family: 'Cinzel', serif !important;
-    color: #B03878 !important;
+    color: #334155 !important;
     letter-spacing: 2px;
 }
 .stTabs [data-baseweb="tab-list"] {
     background: rgba(255,255,255,0.7);
-    border-bottom: 2px solid rgba(210,100,160,0.25);
+    border-bottom: 2px solid rgba(51,65,85,0.15);
     gap: 0;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #9B4A80 !important;
+    color: #64748B !important;
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
@@ -96,110 +104,120 @@ h2, h3 {
     background: transparent !important;
     transition: all 0.2s;
 }
-.stTabs [data-baseweb="tab"]:hover { color: #C0387A !important; }
+.stTabs [data-baseweb="tab"]:hover { color: #0F172A !important; }
 .stTabs [aria-selected="true"] {
-    color: #C0387A !important;
-    border-bottom: 3px solid #C0387A !important;
-    background: rgba(220,100,160,0.07) !important;
+    color: #0F172A !important;
+    border-bottom: 3px solid #3B82F6 !important;
+    background: rgba(59,130,246,0.05) !important;
 }
 .stTabs [data-baseweb="tab-panel"] { background: transparent; padding-top: 1rem; }
 .stButton > button {
-    background: linear-gradient(180deg, #FFFFFF 0%, #FFE8F4 100%);
-    color: #8B2060;
-    border: 1px solid rgba(210,100,160,0.4);
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #E2E8F0;
     border-radius: 6px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.82rem;
     padding: 0.35rem 0.9rem;
     transition: all 0.18s ease;
-    box-shadow: 0 2px 6px rgba(200,80,140,0.10);
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
 }
 .stButton > button:hover {
-    background: linear-gradient(180deg, #FFE0F0 0%, #FFD0E8 100%);
-    border-color: #D060A0;
-    box-shadow: 0 4px 14px rgba(200,80,150,0.25);
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 6px rgba(15,23,42,0.1);
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(180deg, #E070B0 0%, #B03880 100%);
+    background: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
     color: #FFFFFF !important;
     font-weight: 700;
     border: none;
-    box-shadow: 0 4px 14px rgba(180,60,120,0.35);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
 }
 .stButton > button[kind="primary"]:hover {
-    background: linear-gradient(180deg, #F090C8 0%, #D060A0 100%);
-    box-shadow: 0 6px 20px rgba(200,80,150,0.45);
+    background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.4);
 }
 .stTextInput input, .stNumberInput input {
     background: #FFFFFF !important;
-    color: #3A1A4A !important;
-    border: 1px solid rgba(210,100,160,0.35) !important;
+    color: #1E293B !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 6px !important;
 }
 .stTextInput input:focus, .stNumberInput input:focus {
-    border-color: #D060A0 !important;
-    box-shadow: 0 0 8px rgba(210,100,160,0.20) !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.2) !important;
 }
-.stTextInput input::placeholder { color: rgba(180,100,150,0.45) !important; }
+.stTextInput input::placeholder { color: #94A3B8 !important; }
 .stSelectbox > div > div {
     background: #FFFFFF !important;
-    border: 1px solid rgba(210,100,160,0.35) !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 6px !important;
-    color: #3A1A4A !important;
+    color: #1E293B !important;
 }
-.stSelectbox > div > div:focus-within { border-color: #D060A0 !important; }
-[data-baseweb="popover"] { background: #FFF5FA !important; border: 1px solid rgba(210,100,160,0.25) !important; }
-[data-baseweb="menu"]    { background: #FFF5FA !important; }
-[data-baseweb="option"]  { background: #FFF5FA !important; color: #6A2050 !important; }
+.stSelectbox > div > div:focus-within { border-color: #3B82F6 !important; }
+[data-baseweb="popover"] { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; }
+[data-baseweb="menu"]    { background: #FFFFFF !important; }
+[data-baseweb="option"]  { background: #FFFFFF !important; color: #334155 !important; }
 [data-baseweb="option"]:hover, [data-baseweb="option"][aria-selected="true"] {
-    background: #FFD8EC !important; color: #8B2060 !important;
+    background: #F1F5F9 !important; color: #0F172A !important;
 }
-.stSlider [data-baseweb="slider"] div[role="slider"] { background: #D060A0 !important; border: 2px solid #FFFFFF !important; }
-.stSlider [data-testid="stSliderTrackActive"] { background: #E090C0 !important; }
-.stRadio label { color: #6A2050 !important; }
-.stRadio [data-baseweb="radio"] div { border-color: rgba(210,100,160,0.45) !important; }
-.stRadio [aria-checked="true"] div { background: #D060A0 !important; border-color: #D060A0 !important; }
-.stCheckbox label { color: #6A2050 !important; }
-.stCheckbox [data-baseweb="checkbox"] div { border-color: rgba(210,100,160,0.45) !important; background: #FFFFFF !important; }
-.stCheckbox [aria-checked="true"] div { background: #D060A0 !important; border-color: #D060A0 !important; }
-.stExpander { border: 1px solid rgba(210,100,160,0.2) !important; border-radius: 6px !important; background: rgba(255,255,255,0.7) !important; }
-.stExpander summary { color: #7A2858 !important; font-size: 0.85rem; }
-.stExpander summary:hover { color: #C0387A !important; }
+.stSlider [data-baseweb="slider"] div[role="slider"] { background: #3B82F6 !important; border: 2px solid #FFFFFF !important; }
+.stSlider [data-testid="stSliderTrackActive"] { background: #93C5FD !important; }
+.stRadio label { color: #334155 !important; }
+.stRadio [data-baseweb="radio"] div { border-color: #CBD5E1 !important; }
+.stRadio [aria-checked="true"] div { background: #3B82F6 !important; border-color: #3B82F6 !important; }
+.stCheckbox label { color: #334155 !important; }
+.stCheckbox [data-baseweb="checkbox"] div { border-color: #CBD5E1 !important; background: #FFFFFF !important; }
+.stCheckbox [aria-checked="true"] div { background: #3B82F6 !important; border-color: #3B82F6 !important; }
+.stExpander { border: 1px solid #E2E8F0 !important; border-radius: 6px !important; background: #F8FAFC !important; }
+.stExpander summary { color: #475569 !important; font-size: 0.85rem; }
+.stExpander summary:hover { color: #0F172A !important; }
 div[data-testid="stNotification"] {
-    background: #FFF5FA !important;
-    border: 1px solid rgba(210,100,160,0.25) !important;
-    border-left: 3px solid #D060A0 !important;
-    color: #3A1A4A !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-left: 3px solid #3B82F6 !important;
+    color: #1E293B !important;
     border-radius: 6px !important;
 }
-hr { border-color: rgba(210,100,160,0.18) !important; }
-p, span, label, .stMarkdown { color: #4A1A3A; }
-.stCaption, small { color: #9B5080 !important; font-size: 0.78rem; }
-.stDataFrame { border: 1px solid rgba(210,100,160,0.2); border-radius: 6px; }
+hr { border-color: #E2E8F0 !important; margin: 1em 0; }
+p, span, label, .stMarkdown { color: #334155; }
+.stCaption, small { color: #64748B !important; font-size: 0.78rem; }
+.stDataFrame { border: 1px solid #E2E8F0; border-radius: 6px; }
 .stDataFrame thead tr th {
-    background: #FFE0EE !important; color: #8B2060 !important;
+    background: #F1F5F9 !important; color: #334155 !important;
     font-family: 'Cinzel', serif; font-size: 0.76rem; letter-spacing: 1px;
-    border-bottom: 1px solid rgba(210,100,160,0.25) !important;
+    border-bottom: 1px solid #E2E8F0 !important;
 }
-.stDataFrame tbody tr td { background: #FFFAFC !important; color: #4A1A3A !important; }
-.stDataFrame tbody tr:hover td { background: #FFE8F4 !important; }
+.stDataFrame tbody tr td { background: #FFFFFF !important; color: #1E293B !important; }
+.stDataFrame tbody tr:hover td { background: #F8FAFC !important; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #FFE8F0; }
-::-webkit-scrollbar-thumb { background: rgba(210,100,160,0.35); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #D060A0; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* 플레이어 목록 테이블 테두리를 위한 커스텀 스타일 */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    background: #FFFFFF !important;
+    padding: 1rem !important;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+}
 </style>
 """, unsafe_allow_html=True)
 
 # ─── 타이틀 배너 ──────────────────────────────────────────────────
 st.html("""
-<div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid rgba(210,100,160,0.2); margin-bottom:0.5rem;">
-    <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#B03878; letter-spacing:8px; text-transform:uppercase; text-shadow:0 2px 8px rgba(200,80,140,0.2);">
+<div style="text-align:center; padding:1.6rem 0 1.1rem; border-bottom:1px solid #E2E8F0; margin-bottom:0.5rem;">
+    <div style="font-family:'Cinzel',serif; font-size:2.1rem; font-weight:700; color:#1E293B; letter-spacing:8px; text-transform:uppercase; text-shadow:0 2px 8px rgba(15,23,42,0.1);">
         ✦ &nbsp; 내전 관리 시스템 &nbsp; ✦
     </div>
-    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#C070A0; letter-spacing:5px; margin-top:0.4rem;">
-        STAR GUARDIAN &nbsp;·&nbsp; INHOUSE MANAGER
+    <div style="font-family:'Noto Sans KR',sans-serif; font-size:0.72rem; color:#64748B; letter-spacing:5px; margin-top:0.4rem;">
+        LEAGUE OF LEGENDS &nbsp;·&nbsp; CUSTOM MATCH SYSTEM
     </div>
-    <div style="width:50%; height:1px; margin:0.7rem auto 0; background:linear-gradient(90deg,transparent,#F0A0C8,#FFB8DA,#F0A0C8,transparent);"></div>
+    <div style="width:50%; height:1px; margin:0.7rem auto 0; background:linear-gradient(90deg,transparent,#CBD5E1,#94A3B8,#CBD5E1,transparent);"></div>
 </div>
 """)
 
@@ -566,55 +584,59 @@ with tab1:
 
         players = sorted(players, key=_sort_key)
 
-        # 헤더 행
-        _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
-        h_name.markdown("**닉네임**")
-        h_tier.markdown("**솔랭 티어**")
-        h_solo.markdown("**솔랭 MMR**")
-        h_inhouse.markdown("**내전 MMR**")
-        h_record.markdown("**내전 전적**")
+        with st.container(border=True):
+            # 헤더 행
+            _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
+            h_name.markdown("**닉네임**")
+            h_tier.markdown("**솔랭 티어**")
+            h_solo.markdown("**솔랭 MMR**")
+            h_inhouse.markdown("**내전 MMR**")
+            h_record.markdown("**내전 전적**")
 
-        for player in players:
-            stats = player.get("inhouse_stats", {})
-            win = stats.get("win", 0)
-            loss = stats.get("loss", 0)
-            total = win + loss
-            wr_str = f"{win / total * 100:.0f}%" if total > 0 else "-"
-            tier_str = tier_label(
-                player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0)
-            )
-            emoji = tier_emoji(player["solo_tier"])
+            hr_html = "<hr style='margin: 0.5rem 0; padding: 0; border: none; border-bottom: 1px solid #E2E8F0;'>"
 
-            # 솔랭 MMR (solo_mmr 필드 없는 기존 데이터 호환)
-            solo_mmr = player.get("solo_mmr", calculate_mmr(
-                player.get("solo_tier", "UNRANKED"),
-                player.get("solo_rank", ""),
-                player.get("solo_lp", 0), 0, 0,
-            ))
-            final_mmr = player.get("mmr", solo_mmr)
-            adj = final_mmr - solo_mmr
-            adj_str = f" ({'+' if adj >= 0 else ''}{adj:,})" if adj != 0 else ""
-
-            # 요약 행
-            c_chk, c_name, c_tier, c_solo, c_inhouse, c_rec = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
-            with c_chk:
-                st.checkbox(
-                    "선택",
-                    key=f"chk_{player['puuid']}_{st.session_state.chk_reset_count}",
-                    value=st.session_state.chk_all_default,
-                    label_visibility="collapsed",
+            for player in players:
+                st.markdown(hr_html, unsafe_allow_html=True)
+                stats = player.get("inhouse_stats", {})
+                win = stats.get("win", 0)
+                loss = stats.get("loss", 0)
+                total = win + loss
+                wr_str = f"{win / total * 100:.0f}%" if total > 0 else "-"
+                tier_str = tier_label(
+                    player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0)
                 )
-            c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
-            c_tier.markdown(f"{emoji} {tier_str}")
-            c_solo.markdown(f"**{solo_mmr:,}**")
-            c_inhouse.markdown(f"**{final_mmr:,}**{adj_str}")
-            c_rec.markdown(f"{win}승 {loss}패 ({total}판) {wr_str}")
+                emoji = tier_emoji(player["solo_tier"])
 
-            # 상세 정보 - 전체 너비 expander (컬럼 밖에 배치)
-            with st.expander(f"📊 {player['name']} 상세 정보"):
-                show_player_detail(player)
+                # 솔랭 MMR (solo_mmr 필드 없는 기존 데이터 호환)
+                solo_mmr = player.get("solo_mmr", calculate_mmr(
+                    player.get("solo_tier", "UNRANKED"),
+                    player.get("solo_rank", ""),
+                    player.get("solo_lp", 0), 0, 0,
+                ))
+                final_mmr = player.get("mmr", solo_mmr)
+                adj = final_mmr - solo_mmr
+                adj_str = f" ({'+' if adj >= 0 else ''}{adj:,})" if adj != 0 else ""
 
-        st.markdown("---")
+                # 요약 행
+                c_chk, c_name, c_tier, c_solo, c_inhouse, c_rec = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
+                with c_chk:
+                    st.checkbox(
+                        "선택",
+                        key=f"chk_{player['puuid']}_{st.session_state.chk_reset_count}",
+                        value=st.session_state.chk_all_default,
+                        label_visibility="collapsed",
+                    )
+                c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
+                c_tier.markdown(f"{emoji} {tier_str}")
+                c_solo.markdown(f"**{solo_mmr:,}**")
+                c_inhouse.markdown(f"**{final_mmr:,}**{adj_str}")
+                c_rec.markdown(f"{win}승 {loss}패 ({total}판) {wr_str}")
+
+                # 상세 정보 - 전체 너비 expander (컬럼 밖에 배치)
+                with st.expander(f"📊 {player['name']} 상세 정보"):
+                    show_player_detail(player)
+
+        st.markdown("<br>", unsafe_allow_html=True)
 
         # ── 기능 4·5: 팀 구성 ───────────────────────────────────
         st.subheader("팀 구성")
@@ -906,6 +928,62 @@ with tab3:
         # ── 플레이어 관리 (MMR 수정 / 삭제) ─────────────────────────
         with admin_tab3:
             st.markdown("등록된 플레이어를 관리합니다.")
+            
+            c_sync, _ = st.columns([2, 5])
+            with c_sync:
+                if st.button("🔄 플레이어 티어 전체 동기화", use_container_width=True):
+                    mgmt_players = load_players()
+                    if not mgmt_players:
+                        st.warning("동기화할 플레이어가 없습니다.")
+                    else:
+                        success_count = 0
+                        error_count = 0
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        for idx, p in enumerate(mgmt_players):
+                            status_text.text(f"동기화 중... {p['name']} ({idx+1}/{len(mgmt_players)})")
+                            league_res = get_league_entries_by_puuid(p["puuid"])
+                            if "error" not in league_res:
+                                solo = league_res.get("solo")
+                                flex = league_res.get("flex")
+                                if solo and solo["tier"] != "UNRANKED":
+                                    target_league = solo
+                                elif flex and flex["tier"] != "UNRANKED":
+                                    target_league = flex
+                                else:
+                                    target_league = {"tier": "UNRANKED", "rank": "", "lp": 0}
+                                    
+                                p["solo_tier"] = target_league["tier"]
+                                p["solo_rank"] = target_league["rank"]
+                                p["solo_lp"] = target_league["lp"]
+                                p["solo_mmr"] = calculate_mmr(p["solo_tier"], p["solo_rank"], p["solo_lp"])
+                                
+                                stats = p.get("inhouse_stats", {})
+                                win = stats.get("win", 0)
+                                loss = stats.get("loss", 0)
+                                total = win + loss
+                                inhouse_adj = int((win / total - 0.5) * 300) if total >= 5 else 0
+                                p["mmr"] = max(0, p["solo_mmr"] + inhouse_adj)
+                                
+                                success_count += 1
+                                time.sleep(0.1)  # API Rate Limit (최소한의 간격)
+                            else:
+                                error_count += 1
+                                
+                            progress_bar.progress((idx + 1) / len(mgmt_players))
+                        
+                        status_text.text("데이터를 GitHub에 최종 저장하는 중...")
+                        if save_players(mgmt_players, commit_message=f"update: sync {success_count} players from Riot API"):
+                            st.success(f"동기화 완료! (성공: {success_count}명, 실패: {error_count}명)")
+                            st.cache_data.clear()
+                            time.sleep(1)
+                            st.rerun()
+                        else:
+                            st.error("저장 중 오류가 발생했습니다.")
+            
+            st.markdown("---")
+            
             mgmt_players = load_players()
 
             if not mgmt_players:
