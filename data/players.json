@@ -353,7 +353,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 49,
+      "mmr": 98,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 4,
@@ -378,7 +378,7 @@
           }
         }
       },
-      "solo_mmr": 0
+      "solo_mmr": 49
     },
     {
       "name": "케인",
