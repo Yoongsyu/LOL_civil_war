@@ -6,8 +6,8 @@
       "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
       "solo_tier": "SILVER",
       "solo_rank": "III",
-      "solo_lp": 55,
-      "mmr": 1023,
+      "solo_lp": 37,
+      "mmr": 1005,
       "inhouse_stats": {
         "win": 8,
         "loss": 3,
@@ -34,7 +34,8 @@
             "소라카": 1
           }
         }
-      }
+      },
+      "solo_mmr": 937
     },
     {
       "name": "아몬드봉봉초콜릿",
@@ -75,7 +76,8 @@
             "칼리스타": 1
           }
         }
-      }
+      },
+      "solo_mmr": 2265
     },
     {
       "name": "미친과학자",
@@ -116,7 +118,8 @@
             "신지드": 1
           }
         }
-      }
+      },
+      "solo_mmr": 1210
     },
     {
       "name": "Izykite",
@@ -155,16 +158,17 @@
             "라이즈": 1
           }
         }
-      }
+      },
+      "solo_mmr": 1621
     },
     {
       "name": "보드타는 햄스터",
       "tag": "CUTE",
       "puuid": "ed-0aFGSNHRCKv8yFlN3LlnXi4WtA8dKiwzXjmlcN1fmRHpFMlQI3aJoT4Tim765OFbWIG04LY0X6g",
-      "solo_tier": "PLATINUM",
-      "solo_rank": "I",
-      "solo_lp": 2,
-      "mmr": 1942,
+      "solo_tier": "GOLD",
+      "solo_rank": "IV",
+      "solo_lp": 35,
+      "mmr": 1275,
       "inhouse_stats": {
         "win": 7,
         "loss": 4,
@@ -194,7 +198,8 @@
             "르블랑": 1
           }
         }
-      }
+      },
+      "solo_mmr": 1235
     },
     {
       "name": "엄마찾는둘리",
@@ -230,7 +235,8 @@
             "케넨": 1
           }
         }
-      }
+      },
+      "solo_mmr": 1785
     },
     {
       "name": "재 인 초 이",
@@ -239,7 +245,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 36,
-      "mmr": 1206,
+      "mmr": 1207,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
@@ -258,7 +264,8 @@
           "ADC": 0,
           "SUP": 1
         }
-      }
+      },
+      "solo_mmr": 1236
     },
     {
       "name": "지 혜",
@@ -267,7 +274,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 982,
+      "mmr": 0,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 3,
@@ -298,7 +305,7 @@
           }
         }
       },
-      "solo_mmr": 1050
+      "solo_mmr": 0
     },
     {
       "name": "호 균",
@@ -336,7 +343,8 @@
             "베인": 1
           }
         }
-      }
+      },
+      "solo_mmr": 2071
     },
     {
       "name": "검은고목나무1",
@@ -345,7 +353,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1849,
+      "mmr": 49,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 4,
@@ -370,7 +378,7 @@
           }
         }
       },
-      "solo_mmr": 1800
+      "solo_mmr": 0
     },
     {
       "name": "케인",
