@@ -274,7 +274,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 0,
+      "mmr": 982,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 3,
@@ -305,7 +305,7 @@
           }
         }
       },
-      "solo_mmr": 0
+      "solo_mmr": 1050
     },
     {
       "name": "호 균",
