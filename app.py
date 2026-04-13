@@ -205,6 +205,49 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(15,23,42,0.03);
 }
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 768px) {
+    .main .block-container {
+        padding: 0.6rem 0.8rem 1.5rem !important;
+        max-width: 100% !important;
+    }
+    /* 컬럼 자동 줄바꿈 */
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap !important;
+    }
+    [data-testid="column"] {
+        min-width: min(100%, 280px) !important;
+        flex: 1 1 280px !important;
+    }
+    /* 탭 레이블 크기 축소 */
+    .stTabs [data-baseweb="tab"] {
+        font-size: 0.62rem !important;
+        padding: 0.5rem 0.55rem !important;
+        letter-spacing: 0.3px !important;
+    }
+    /* 타이틀 배너 */
+    div[style*="font-size:2.1rem"] { font-size: 1.3rem !important; letter-spacing: 3px !important; }
+    /* 버튼 */
+    .stButton > button { font-size: 0.78rem !important; padding: 0.3rem 0.6rem !important; }
+    /* 헤더 */
+    h2, h3 { font-size: 1.05rem !important; letter-spacing: 1px !important; }
+    p, span, label, .stMarkdown { font-size: 0.82rem !important; }
+    /* 슬라이더 레이블 */
+    .stSlider label { font-size: 0.78rem !important; }
+    /* expander */
+    .stExpander summary { font-size: 0.8rem !important; }
+}
+@media (max-width: 480px) {
+    [data-testid="column"] {
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    .stTabs [data-baseweb="tab"] {
+        font-size: 0.58rem !important;
+        padding: 0.45rem 0.4rem !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -421,7 +464,53 @@ def get_champion_list() -> list[str]:
         return [""]
 
 
+@st.cache_data(ttl=3600 * 24)
+def get_champion_url_map() -> dict[str, str]:
+    """한국어 챔피언 이름 → Data Dragon 이미지 URL 매핑. 실패 시 빈 딕셔너리."""
+    try:
+        import requests as _req
+        ver = _req.get(
+            "https://ddragon.leagueoflegends.com/api/versions.json", timeout=5
+        ).json()[0]
+        data = _req.get(
+            f"https://ddragon.leagueoflegends.com/cdn/{ver}/data/ko_KR/champion.json",
+            timeout=10,
+        ).json()
+        base = f"https://ddragon.leagueoflegends.com/cdn/{ver}/img/champion/"
+        return {c["name"]: base + c["image"]["full"] for c in data["data"].values()}
+    except Exception:
+        return {}
+
+
 # ─── UI 헬퍼 ─────────────────────────────────────────────────────
+
+_TIER_BADGE_COLORS = {
+    "IRON":        ("#6B7280", "#F3F4F6"),
+    "BRONZE":      ("#92400E", "#FEF3C7"),
+    "SILVER":      ("#475569", "#F1F5F9"),
+    "GOLD":        ("#854D0E", "#FEF9C3"),
+    "PLATINUM":    ("#0F766E", "#CCFBF1"),
+    "EMERALD":     ("#166534", "#DCFCE7"),
+    "DIAMOND":     ("#1D4ED8", "#DBEAFE"),
+    "MASTER":      ("#7C3AED", "#EDE9FE"),
+    "GRANDMASTER": ("#B91C1C", "#FEE2E2"),
+    "CHALLENGER":  ("#92400E", "#FEF3C7"),
+    "UNRANKED":    ("#64748B", "#F8FAFC"),
+}
+
+
+def tier_badge_html(tier: str, rank: str = "", lp: int = 0, font_size: str = "0.75rem") -> str:
+    """티어를 색상 배지 HTML로 반환"""
+    text_color, bg_color = _TIER_BADGE_COLORS.get(tier.upper(), ("#64748B", "#F8FAFC"))
+    label = tier_label(tier, rank, lp)
+    emoji = tier_emoji(tier)
+    return (
+        f"<span style='background:{bg_color};color:{text_color};"
+        f"border:1px solid {text_color}33;border-radius:4px;"
+        f"padding:2px 7px;font-size:{font_size};font-weight:600;"
+        f"white-space:nowrap;display:inline-block;'>{emoji} {label}</span>"
+    )
+
 
 def with_pure_mmr(players: list) -> list:
     """솔랭 MMR만으로 팀 구성할 때 사용하는 복사본 반환 (내전 보정치 제외)"""
@@ -453,16 +542,16 @@ def show_player_detail(player: dict):
     final_mmr = player.get("mmr", solo_mmr)
     adj = final_mmr - solo_mmr
     adj_str = f" ({'+' if adj >= 0 else ''}{adj:,})" if adj != 0 else ""
-    tier_str = tier_label(player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0))
-    emoji = tier_emoji(player["solo_tier"])
+    badge = tier_badge_html(player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0))
 
     # 요약 한 줄
     st.markdown(
-        f"{emoji} **{tier_str}**&ensp;|&ensp;"
+        f"{badge}&ensp;"
         f"솔랭 MMR **{solo_mmr:,}**&ensp;|&ensp;"
         f"내전 MMR **{final_mmr:,}**{adj_str}&ensp;|&ensp;"
         f"승률 **{wr}** ({win}승 {loss}패 {total}판)&ensp;|&ensp;"
-        f"모스트 **{POSITION_KR.get(most, most)}**"
+        f"모스트 **{POSITION_KR.get(most, most)}**",
+        unsafe_allow_html=True,
     )
 
     # 포지션별 통계 (전적 있을 때만)
@@ -491,34 +580,122 @@ def show_player_detail(player: dict):
         )
 
 
+def _most_played_champ_for(player: dict, pos: str = "") -> str:
+    """플레이어의 (포지션별) 모스트 챔피언 한국어 이름 반환. 없으면 빈 문자열."""
+    pos_champs = player.get("inhouse_stats", {}).get("position_champions", {})
+    if pos and pos_champs.get(pos):
+        return max(pos_champs[pos], key=pos_champs[pos].get)
+    # 포지션 미지정 시 전체 합산
+    combined: dict[str, int] = {}
+    for champ_dict in pos_champs.values():
+        for champ, cnt in champ_dict.items():
+            combined[champ] = combined.get(champ, 0) + cnt
+    return max(combined, key=combined.get) if combined else ""
+
+
 def show_team_result(result: dict, with_positions: bool):
-    """팀 구성 결과를 블루/레드 2열로 렌더링"""
+    """팀 구성 결과를 블루/레드 2열로 카드 렌더링 (챔피언 초상화 포함)"""
+    url_map = get_champion_url_map()
     col_b, col_r = st.columns(2)
-    for col, side, label in [
-        (col_b, "blue", "🔵 블루팀"),
-        (col_r, "red", "🔴 레드팀"),
-    ]:
+    team_styles = [
+        (col_b, "blue",  "🔵 블루팀", "#3B82F6", "#EFF6FF"),
+        (col_r, "red",   "🔴 레드팀", "#EF4444", "#FFF5F5"),
+    ]
+    for col, side, label, border, bg in team_styles:
         with col:
-            st.markdown(f"### {label}")
-            st.caption(f"총 MMR: {result[f'{side}_mmr']:,}")
+            total_mmr = result[f"{side}_mmr"]
+            st.markdown(
+                f"<div style='background:{bg};border:2px solid {border};"
+                f"border-radius:10px;padding:0.75rem 1rem 0.6rem;"
+                f"margin-bottom:0.5rem;'>"
+                f"<div style='font-size:1rem;font-weight:700;color:#1E293B;'>{label}</div>"
+                f"<div style='font-size:0.75rem;color:#64748B;margin-top:2px;'>"
+                f"총 MMR <b>{total_mmr:,}</b></div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
             for p in result[side]:
-                emoji = tier_emoji(p["solo_tier"])
-                tier_str = tier_label(p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0))
-                pos_str = ""
+                badge = tier_badge_html(p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0))
+
+                pos = ""
+                pos_html = ""
                 if with_positions:
                     pos = result.get(f"{side}_positions", {}).get(p["name"], "")
-                    pos_str = f" | **{POSITION_KR.get(pos, pos)}**"
+                    if pos:
+                        pos_html = (
+                            f"<span style='background:#F1F5F9;color:#475569;"
+                            f"border-radius:4px;padding:1px 6px;font-size:0.7rem;"
+                            f"font-weight:600;margin-left:5px;'>"
+                            f"{POSITION_KR.get(pos, pos)}</span>"
+                        )
+
+                # 챔피언 초상화
+                champ = _most_played_champ_for(p, pos)
+                champ_url = url_map.get(champ, "") if champ else ""
+                if champ_url:
+                    champ_img_html = (
+                        f"<img src='{champ_url}' width='44' height='44' "
+                        f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                        f"object-fit:cover;flex-shrink:0;' "
+                        f"title='{champ}'>"
+                    )
+                    champ_name_html = (
+                        f"<div style='font-size:0.68rem;color:#94A3B8;"
+                        f"text-align:center;margin-top:2px;white-space:nowrap;"
+                        f"overflow:hidden;text-overflow:ellipsis;max-width:48px;'>"
+                        f"{champ}</div>"
+                    )
+                    left_section = (
+                        f"<div style='display:flex;flex-direction:column;"
+                        f"align-items:center;margin-right:10px;flex-shrink:0;'>"
+                        f"{champ_img_html}{champ_name_html}</div>"
+                    )
+                else:
+                    left_section = (
+                        f"<div style='width:44px;height:44px;border-radius:50%;"
+                        f"background:#F1F5F9;border:2px solid #E2E8F0;"
+                        f"display:flex;align-items:center;justify-content:center;"
+                        f"margin-right:10px;flex-shrink:0;font-size:1.1rem;'>?</div>"
+                    )
+
                 st.markdown(
-                    f"- {emoji} **{p['name']}** {tier_str}{pos_str} *(MMR {p['mmr']:,})*"
+                    f"<div style='background:#FFFFFF;border:1px solid #E2E8F0;"
+                    f"border-radius:8px;padding:0.55rem 0.85rem;"
+                    f"margin-bottom:0.35rem;display:flex;"
+                    f"align-items:center;'>"
+                    f"{left_section}"
+                    f"<div style='flex:1;min-width:0;'>"
+                    f"<div style='font-weight:700;font-size:0.9rem;color:#1E293B;'>"
+                    f"{p['name']}{pos_html}</div>"
+                    f"<div style='margin-top:4px;'>{badge}</div>"
+                    f"</div>"
+                    f"<div style='text-align:right;flex-shrink:0;margin-left:8px;'>"
+                    f"<div style='font-size:0.68rem;color:#94A3B8;'>MMR</div>"
+                    f"<div style='font-size:0.95rem;font-weight:700;color:#334155;'>"
+                    f"{p['mmr']:,}</div>"
+                    f"</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
                 )
-    st.info(f"MMR 차이: **{result['diff']:,}점**")
+
+    diff = result["diff"]
+    diff_color = "#10B981" if diff <= 100 else "#F59E0B" if diff <= 250 else "#EF4444"
+    st.markdown(
+        f"<div style='text-align:center;padding:0.55rem 1rem;"
+        f"background:#F8FAFC;border:1px solid #E2E8F0;"
+        f"border-radius:8px;margin-top:0.4rem;'>"
+        f"<span style='color:{diff_color};font-weight:700;font-size:0.9rem;'>"
+        f"MMR 차이: {diff:,}점</span>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
 
 
 # ══════════════════════════════════════════════════════════════════
 # 메인 앱
 # ══════════════════════════════════════════════════════════════════
 
-tab1, tab2, tab3 = st.tabs(["🏠 플레이어 & 팀 구성", "➕ 플레이어 등록", "🔧 관리자"])
+tab1, tab2, tab3, tab4 = st.tabs(["🏠 플레이어 & 팀 구성", "➕ 플레이어 등록", "🔧 관리자", "🏆 리더보드"])
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -539,19 +716,6 @@ with tab1:
         st.info("등록된 플레이어가 없습니다. '플레이어 등록' 탭에서 먼저 추가해주세요.")
     else:
         # ── 기능 1·2·3: 리스트 + 티어 + 상세 정보 ─────────────────
-        # 전체선택/해제 버튼
-        btn_all, btn_none, _ = st.columns([1, 1, 6])
-        with btn_all:
-            if st.button("☑ 전체선택", use_container_width=True):
-                st.session_state.chk_reset_count += 1
-                st.session_state.chk_all_default = True
-                st.rerun()
-        with btn_none:
-            if st.button("☐ 전체해제", use_container_width=True):
-                st.session_state.chk_reset_count += 1
-                st.session_state.chk_all_default = False
-                st.rerun()
-
         # ── 정렬 옵션 ─────────────────────────────────────────────
         sort_col, _ = st.columns([2, 5])
         with sort_col:
@@ -586,7 +750,18 @@ with tab1:
 
         with st.container(border=True):
             # 헤더 행
-            _, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
+            h_chk, h_name, h_tier, h_solo, h_inhouse, h_record = st.columns([0.5, 2.2, 1.8, 1.4, 1.4, 1.8])
+            with h_chk:
+                select_all = st.checkbox(
+                    "전체",
+                    value=st.session_state.chk_all_default,
+                    key=f"chk_all_{st.session_state.chk_reset_count}",
+                    label_visibility="collapsed",
+                )
+                if select_all != st.session_state.chk_all_default:
+                    st.session_state.chk_reset_count += 1
+                    st.session_state.chk_all_default = select_all
+                    st.rerun()
             h_name.markdown("**닉네임**")
             h_tier.markdown("**솔랭 티어**")
             h_solo.markdown("**솔랭 MMR**")
@@ -602,10 +777,6 @@ with tab1:
                 loss = stats.get("loss", 0)
                 total = win + loss
                 wr_str = f"{win / total * 100:.0f}%" if total > 0 else "-"
-                tier_str = tier_label(
-                    player["solo_tier"], player.get("solo_rank", ""), player.get("solo_lp", 0)
-                )
-                emoji = tier_emoji(player["solo_tier"])
 
                 # 솔랭 MMR (solo_mmr 필드 없는 기존 데이터 호환)
                 solo_mmr = player.get("solo_mmr", calculate_mmr(
@@ -627,7 +798,7 @@ with tab1:
                         label_visibility="collapsed",
                     )
                 c_name.markdown(f"**{player['name']}**#{player.get('tag', '')}")
-                c_tier.markdown(f"{emoji} {tier_str}")
+                c_tier.markdown(tier_badge_html(player["solo_tier"], player.get("solo_rank",""), player.get("solo_lp",0)), unsafe_allow_html=True)
                 c_solo.markdown(f"**{solo_mmr:,}**")
                 c_inhouse.markdown(f"**{final_mmr:,}**{adj_str}")
                 c_rec.markdown(f"{win}승 {loss}패 ({total}판) {wr_str}")
@@ -1082,3 +1253,266 @@ with tab3:
                                 st.cache_data.clear()
                             else:
                                 st.error("저장 실패")
+
+
+# ══════════════════════════════════════════════════════════════════
+# TAB 4: 리더보드
+# ══════════════════════════════════════════════════════════════════
+with tab4:
+    import pandas as pd
+
+    lb_players = get_players_cached()
+
+    if not lb_players:
+        st.info("등록된 플레이어가 없습니다.")
+    else:
+        # ── 전체 통계 요약 배너 ───────────────────────────────────
+        total_games_all = sum(
+            (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0))
+            for p in lb_players
+        ) // 10  # 경기 수 = 총 참여 합산 / 10
+
+        players_with_games = [
+            p for p in lb_players
+            if (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0)) > 0
+        ]
+
+        # 승률왕 (최소 5판)
+        qualified = [
+            p for p in lb_players
+            if (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0)) >= 5
+        ]
+        wr_king = max(
+            qualified,
+            key=lambda p: p["inhouse_stats"]["win"] / (p["inhouse_stats"]["win"] + p["inhouse_stats"]["loss"]),
+        ) if qualified else None
+
+        # 최다 경기
+        most_played = max(
+            players_with_games,
+            key=lambda p: p["inhouse_stats"].get("win", 0) + p["inhouse_stats"].get("loss", 0),
+        ) if players_with_games else None
+
+        # 최다 승
+        most_wins = max(
+            players_with_games,
+            key=lambda p: p["inhouse_stats"].get("win", 0),
+        ) if players_with_games else None
+
+        # 요약 카드 3열
+        sc1, sc2, sc3 = st.columns(3)
+        card_style = (
+            "background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px;"
+            "padding:1rem 1.2rem; text-align:center;"
+        )
+        with sc1:
+            st.markdown(
+                f"<div style='{card_style}'>"
+                f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>TOTAL MATCHES</div>"
+                f"<div style='font-size:2rem;font-weight:700;color:#1E293B;'>{total_games_all}</div>"
+                f"<div style='font-size:0.72rem;color:#94A3B8;'>누적 내전 경기 수</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+        with sc2:
+            if wr_king:
+                wr_val = wr_king["inhouse_stats"]["win"] / (
+                    wr_king["inhouse_stats"]["win"] + wr_king["inhouse_stats"]["loss"]
+                ) * 100
+                sc2.markdown(
+                    f"<div style='{card_style}'>"
+                    f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>WIN RATE KING</div>"
+                    f"<div style='font-size:1.5rem;font-weight:700;color:#1E293B;'>{wr_king['name']}</div>"
+                    f"<div style='font-size:0.85rem;color:#3B82F6;font-weight:600;'>{wr_val:.1f}% 승률</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                sc2.markdown(
+                    f"<div style='{card_style}'>"
+                    f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>WIN RATE KING</div>"
+                    f"<div style='font-size:1.2rem;color:#94A3B8;'>5판 이상 필요</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+        with sc3:
+            if most_played:
+                mp_total = most_played["inhouse_stats"].get("win", 0) + most_played["inhouse_stats"].get("loss", 0)
+                sc3.markdown(
+                    f"<div style='{card_style}'>"
+                    f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>MOST ACTIVE</div>"
+                    f"<div style='font-size:1.5rem;font-weight:700;color:#1E293B;'>{most_played['name']}</div>"
+                    f"<div style='font-size:0.85rem;color:#10B981;font-weight:600;'>{mp_total}판 참여</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                sc3.markdown(
+                    f"<div style='{card_style}'>"
+                    f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>MOST ACTIVE</div>"
+                    f"<div style='font-size:1.2rem;color:#94A3B8;'>-</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── 배지 ─────────────────────────────────────────────────
+        def _get_badges(player: dict) -> list[str]:
+            badges = []
+            stats = player.get("inhouse_stats", {})
+            win = stats.get("win", 0)
+            loss = stats.get("loss", 0)
+            total = win + loss
+            if total == 0:
+                return badges
+            wr = win / total
+            if total >= 5 and wr >= 0.70:
+                badges.append("🔥 승률왕")
+            if total >= 30:
+                badges.append("⚔️ 베테랑")
+            if total >= 60:
+                badges.append("👑 레전드")
+            if win >= 20:
+                badges.append("🏆 20승 달성")
+            # 포지션 장인: 한 포지션에 70% 이상 집중
+            positions = stats.get("positions", {})
+            if total >= 5:
+                for pos, cnt in positions.items():
+                    if cnt / total >= 0.70:
+                        badges.append(f"🎯 {POSITION_KR.get(pos, pos)} 장인")
+            return badges
+
+        # ── 종합 순위표 ───────────────────────────────────────────
+        lb_sort_col, lb_min_col, _ = st.columns([2, 2, 3])
+        with lb_sort_col:
+            lb_sort = st.selectbox(
+                "정렬 기준",
+                ["승률 높은순", "총 승수 많은순", "총 경기 많은순", "내전 MMR 높은순"],
+                key="lb_sort",
+            )
+        with lb_min_col:
+            min_games = st.number_input(
+                "최소 경기 수",
+                min_value=0, max_value=50, value=1, step=1,
+                key="lb_min_games",
+                help="이 판 수 이상 플레이한 플레이어만 표시",
+            )
+
+        rows = []
+        for p in lb_players:
+            stats = p.get("inhouse_stats", {})
+            win = stats.get("win", 0)
+            loss = stats.get("loss", 0)
+            total = win + loss
+            if total < min_games:
+                continue
+            wr = win / total if total > 0 else 0.0
+            solo_mmr = p.get("solo_mmr", p.get("mmr", 0))
+            final_mmr = p.get("mmr", solo_mmr)
+            most_pos = get_most_played_position(p)
+            badges = _get_badges(p)
+            rows.append({
+                "_win": win,
+                "_total": total,
+                "_wr": wr,
+                "_mmr": final_mmr,
+                "닉네임": f"{p['name']}#{p.get('tag', '')}",
+                "티어": f"{tier_emoji(p['solo_tier'])} {tier_label(p['solo_tier'], p.get('solo_rank',''), p.get('solo_lp',0))}",
+                "내전 MMR": f"{final_mmr:,}",
+                "전적": f"{win}승 {loss}패",
+                "승률": f"{wr*100:.1f}%" if total > 0 else "-",
+                "모스트 포지션": POSITION_KR.get(most_pos, most_pos) if most_pos else "-",
+                "배지": " ".join(badges) if badges else "-",
+            })
+
+        if not rows:
+            st.info(f"{min_games}판 이상 플레이한 플레이어가 없습니다.")
+        else:
+            sort_key_map = {
+                "승률 높은순": lambda r: -r["_wr"],
+                "총 승수 많은순": lambda r: -r["_win"],
+                "총 경기 많은순": lambda r: -r["_total"],
+                "내전 MMR 높은순": lambda r: -r["_mmr"],
+            }
+            rows.sort(key=sort_key_map[lb_sort])
+
+            # 순위 열 추가
+            for i, row in enumerate(rows):
+                medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
+                row["순위"] = medal
+
+            display_cols = ["순위", "닉네임", "티어", "내전 MMR", "전적", "승률", "모스트 포지션", "배지"]
+            df = pd.DataFrame(rows)[display_cols]
+
+            st.dataframe(df, use_container_width=True, hide_index=True, height=min(450, 60 + len(rows) * 35))
+
+        st.markdown("---")
+
+        # ── 포지션별 리더보드 ─────────────────────────────────────
+        st.subheader("포지션별 TOP 3")
+
+        pos_cols = st.columns(5)
+        for col, pos in zip(pos_cols, POSITIONS):
+            pos_rows = []
+            for p in lb_players:
+                stats = p.get("inhouse_stats", {})
+                played = stats.get("positions", {}).get(pos, 0)
+                if played == 0:
+                    continue
+                wins = stats.get("position_wins", {}).get(pos, 0)
+                wr = wins / played
+                champ_counts = stats.get("position_champions", {}).get(pos, {})
+                most_champ = max(champ_counts, key=champ_counts.get) if champ_counts else "-"
+                pos_rows.append({
+                    "name": p["name"],
+                    "played": played,
+                    "wins": wins,
+                    "wr": wr,
+                    "most_champ": most_champ,
+                })
+            pos_rows.sort(key=lambda r: (-r["wr"], -r["played"]))
+            top3 = pos_rows[:3]
+            lb_url_map = get_champion_url_map()
+
+            with col:
+                st.markdown(
+                    f"<div style='text-align:center;font-weight:700;font-size:0.85rem;"
+                    f"color:#334155;padding:0.4rem 0 0.6rem;border-bottom:2px solid #E2E8F0;"
+                    f"margin-bottom:0.6rem;'>{POSITION_KR[pos]}</div>",
+                    unsafe_allow_html=True,
+                )
+                if not top3:
+                    st.caption("기록 없음")
+                for rank_i, r in enumerate(top3):
+                    medal = ["🥇", "🥈", "🥉"][rank_i]
+                    champ_name = r["most_champ"] if r["most_champ"] != "-" else ""
+                    champ_url = lb_url_map.get(champ_name, "") if champ_name else ""
+                    if champ_url:
+                        img_html = (
+                            f"<img src='{champ_url}' width='36' height='36' "
+                            f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                            f"vertical-align:middle;margin-right:6px;'>"
+                        )
+                    else:
+                        img_html = (
+                            f"<span style='display:inline-block;width:36px;height:36px;"
+                            f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
+                            f"vertical-align:middle;margin-right:6px;text-align:center;"
+                            f"line-height:36px;font-size:0.8rem;'>?</span>"
+                        )
+                    st.markdown(
+                        f"<div style='display:flex;align-items:center;"
+                        f"padding:0.4rem 0;border-bottom:1px solid #F1F5F9;'>"
+                        f"{img_html}"
+                        f"<div>"
+                        f"<div style='font-size:0.85rem;font-weight:700;color:#1E293B;'>"
+                        f"{medal} {r['name']}</div>"
+                        f"<div style='font-size:0.72rem;color:#64748B;'>"
+                        f"{r['wr']*100:.1f}% ({r['wins']}승/{r['played']}판)</div>"
+                        f"<div style='font-size:0.68rem;color:#94A3B8;'>"
+                        f"{champ_name if champ_name else '-'}</div>"
+                        f"</div>"
+                        f"</div>",
+                        unsafe_allow_html=True,
+                    )
