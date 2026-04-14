@@ -446,6 +446,11 @@ def get_players_cached():
     return load_players()
 
 
+@st.cache_data(ttl=300)
+def get_matches_cached():
+    return load_matches()
+
+
 @st.cache_data(ttl=3600 * 24)  # 24시간 캐시 (챔피언 목록은 자주 안 바뀜)
 def get_champion_list() -> list[str]:
     """Riot Data Dragon에서 최신 챔피언 목록(한국어)을 가져옴. 실패 시 빈 목록."""
@@ -529,7 +534,7 @@ def with_pure_mmr(players: list) -> list:
 
 
 def show_player_detail(player: dict):
-    """플레이어 상세 정보 렌더링 (컴팩트 버전)"""
+    """플레이어 상세 정보 렌더링 (포지션별 / 챔피언별 탭)"""
     import pandas as pd
 
     stats = player.get("inhouse_stats", {})
@@ -554,14 +559,25 @@ def show_player_detail(player: dict):
         unsafe_allow_html=True,
     )
 
-    # 포지션별 통계 (전적 있을 때만)
-    if total > 0:
+    if total == 0:
+        return
+
+    # ── 포지션별 / 챔피언별 탭 ────────────────────────────────────
+    puuid = player["puuid"]
+    view = st.radio(
+        "통계 보기",
+        ["포지션별 승률", "챔피언별 승률"],
+        horizontal=True,
+        key=f"detail_view_{puuid}",
+        label_visibility="collapsed",
+    )
+
+    if view == "포지션별 승률":
         pos_champs = stats.get("position_champions", {})
         rows = []
         for pos in POSITIONS:
             played = stats.get("positions", {}).get(pos, 0)
             wins = stats.get("position_wins", {}).get(pos, 0)
-            # 모스트 챔피언: 해당 포지션에서 가장 많이 픽한 챔피언
             champ_counts = pos_champs.get(pos, {})
             most_champ = max(champ_counts, key=champ_counts.get) if champ_counts else "-"
             rows.append({
@@ -577,6 +593,77 @@ def show_player_detail(player: dict):
             use_container_width=True,
             hide_index=True,
             height=210,
+        )
+
+    else:  # 챔피언별 승률
+        matches = get_matches_cached()
+        url_map = get_champion_url_map()
+
+        # matches에서 이 플레이어의 챔피언별 승/패 집계
+        champ_stats: dict[str, dict] = {}
+        for m in matches:
+            winner = m["winner"]
+            for side in ["blue", "red"]:
+                for pi in m.get(f"{side}_team", []):
+                    if pi.get("puuid") != puuid:
+                        continue
+                    champ = pi.get("champion", "")
+                    if not champ:
+                        continue
+                    if champ not in champ_stats:
+                        champ_stats[champ] = {"win": 0, "loss": 0}
+                    if side == winner:
+                        champ_stats[champ]["win"] += 1
+                    else:
+                        champ_stats[champ]["loss"] += 1
+
+        if not champ_stats:
+            st.caption("챔피언 기록이 없습니다. (전적 입력 시 챔피언을 선택해야 집계됩니다)")
+            return
+
+        # 판수 내림차순 정렬
+        sorted_champs = sorted(
+            champ_stats.items(),
+            key=lambda x: -(x[1]["win"] + x[1]["loss"]),
+        )
+
+        # 전체 카드를 하나의 스크롤 박스로 렌더링 (4~5줄 고정 높이)
+        cards_html = ""
+        for champ, s in sorted_champs:
+            w, l = s["win"], s["loss"]
+            t = w + l
+            wr_val = w / t * 100
+            wr_color = "#10B981" if wr_val >= 60 else "#EF4444" if wr_val < 40 else "#64748B"
+            img_url = url_map.get(champ, "")
+            img_html = (
+                f"<img src='{img_url}' width='32' height='32' "
+                f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                f"object-fit:cover;flex-shrink:0;'>"
+                if img_url else
+                f"<div style='width:32px;height:32px;border-radius:50%;"
+                f"background:#F1F5F9;border:2px solid #E2E8F0;"
+                f"display:flex;align-items:center;justify-content:center;"
+                f"font-size:0.7rem;color:#94A3B8;flex-shrink:0;'>?</div>"
+            )
+            cards_html += (
+                f"<div style='display:flex;align-items:center;gap:9px;"
+                f"padding:0.32rem 0.5rem;border-bottom:1px solid #F1F5F9;'>"
+                f"{img_html}"
+                f"<div style='flex:1;font-weight:700;font-size:0.85rem;color:#1E293B;'>{champ}</div>"
+                f"<div style='text-align:right;'>"
+                f"<span style='font-size:0.78rem;color:#475569;'>{t}판 &nbsp;{w}승 {l}패</span><br>"
+                f"<span style='font-size:0.85rem;font-weight:700;color:{wr_color};'>{wr_val:.1f}%</span>"
+                f"</div>"
+                f"</div>"
+            )
+
+        st.markdown(
+            f"<div style='height:230px;overflow-y:auto;"
+            f"border:1px solid #E2E8F0;border-radius:6px;"
+            f"background:#FFFFFF;'>"
+            f"{cards_html}"
+            f"</div>",
+            unsafe_allow_html=True,
         )
 
 
