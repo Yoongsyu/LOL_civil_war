@@ -1080,7 +1080,7 @@
           "name": "보드타는 햄스터",
           "tag": "CUTE",
           "position": "JNG",
-          "champion": "자르반4세"
+          "champion": "자르반 4세"
         },
         {
           "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
@@ -1104,7 +1104,11 @@
           "champion": "세라핀"
         }
       ],
-      "winner": "red"
+      "winner": "red",
+      "bans": {
+        "blue": [],
+        "red": []
+      }
     },
     {
       "id": "747db786",
