@@ -276,6 +276,8 @@ if "chk_reset_count" not in st.session_state:
     st.session_state.chk_reset_count = 0
 if "chk_all_default" not in st.session_state:
     st.session_state.chk_all_default = False
+if "editing_match" not in st.session_state:
+    st.session_state.editing_match = None
 
 
 # ─── matches.json 유틸리티 ────────────────────────────────────────
@@ -321,15 +323,18 @@ def save_matches(matches: list, commit_msg: str = "update: matches data") -> boo
         return False
 
 
-def record_match_batch(blue_team, red_team, winner, positions, champions=None) -> bool:
+def record_match_batch(blue_team, red_team, winner, positions, champions=None, bans=None) -> bool:
     """
     모든 플레이어 stats 일괄 업데이트 + matches.json 저장 (총 2회 GitHub 커밋)
     positions: {puuid: position_str}
     champions: {puuid: champion_name}  (optional)
+    bans: {"blue": [champ,...], "red": [champ,...]}  (optional)
     winner: "blue" or "red"
     """
     if champions is None:
         champions = {}
+    if bans is None:
+        bans = {"blue": [], "red": []}
     players = load_players()
     player_map = {p["puuid"]: p for p in players}
 
@@ -340,6 +345,7 @@ def record_match_batch(blue_team, red_team, winner, positions, champions=None) -
         "blue_team": [],
         "red_team": [],
         "winner": winner,
+        "bans": bans,
     }
 
     for side, team in [("blue", blue_team), ("red", red_team)]:
@@ -437,6 +443,58 @@ def revert_match(match: dict) -> bool:
         list(player_map.values()),
         commit_message=f"revert: match {match['id']}",
     )
+
+
+def update_match(old_match: dict, new_match: dict) -> bool:
+    """경기 수정: 기존 stats 원복 후 새 데이터로 재적용"""
+    if not revert_match(old_match):
+        return False
+
+    # revert 후 최신 플레이어 데이터 로드
+    players = load_players()
+    player_map = {p["puuid"]: p for p in players}
+
+    winner = new_match["winner"]
+    for side in ["blue", "red"]:
+        is_win = side == winner
+        for pi in new_match[f"{side}_team"]:
+            puuid = pi["puuid"]
+            pos = pi.get("position", "TOP")
+            champ = pi.get("champion", "")
+            if puuid not in player_map:
+                continue
+            p = player_map[puuid]
+            stats = p.setdefault("inhouse_stats", {
+                "win": 0, "loss": 0,
+                "positions": {x: 0 for x in POSITIONS},
+                "position_wins": {x: 0 for x in POSITIONS},
+            })
+            stats.setdefault("position_wins", {x: 0 for x in POSITIONS})
+            if is_win:
+                stats["win"] = stats.get("win", 0) + 1
+                stats["position_wins"][pos] = stats["position_wins"].get(pos, 0) + 1
+            else:
+                stats["loss"] = stats.get("loss", 0) + 1
+            stats["positions"][pos] = stats["positions"].get(pos, 0) + 1
+            if champ:
+                pos_champs = stats.setdefault("position_champions", {})
+                pos_champs.setdefault(pos, {})
+                pos_champs[pos][champ] = pos_champs[pos].get(champ, 0) + 1
+            wc = stats.get("win", 0)
+            lc = stats.get("loss", 0)
+            tot = wc + lc
+            solo_mmr = p.get("solo_mmr", calculate_mmr(
+                p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
+            ))
+            inhouse_adj = int((wc / tot - 0.5) * 300) if tot >= 5 else 0
+            p["mmr"] = max(0, solo_mmr + inhouse_adj)
+
+    ok1 = save_players(list(player_map.values()),
+                       commit_message=f"update: edit match {new_match['id']}")
+    all_matches = load_matches()
+    updated = [new_match if m["id"] == new_match["id"] else m for m in all_matches]
+    ok2 = save_matches(updated, commit_msg=f"update: edit match {new_match['id']}")
+    return ok1 and ok2
 
 
 # ─── 캐시된 로더 ─────────────────────────────────────────────────
@@ -782,7 +840,7 @@ def show_team_result(result: dict, with_positions: bool):
 # 메인 앱
 # ══════════════════════════════════════════════════════════════════
 
-tab1, tab2, tab3, tab4 = st.tabs(["🏠 플레이어 & 팀 구성", "➕ 플레이어 등록", "🔧 관리자", "🏆 리더보드"])
+tab1, tab4, tab2, tab3 = st.tabs(["🏠 플레이어 & 팀 구성", "🏆 리더보드", "➕ 플레이어 등록", "🔧 관리자"])
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -1062,17 +1120,15 @@ with tab3:
                     )
                     blue_pos_picks.append(
                         c2.selectbox(
-                            "포지션",
-                            POSITIONS,
+                            "포지션", POSITIONS,
+                            index=i,
                             format_func=lambda x: POSITION_KR[x],
                             key=f"b_pos_{i}",
                         )
                     )
                     blue_champ_picks.append(
                         c3.selectbox(
-                            "챔피언",
-                            champ_list,
-                            key=f"b_champ_{i}",
+                            "챔피언", champ_list, key=f"b_champ_{i}",
                             format_func=lambda x: x if x else "선택 안 함",
                         )
                     )
@@ -1086,21 +1142,39 @@ with tab3:
                     )
                     red_pos_picks.append(
                         c2.selectbox(
-                            "포지션",
-                            POSITIONS,
+                            "포지션", POSITIONS,
+                            index=i,
                             format_func=lambda x: POSITION_KR[x],
                             key=f"r_pos_{i}",
                         )
                     )
                     red_champ_picks.append(
                         c3.selectbox(
-                            "챔피언",
-                            champ_list,
-                            key=f"r_champ_{i}",
+                            "챔피언", champ_list, key=f"r_champ_{i}",
                             format_func=lambda x: x if x else "선택 안 함",
                         )
                     )
 
+                st.markdown("---")
+                st.markdown("**🚫 밴 정보** *(선택 사항)*")
+                ban_col_b, ban_col_r = st.columns(2)
+                blue_bans, red_bans = [], []
+                with ban_col_b:
+                    st.caption("🔵 블루팀 밴 (5개)")
+                    for i in range(5):
+                        blue_bans.append(st.selectbox(
+                            f"블루 밴 {i+1}", champ_list, key=f"b_ban_{i}",
+                            format_func=lambda x: x if x else "선택 안 함",
+                        ))
+                with ban_col_r:
+                    st.caption("🔴 레드팀 밴 (5개)")
+                    for i in range(5):
+                        red_bans.append(st.selectbox(
+                            f"레드 밴 {i+1}", champ_list, key=f"r_ban_{i}",
+                            format_func=lambda x: x if x else "선택 안 함",
+                        ))
+
+                st.markdown("---")
                 winner = st.radio("승리팀", ["블루팀", "레드팀"], horizontal=True)
                 winner_key = "blue" if winner == "블루팀" else "red"
 
@@ -1121,9 +1195,13 @@ with tab3:
                             positions[p["puuid"]] = pos
                             if champ.strip():
                                 champions[p["puuid"]] = champ.strip()
+                        bans = {
+                            "blue": [b for b in blue_bans if b],
+                            "red":  [b for b in red_bans  if b],
+                        }
 
                         with st.spinner("전적 등록 중... (GitHub 저장에 잠시 시간이 걸릴 수 있습니다)"):
-                            ok = record_match_batch(blue_team, red_team, winner_key, positions, champions)
+                            ok = record_match_batch(blue_team, red_team, winner_key, positions, champions, bans)
 
                         if ok:
                             st.success("✅ 전적이 등록되었습니다!")
@@ -1131,57 +1209,164 @@ with tab3:
                         else:
                             st.error("등록 중 오류가 발생했습니다.")
 
-        # ── 기능 8: 경기 기록 조회 및 삭제 ─────────────────────────
+        # ── 기능 8: 경기 기록 조회·수정·삭제 ────────────────────────
         with admin_tab2:
             matches = load_matches()
+            edit_champ_list = get_champion_list()
 
             if not matches:
                 st.info("등록된 경기 기록이 없습니다.")
             else:
                 st.caption(f"총 {len(matches)}경기 기록됨")
                 for match in matches:
+                    mid = match["id"]
                     winner_str = "🔵 블루팀" if match["winner"] == "blue" else "🔴 레드팀"
                     with st.expander(
-                        f"{match['date']} | {winner_str} 승리 | ID: {match['id']}"
+                        f"{match['date']} | {winner_str} 승리 | ID: {mid}"
                     ):
-                        cb, cr = st.columns(2)
-                        with cb:
-                            st.markdown("**🔵 블루팀**")
-                            for pm in match["blue_team"]:
-                                pos_kr = POSITION_KR.get(pm.get("position", ""), "")
-                                champ = pm.get("champion", "")
-                                champ_str = f" · {champ}" if champ else ""
-                                st.markdown(
-                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr}{champ_str})"
-                                )
-                        with cr:
-                            st.markdown("**🔴 레드팀**")
-                            for pm in match["red_team"]:
-                                pos_kr = POSITION_KR.get(pm.get("position", ""), "")
-                                champ = pm.get("champion", "")
-                                champ_str = f" · {champ}" if champ else ""
-                                st.markdown(
-                                    f"- {pm['name']}#{pm.get('tag', '')} ({pos_kr}{champ_str})"
+                        # ── 일반 조회 뷰 ──────────────────────────────
+                        if st.session_state.editing_match != mid:
+                            cb, cr = st.columns(2)
+                            with cb:
+                                st.markdown("**🔵 블루팀**")
+                                for pm in match["blue_team"]:
+                                    pos_kr = POSITION_KR.get(pm.get("position", ""), "")
+                                    champ = pm.get("champion", "")
+                                    champ_str = f" · {champ}" if champ else ""
+                                    st.markdown(f"- {pm['name']}#{pm.get('tag','')} ({pos_kr}{champ_str})")
+                            with cr:
+                                st.markdown("**🔴 레드팀**")
+                                for pm in match["red_team"]:
+                                    pos_kr = POSITION_KR.get(pm.get("position", ""), "")
+                                    champ = pm.get("champion", "")
+                                    champ_str = f" · {champ}" if champ else ""
+                                    st.markdown(f"- {pm['name']}#{pm.get('tag','')} ({pos_kr}{champ_str})")
+
+                            # 밴 표시
+                            bans = match.get("bans", {})
+                            b_bans = [b for b in bans.get("blue", []) if b]
+                            r_bans = [b for b in bans.get("red",  []) if b]
+                            if b_bans or r_bans:
+                                st.caption(
+                                    f"🚫 밴 — 블루: {', '.join(b_bans) or '없음'}  |  "
+                                    f"레드: {', '.join(r_bans) or '없음'}"
                                 )
 
-                        st.markdown("---")
-                        if st.button(
-                            "🗑️ 이 경기 삭제 (전적 원복)",
-                            key=f"del_match_{match['id']}",
-                        ):
-                            with st.spinner("삭제 중..."):
-                                ok1 = revert_match(match)
-                                updated = [m for m in matches if m["id"] != match["id"]]
-                                ok2 = save_matches(
-                                    updated,
-                                    commit_msg=f"delete: match {match['id']}",
-                                )
-                            if ok1 and ok2:
-                                st.success("삭제 완료! 전적이 원복되었습니다.")
-                                st.cache_data.clear()
-                                st.rerun()
-                            else:
-                                st.error("삭제 중 오류가 발생했습니다.")
+                            st.markdown("---")
+                            btn_edit, btn_del, _ = st.columns([1, 1, 3])
+                            with btn_edit:
+                                if st.button("✏️ 수정", key=f"edit_btn_{mid}"):
+                                    st.session_state.editing_match = mid
+                                    st.rerun()
+                            with btn_del:
+                                if st.button("🗑️ 삭제", key=f"del_match_{mid}"):
+                                    with st.spinner("삭제 중..."):
+                                        ok1 = revert_match(match)
+                                        updated = [m for m in matches if m["id"] != mid]
+                                        ok2 = save_matches(updated, commit_msg=f"delete: match {mid}")
+                                    if ok1 and ok2:
+                                        st.success("삭제 완료!")
+                                        st.cache_data.clear()
+                                        st.rerun()
+                                    else:
+                                        st.error("삭제 중 오류가 발생했습니다.")
+
+                        # ── 수정 폼 ───────────────────────────────────
+                        else:
+                            st.markdown("#### ✏️ 경기 수정")
+                            new_winner = st.radio(
+                                "승리팀",
+                                ["블루팀", "레드팀"],
+                                index=0 if match["winner"] == "blue" else 1,
+                                horizontal=True,
+                                key=f"edit_winner_{mid}",
+                            )
+                            new_winner_key = "blue" if new_winner == "블루팀" else "red"
+
+                            new_blue, new_red = [], []
+                            for side_label, team_key, new_list in [
+                                ("🔵 블루팀", "blue_team", new_blue),
+                                ("🔴 레드팀", "red_team", new_red),
+                            ]:
+                                st.markdown(f"**{side_label}**")
+                                for i, pm in enumerate(match[team_key]):
+                                    ec1, ec2, ec3 = st.columns([2, 1, 1.5])
+                                    ec1.markdown(f"**{pm['name']}**#{pm.get('tag','')}")
+                                    new_pos = ec2.selectbox(
+                                        "포지션", POSITIONS,
+                                        index=POSITIONS.index(pm.get("position", "TOP")),
+                                        format_func=lambda x: POSITION_KR[x],
+                                        key=f"edit_{mid}_{team_key}_pos_{i}",
+                                        label_visibility="collapsed",
+                                    )
+                                    cur_champ = pm.get("champion", "")
+                                    champ_idx = edit_champ_list.index(cur_champ) if cur_champ in edit_champ_list else 0
+                                    new_champ = ec3.selectbox(
+                                        "챔피언", edit_champ_list,
+                                        index=champ_idx,
+                                        format_func=lambda x: x if x else "선택 안 함",
+                                        key=f"edit_{mid}_{team_key}_champ_{i}",
+                                        label_visibility="collapsed",
+                                    )
+                                    new_list.append({**pm, "position": new_pos, "champion": new_champ})
+
+                            # 밴 수정
+                            st.markdown("**🚫 밴**")
+                            cur_bans = match.get("bans", {"blue": [], "red": []})
+                            eb1, eb2 = st.columns(2)
+                            new_b_bans, new_r_bans = [], []
+                            with eb1:
+                                st.caption("블루 밴")
+                                for i in range(5):
+                                    cur = cur_bans.get("blue", [""] * 5)
+                                    cur_val = cur[i] if i < len(cur) else ""
+                                    idx = edit_champ_list.index(cur_val) if cur_val in edit_champ_list else 0
+                                    new_b_bans.append(st.selectbox(
+                                        f"블루 밴 {i+1}", edit_champ_list, index=idx,
+                                        format_func=lambda x: x if x else "선택 안 함",
+                                        key=f"edit_{mid}_bban_{i}",
+                                        label_visibility="collapsed",
+                                    ))
+                            with eb2:
+                                st.caption("레드 밴")
+                                for i in range(5):
+                                    cur = cur_bans.get("red", [""] * 5)
+                                    cur_val = cur[i] if i < len(cur) else ""
+                                    idx = edit_champ_list.index(cur_val) if cur_val in edit_champ_list else 0
+                                    new_r_bans.append(st.selectbox(
+                                        f"레드 밴 {i+1}", edit_champ_list, index=idx,
+                                        format_func=lambda x: x if x else "선택 안 함",
+                                        key=f"edit_{mid}_rban_{i}",
+                                        label_visibility="collapsed",
+                                    ))
+
+                            st.markdown("---")
+                            save_col, cancel_col, _ = st.columns([1, 1, 3])
+                            with save_col:
+                                if st.button("💾 저장", type="primary", key=f"edit_save_{mid}"):
+                                    new_match = {
+                                        **match,
+                                        "winner": new_winner_key,
+                                        "blue_team": new_blue,
+                                        "red_team":  new_red,
+                                        "bans": {
+                                            "blue": [b for b in new_b_bans if b],
+                                            "red":  [b for b in new_r_bans if b],
+                                        },
+                                    }
+                                    with st.spinner("수정 중..."):
+                                        ok = update_match(match, new_match)
+                                    if ok:
+                                        st.success("수정 완료!")
+                                        st.session_state.editing_match = None
+                                        st.cache_data.clear()
+                                        st.rerun()
+                                    else:
+                                        st.error("수정 중 오류가 발생했습니다.")
+                            with cancel_col:
+                                if st.button("취소", key=f"edit_cancel_{mid}"):
+                                    st.session_state.editing_match = None
+                                    st.rerun()
 
         # ── 플레이어 관리 (MMR 수정 / 삭제) ─────────────────────────
         with admin_tab3:
@@ -1536,6 +1721,64 @@ with tab4:
 
         st.markdown("---")
 
+        # ── 챔피언 통계 ──────────────────────────────────────────
+        st.markdown("---")
+        st.subheader("챔피언 통계")
+        lb_all_matches = get_matches_cached()
+        lb_url_map_stat = get_champion_url_map()
+
+        # 집계
+        ban_counter: dict[str, int] = {}
+        play_counter: dict[str, int] = {}
+        for m in lb_all_matches:
+            for side in ["blue", "red"]:
+                for b in m.get("bans", {}).get(side, []):
+                    if b:
+                        ban_counter[b] = ban_counter.get(b, 0) + 1
+                for pi in m.get(f"{side}_team", []):
+                    c = pi.get("champion", "")
+                    if c:
+                        play_counter[c] = play_counter.get(c, 0) + 1
+
+        top5_ban  = sorted(ban_counter.items(),  key=lambda x: -x[1])[:5]
+        top5_play = sorted(play_counter.items(), key=lambda x: -x[1])[:5]
+
+        def _champ_rank_html(items: list[tuple[str, int]], label: str) -> None:
+            st.markdown(f"**{label}**")
+            if not items:
+                st.caption("데이터 없음")
+                return
+            for rank_i, (champ, cnt) in enumerate(items):
+                medal = ["🥇", "🥈", "🥉", "4위", "5위"][rank_i]
+                img_url = lb_url_map_stat.get(champ, "")
+                img_html = (
+                    f"<img src='{img_url}' width='30' height='30' "
+                    f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                    f"vertical-align:middle;margin-right:7px;'>"
+                    if img_url else
+                    f"<span style='display:inline-block;width:30px;height:30px;"
+                    f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
+                    f"vertical-align:middle;margin-right:7px;text-align:center;"
+                    f"line-height:30px;font-size:0.7rem;color:#94A3B8;'>?</span>"
+                )
+                st.markdown(
+                    f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                    f"border-bottom:1px solid #F1F5F9;'>"
+                    f"{img_html}"
+                    f"<span style='font-weight:700;font-size:0.88rem;color:#1E293B;flex:1;'>"
+                    f"{medal} {champ}</span>"
+                    f"<span style='font-size:0.82rem;color:#64748B;'>{cnt}회</span>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+        stat_col1, stat_col2 = st.columns(2)
+        with stat_col1:
+            _champ_rank_html(top5_ban,  "🚫 가장 많이 밴된 챔피언 TOP 5")
+        with stat_col2:
+            _champ_rank_html(top5_play, "⚔️ 가장 많이 플레이한 챔피언 TOP 5")
+
+        st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
         st.subheader("포지션별 TOP 3")
 
