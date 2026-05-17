@@ -70,6 +70,27 @@ def get_puuid(game_name: str, tag_line: str) -> dict:
         return {"error": f"네트워크 오류: {str(e)}"}
 
 
+def get_account_by_puuid(puuid: str) -> dict:
+    """
+    PUUID로 계정 정보 조회 (Account-V1)
+    반환: {"puuid": str, "gameName": str, "tagLine": str} or {"error": str}
+    """
+    url = (
+        f"https://{REGION_ASIA}.api.riotgames.com"
+        f"/riot/account/v1/accounts/by-puuid/{puuid}"
+    )
+    try:
+        resp = requests.get(url, headers=_get_headers(), timeout=10)
+        if resp.status_code == 200:
+            return resp.json()
+        elif resp.status_code == 404:
+            return {"error": "계정을 찾을 수 없습니다."}
+        else:
+            return {"error": f"API 오류 (상태 코드: {resp.status_code})"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"네트워크 오류: {str(e)}"}
+
+
 def get_league_entries_by_puuid(puuid: str) -> dict:
     """
     PUUID로 랭크 정보 직접 조회 (League-V4 by PUUID)

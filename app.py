@@ -20,6 +20,7 @@ from riot_api import (
     calculate_mmr,
     POSITIONS,
     get_league_entries_by_puuid,
+    get_account_by_puuid,
 )
 from balancer import (
     find_balanced_teams,
@@ -1386,6 +1387,15 @@ with tab3:
                         
                         for idx, p in enumerate(mgmt_players):
                             status_text.text(f"동기화 중... {p['name']} ({idx+1}/{len(mgmt_players)})")
+                            # 닉네임/태그 갱신
+                            account_res = get_account_by_puuid(p["puuid"])
+                            if "error" not in account_res:
+                                new_name = account_res.get("gameName", p["name"])
+                                new_tag  = account_res.get("tagLine",  p["tag"])
+                                if new_name != p["name"] or new_tag != p.get("tag", ""):
+                                    p["name"] = new_name
+                                    p["tag"]  = new_tag
+                            # 티어 갱신
                             league_res = get_league_entries_by_puuid(p["puuid"])
                             if "error" not in league_res:
                                 solo = league_res.get("solo")
@@ -1396,24 +1406,24 @@ with tab3:
                                     target_league = flex
                                 else:
                                     target_league = {"tier": "UNRANKED", "rank": "", "lp": 0}
-                                    
+
                                 p["solo_tier"] = target_league["tier"]
                                 p["solo_rank"] = target_league["rank"]
                                 p["solo_lp"] = target_league["lp"]
                                 p["solo_mmr"] = calculate_mmr(p["solo_tier"], p["solo_rank"], p["solo_lp"])
-                                
+
                                 stats = p.get("inhouse_stats", {})
                                 win = stats.get("win", 0)
                                 loss = stats.get("loss", 0)
                                 total = win + loss
                                 inhouse_adj = int((win / total - 0.5) * 300) if total >= 5 else 0
                                 p["mmr"] = max(0, p["solo_mmr"] + inhouse_adj)
-                                
+
                                 success_count += 1
                                 time.sleep(0.1)  # API Rate Limit (최소한의 간격)
                             else:
                                 error_count += 1
-                                
+
                             progress_bar.progress((idx + 1) / len(mgmt_players))
                         
                         status_text.text("데이터를 GitHub에 최종 저장하는 중...")
@@ -1525,6 +1535,57 @@ with tab3:
                                 st.cache_data.clear()
                             else:
                                 st.error("저장 실패")
+
+                    # 닉네임/태그 변경 expander
+                    with st.expander(f"✏️ {player['name']} 닉네임 변경"):
+                        st.caption(
+                            "플레이어가 Riot 닉네임을 변경한 경우 새 Riot ID를 입력하세요. "
+                            "PUUID가 일치하면 기존 전적이 그대로 이어집니다."
+                        )
+                        new_riot_id = st.text_input(
+                            "새 Riot ID",
+                            placeholder="NewName#KR1",
+                            key=f"new_rid_{puuid}",
+                        )
+                        if st.button("🔍 확인 및 변경", key=f"rename_{puuid}", type="primary"):
+                            if not new_riot_id or "#" not in new_riot_id:
+                                st.error("닉네임#태그 형식으로 입력해주세요. (예: NewName#KR1)")
+                            else:
+                                new_name_part, new_tag_part = new_riot_id.rsplit("#", 1)
+                                with st.spinner("Riot API 조회 중..."):
+                                    from riot_api import get_puuid as _get_puuid
+                                    acc = _get_puuid(new_name_part.strip(), new_tag_part.strip())
+                                if "error" in acc:
+                                    st.error(acc["error"])
+                                elif acc["puuid"] != puuid:
+                                    st.error(
+                                        "⚠️ PUUID가 일치하지 않습니다. 다른 계정입니다. "
+                                        "같은 계정의 변경된 닉네임인지 확인해주세요."
+                                    )
+                                else:
+                                    all_players = load_players()
+                                    for p in all_players:
+                                        if p["puuid"] == puuid:
+                                            old_display = f"{p['name']}#{p.get('tag','')}"
+                                            p["name"] = acc["gameName"]
+                                            p["tag"]  = acc["tagLine"]
+                                            break
+                                    ok = save_players(
+                                        all_players,
+                                        commit_message=(
+                                            f"update: rename {old_display} → "
+                                            f"{acc['gameName']}#{acc['tagLine']}"
+                                        ),
+                                    )
+                                    if ok:
+                                        st.success(
+                                            f"✅ {old_display} → "
+                                            f"**{acc['gameName']}#{acc['tagLine']}** 변경 완료!"
+                                        )
+                                        st.cache_data.clear()
+                                        st.rerun()
+                                    else:
+                                        st.error("저장 실패")
 
 
 # ══════════════════════════════════════════════════════════════════
