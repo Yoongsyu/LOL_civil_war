@@ -647,6 +647,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "케 인",
+      "tag": "아님말고",
+      "puuid": "k9KRpsZyXc-yWYvaLMl1fZGbZSbYOFx9xymzqV4WRn1nu22jqqXNYnxGgdHgR7-xwBLPHoCf-2Vcfg",
+      "solo_tier": "GOLD",
+      "solo_rank": "IV",
+      "solo_lp": 36,
+      "solo_mmr": 1236,
+      "mmr": 1236,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
