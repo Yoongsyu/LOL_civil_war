@@ -380,7 +380,7 @@ def record_match_batch(blue_team, red_team, winner, positions, champions=None, b
                 solo_mmr = p.get("solo_mmr", calculate_mmr(
                     p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
                 ))
-                inhouse_adj = int((win_cnt / total - 0.5) * 300) if total >= 5 else 0
+                inhouse_adj = int((win_cnt / total - 0.5) * 600) if total >= 5 else 0
                 p["mmr"] = max(0, solo_mmr + inhouse_adj)
             match_record[f"{side}_team"].append({
                 "puuid":    puuid,
@@ -437,7 +437,7 @@ def revert_match(match: dict) -> bool:
             solo_mmr = p.get("solo_mmr", calculate_mmr(
                 p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
             ))
-            inhouse_adj = int((win_cnt / total - 0.5) * 300) if total >= 5 else 0
+            inhouse_adj = int((win_cnt / total - 0.5) * 600) if total >= 5 else 0
             p["mmr"] = max(0, solo_mmr + inhouse_adj)
 
     return save_players(
@@ -487,7 +487,7 @@ def update_match(old_match: dict, new_match: dict) -> bool:
             solo_mmr = p.get("solo_mmr", calculate_mmr(
                 p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
             ))
-            inhouse_adj = int((wc / tot - 0.5) * 300) if tot >= 5 else 0
+            inhouse_adj = int((wc / tot - 0.5) * 600) if tot >= 5 else 0
             p["mmr"] = max(0, solo_mmr + inhouse_adj)
 
     ok1 = save_players(list(player_map.values()),
@@ -1416,7 +1416,7 @@ with tab3:
                                 win = stats.get("win", 0)
                                 loss = stats.get("loss", 0)
                                 total = win + loss
-                                inhouse_adj = int((win / total - 0.5) * 300) if total >= 5 else 0
+                                inhouse_adj = int((win / total - 0.5) * 600) if total >= 5 else 0
                                 p["mmr"] = max(0, p["solo_mmr"] + inhouse_adj)
 
                                 success_count += 1
@@ -1522,7 +1522,7 @@ with tab3:
                                     w = s.get("win", 0)
                                     l = s.get("loss", 0)
                                     t = w + l
-                                    inhouse_adj = int((w / t - 0.5) * 300) if t >= 5 else 0
+                                    inhouse_adj = int((w / t - 0.5) * 600) if t >= 5 else 0
                                     p["mmr"] = max(0, int(new_mmr) + inhouse_adj)
                                     break
                             ok = save_players(

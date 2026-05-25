@@ -150,7 +150,7 @@ def calculate_mmr(tier: str, rank: str, lp: int,
     if total_inhouse >= 5:
         win_rate = inhouse_win / total_inhouse
         # 승률 50% 기준으로 -150 ~ +150점 보정
-        weight = (win_rate - 0.5) * 300
+        weight = (win_rate - 0.5) * 600
         mmr = int(mmr + weight)
 
     return max(0, mmr)
