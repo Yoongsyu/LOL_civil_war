@@ -1791,26 +1791,64 @@ with tab4:
             }
             rows.sort(key=sort_key_map[lb_sort])
 
-            for i, row in enumerate(rows):
-                row["순위"] = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
+            th = (
+                "style='padding:0.45rem 0.6rem;text-align:left;font-size:0.73rem;"
+                "font-weight:700;color:#475569;white-space:nowrap;"
+                "border-bottom:2px solid #CBD5E1;background:#F1F5F9;'"
+            )
+            td_base = "padding:0.42rem 0.6rem;font-size:0.81rem;border-bottom:1px solid #F1F5F9;white-space:nowrap;"
 
-            display_cols = ["순위", "닉네임", "티어", "내전 MMR", "전적", "승률", "모스트 포지션", "배지"]
-            df = pd.DataFrame(rows)[display_cols]
-            st.dataframe(
-                df,
-                use_container_width=True,
-                hide_index=True,
-                height=min(450, 60 + len(rows) * 35),
-                column_config={
-                    "순위":       st.column_config.TextColumn("순위",       width=55),
-                    "닉네임":     st.column_config.TextColumn("닉네임",     width=130),
-                    "티어":       st.column_config.TextColumn("티어",       width=130),
-                    "내전 MMR":   st.column_config.TextColumn("내전 MMR",   width=80),
-                    "전적":       st.column_config.TextColumn("전적",       width=90),
-                    "승률":       st.column_config.TextColumn("승률",       width=60),
-                    "모스트 포지션": st.column_config.TextColumn("모스트 포지션", width=90),
-                    "배지":       st.column_config.TextColumn("배지",       width=250),
-                },
+            header = (
+                f"<tr>"
+                f"<th {th}>순위</th>"
+                f"<th {th}>닉네임</th>"
+                f"<th {th}>티어</th>"
+                f"<th {th}>내전 MMR</th>"
+                f"<th {th}>전적</th>"
+                f"<th {th}>승률</th>"
+                f"<th {th}>포지션</th>"
+                f"<th {th}>배지</th>"
+                f"</tr>"
+            )
+
+            body = ""
+            for i, row in enumerate(rows):
+                medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
+                bg = "#FAFBFF" if i % 2 == 0 else "#FFFFFF"
+                wr_color = "#10B981" if row["_wr"] >= 0.6 else "#EF4444" if row["_wr"] < 0.4 else "#334155"
+                badge_str = row["배지"]
+                if badge_str and badge_str != "-":
+                    badge_html = " ".join(
+                        f"<span style='display:inline-block;background:#F1F5F9;color:#334155;"
+                        f"border:1px solid #E2E8F0;border-radius:4px;padding:1px 6px;"
+                        f"font-size:0.7rem;font-weight:600;white-space:nowrap;"
+                        f"margin-right:3px;'>{b}</span>"
+                        for b in badge_str.split(" ") if b
+                    )
+                else:
+                    badge_html = "<span style='color:#CBD5E1;'>-</span>"
+
+                body += (
+                    f"<tr style='background:{bg};'>"
+                    f"<td style='{td_base}font-weight:700;'>{medal}</td>"
+                    f"<td style='{td_base}font-weight:700;color:#1E293B;'>{row['닉네임']}</td>"
+                    f"<td style='{td_base}'>{row['티어']}</td>"
+                    f"<td style='{td_base}text-align:right;font-weight:700;'>{row['내전 MMR']}</td>"
+                    f"<td style='{td_base}text-align:center;color:#475569;'>{row['전적']}</td>"
+                    f"<td style='{td_base}text-align:center;font-weight:700;color:{wr_color};'>{row['승률']}</td>"
+                    f"<td style='{td_base}text-align:center;color:#64748B;'>{row['모스트 포지션']}</td>"
+                    f"<td style='padding:0.42rem 0.6rem;font-size:0.81rem;border-bottom:1px solid #F1F5F9;"
+                    f"white-space:nowrap;'>{badge_html}</td>"
+                    f"</tr>"
+                )
+
+            st.markdown(
+                f"<div style='overflow-x:auto;border:1px solid #E2E8F0;border-radius:8px;'>"
+                f"<table style='border-collapse:collapse;min-width:700px;width:100%;'>"
+                f"<thead>{header}</thead>"
+                f"<tbody>{body}</tbody>"
+                f"</table></div>",
+                unsafe_allow_html=True,
             )
 
         st.markdown("---")
