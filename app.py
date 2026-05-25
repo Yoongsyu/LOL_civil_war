@@ -1777,7 +1777,7 @@ with tab4:
                 "전적": f"{win}승 {loss}패",
                 "승률": f"{wr*100:.1f}%" if total > 0 else "-",
                 "모스트 포지션": POSITION_KR.get(most_pos, most_pos) if most_pos else "-",
-                "배지": " ".join(badges) if badges else "-",
+                "_badges": badges,
             })
 
         if not rows:
@@ -1816,14 +1816,14 @@ with tab4:
                 medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
                 bg = "#FAFBFF" if i % 2 == 0 else "#FFFFFF"
                 wr_color = "#10B981" if row["_wr"] >= 0.6 else "#EF4444" if row["_wr"] < 0.4 else "#334155"
-                badge_str = row["배지"]
-                if badge_str and badge_str != "-":
+                badge_list = row["_badges"]
+                if badge_list:
                     badge_html = " ".join(
                         f"<span style='display:inline-block;background:#F1F5F9;color:#334155;"
                         f"border:1px solid #E2E8F0;border-radius:4px;padding:1px 6px;"
                         f"font-size:0.7rem;font-weight:600;white-space:nowrap;"
                         f"margin-right:3px;'>{b}</span>"
-                        for b in badge_str.split(" ") if b
+                        for b in badge_list
                     )
                 else:
                     badge_html = "<span style='color:#CBD5E1;'>-</span>"
