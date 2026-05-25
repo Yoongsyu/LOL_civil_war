@@ -7,7 +7,7 @@
       "solo_tier": "SILVER",
       "solo_rank": "III",
       "solo_lp": 37,
-      "mmr": 932,
+      "mmr": 927,
       "inhouse_stats": {
         "win": 14,
         "loss": 15,
@@ -55,7 +55,7 @@
       "solo_tier": "EMERALD",
       "solo_rank": "II",
       "solo_lp": 65,
-      "mmr": 2270,
+      "mmr": 2275,
       "inhouse_stats": {
         "win": 15,
         "loss": 14,
@@ -114,7 +114,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1216,
+      "mmr": 1222,
       "inhouse_stats": {
         "win": 13,
         "loss": 12,
@@ -171,7 +171,7 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 49,
-      "mmr": 1716,
+      "mmr": 1783,
       "inhouse_stats": {
         "win": 21,
         "loss": 8,
@@ -228,7 +228,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 35,
-      "mmr": 1258,
+      "mmr": 1282,
       "inhouse_stats": {
         "win": 11,
         "loss": 8,
@@ -274,7 +274,7 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "III",
       "solo_lp": 0,
-      "mmr": 1723,
+      "mmr": 1746,
       "inhouse_stats": {
         "win": 15,
         "loss": 11,
@@ -327,7 +327,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 29,
-      "mmr": 1293,
+      "mmr": 1357,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 10,
@@ -373,7 +373,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "II",
       "solo_lp": 64,
-      "mmr": 1418,
+      "mmr": 1371,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 10,
@@ -419,7 +419,7 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 97,
-      "mmr": 2082,
+      "mmr": 2066,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 13,
@@ -477,7 +477,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1700,
+      "mmr": 1650,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 5,
@@ -525,7 +525,7 @@
       "solo_rank": "IV",
       "solo_lp": 31,
       "solo_mmr": 2031,
-      "mmr": 1936,
+      "mmr": 1841,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
@@ -571,7 +571,7 @@
       "solo_rank": "IV",
       "solo_lp": 32,
       "solo_mmr": 1632,
-      "mmr": 1621,
+      "mmr": 1609,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 6,
@@ -617,7 +617,7 @@
       "solo_rank": "III",
       "solo_lp": 91,
       "solo_mmr": 1791,
-      "mmr": 1723,
+      "mmr": 1655,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 3,
@@ -696,7 +696,7 @@
       "solo_rank": "IV",
       "solo_lp": 27,
       "solo_mmr": 2427,
-      "mmr": 2517,
+      "mmr": 2607,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 4,
