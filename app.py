@@ -1610,10 +1610,10 @@ with tab4:
             if (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0)) > 0
         ]
 
-        # 승률왕 (최소 5판)
+        # 승률왕 (최소 10판)
         qualified = [
             p for p in lb_players
-            if (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0)) >= 5
+            if (p.get("inhouse_stats", {}).get("win", 0) + p.get("inhouse_stats", {}).get("loss", 0)) >= 10
         ]
         wr_king = max(
             qualified,
@@ -1664,7 +1664,7 @@ with tab4:
                 sc2.markdown(
                     f"<div style='{card_style}'>"
                     f"<div style='font-size:0.72rem;color:#64748B;letter-spacing:2px;'>WIN RATE KING</div>"
-                    f"<div style='font-size:1.2rem;color:#94A3B8;'>5판 이상 필요</div>"
+                    f"<div style='font-size:1.2rem;color:#94A3B8;'>10판 이상 필요</div>"
                     f"</div>",
                     unsafe_allow_html=True,
                 )
@@ -1717,6 +1717,7 @@ with tab4:
             return badges
 
         # ── 종합 순위표 ───────────────────────────────────────────
+        st.caption("※ 기본적으로 10판 이상 플레이한 플레이어만 표시됩니다. 최소 경기 수를 조정해 변경할 수 있습니다.")
         lb_sort_col, lb_min_col, _ = st.columns([2, 2, 3])
         with lb_sort_col:
             lb_sort = st.selectbox(
@@ -1727,7 +1728,7 @@ with tab4:
         with lb_min_col:
             min_games = st.number_input(
                 "최소 경기 수",
-                min_value=0, max_value=50, value=1, step=1,
+                min_value=0, max_value=50, value=10, step=1,
                 key="lb_min_games",
                 help="이 판 수 이상 플레이한 플레이어만 표시",
             )
@@ -1775,10 +1776,30 @@ with tab4:
                 medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
                 row["순위"] = medal
 
-            display_cols = ["순위", "닉네임", "티어", "내전 MMR", "전적", "승률", "모스트 포지션", "배지"]
+            display_cols = ["순위", "닉네임", "티어", "내전 MMR", "전적", "승률", "모스트 포지션"]
             df = pd.DataFrame(rows)[display_cols]
 
             st.dataframe(df, use_container_width=True, hide_index=True, height=min(450, 60 + len(rows) * 35))
+
+            # 배지 — 데이터프레임 밖에서 줄바꿈 가능한 HTML로 렌더링
+            badge_rows = [(r["닉네임"], r.get("배지", "")) for r in rows if r.get("배지") and r["배지"] != "-"]
+            if badge_rows:
+                st.markdown("**배지**")
+                for nickname, badge_str in badge_rows:
+                    badge_tags = "".join(
+                        f"<span style='display:inline-block;background:#F1F5F9;color:#334155;"
+                        f"border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;"
+                        f"font-size:0.75rem;font-weight:600;margin:2px 3px 2px 0;'>{b}</span>"
+                        for b in badge_str.split(" ") if b
+                    )
+                    st.markdown(
+                        f"<div style='display:flex;align-items:center;flex-wrap:wrap;"
+                        f"gap:2px;padding:0.25rem 0;border-bottom:1px solid #F1F5F9;'>"
+                        f"<span style='font-size:0.82rem;font-weight:700;color:#475569;"
+                        f"margin-right:6px;white-space:nowrap;'>{nickname}</span>"
+                        f"{badge_tags}</div>",
+                        unsafe_allow_html=True,
+                    )
 
         st.markdown("---")
 
@@ -1849,7 +1870,7 @@ with tab4:
             for p in lb_players:
                 stats = p.get("inhouse_stats", {})
                 played = stats.get("positions", {}).get(pos, 0)
-                if played == 0:
+                if played < 5:
                     continue
                 wins = stats.get("position_wins", {}).get(pos, 0)
                 wr = wins / played
