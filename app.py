@@ -1373,7 +1373,30 @@ with tab3:
         with admin_tab3:
             st.markdown("등록된 플레이어를 관리합니다.")
             
-            c_sync, _ = st.columns([2, 5])
+            c_sync, c_recalc, _ = st.columns([2, 2, 3])
+            with c_recalc:
+                if st.button("⚡ MMR 전체 재계산 (600배율)", use_container_width=True):
+                    recalc_players = load_players()
+                    if not recalc_players:
+                        st.warning("플레이어가 없습니다.")
+                    else:
+                        for p in recalc_players:
+                            s = p.get("inhouse_stats", {})
+                            w = s.get("win", 0)
+                            l = s.get("loss", 0)
+                            t = w + l
+                            solo_mmr = p.get("solo_mmr", calculate_mmr(
+                                p.get("solo_tier", "UNRANKED"),
+                                p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0,
+                            ))
+                            inhouse_adj = int((w / t - 0.5) * 600) if t >= 5 else 0
+                            p["mmr"] = max(0, solo_mmr + inhouse_adj)
+                        if save_players(recalc_players, commit_message="update: recalculate all MMR with 600x multiplier"):
+                            st.success(f"✅ {len(recalc_players)}명 MMR 재계산 완료!")
+                            st.cache_data.clear()
+                            st.rerun()
+                        else:
+                            st.error("저장 중 오류가 발생했습니다.")
             with c_sync:
                 if st.button("🔄 플레이어 티어 전체 동기화", use_container_width=True):
                     mgmt_players = load_players()
@@ -1747,17 +1770,14 @@ with tab4:
             most_pos = get_most_played_position(p)
             badges = _get_badges(p)
             rows.append({
-                "_win": win,
-                "_total": total,
-                "_wr": wr,
-                "_mmr": final_mmr,
+                "_win": win, "_total": total, "_wr": wr, "_mmr": final_mmr,
+                "_tier": (p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0)),
                 "닉네임": f"{p['name']}#{p.get('tag', '')}",
-                "티어": f"{tier_emoji(p['solo_tier'])} {tier_label(p['solo_tier'], p.get('solo_rank',''), p.get('solo_lp',0))}",
-                "내전 MMR": f"{final_mmr:,}",
+                "내전 MMR": final_mmr,
                 "전적": f"{win}승 {loss}패",
                 "승률": f"{wr*100:.1f}%" if total > 0 else "-",
-                "모스트 포지션": POSITION_KR.get(most_pos, most_pos) if most_pos else "-",
-                "배지": " ".join(badges) if badges else "-",
+                "포지션": POSITION_KR.get(most_pos, most_pos) if most_pos else "-",
+                "배지": badges,
             })
 
         if not rows:
@@ -1771,35 +1791,55 @@ with tab4:
             }
             rows.sort(key=sort_key_map[lb_sort])
 
-            # 순위 열 추가
+            # 헤더
+            st.markdown(
+                "<div style='display:flex;align-items:center;background:#F1F5F9;"
+                "border:1px solid #E2E8F0;border-radius:6px 6px 0 0;"
+                "padding:0.4rem 0.6rem;font-size:0.73rem;font-weight:700;color:#475569;'>"
+                "<div style='width:38px'>순위</div>"
+                "<div style='flex:2.2'>닉네임 / 티어</div>"
+                "<div style='flex:1;text-align:right'>MMR</div>"
+                "<div style='flex:1.4;text-align:center'>전적</div>"
+                "<div style='flex:0.8;text-align:center'>승률</div>"
+                "<div style='flex:0.9;text-align:center'>포지션</div>"
+                "<div style='flex:2.5'>배지</div>"
+                "</div>",
+                unsafe_allow_html=True,
+            )
+
             for i, row in enumerate(rows):
-                medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}위"
-                row["순위"] = medal
-
-            display_cols = ["순위", "닉네임", "티어", "내전 MMR", "전적", "승률", "모스트 포지션"]
-            df = pd.DataFrame(rows)[display_cols]
-
-            st.dataframe(df, use_container_width=True, hide_index=True, height=min(450, 60 + len(rows) * 35))
-
-            # 배지 — 데이터프레임 밖에서 줄바꿈 가능한 HTML로 렌더링
-            badge_rows = [(r["닉네임"], r.get("배지", "")) for r in rows if r.get("배지") and r["배지"] != "-"]
-            if badge_rows:
-                st.markdown("**배지**")
-                for nickname, badge_str in badge_rows:
-                    badge_tags = "".join(
-                        f"<span style='display:inline-block;background:#F1F5F9;color:#334155;"
-                        f"border:1px solid #E2E8F0;border-radius:4px;padding:2px 7px;"
-                        f"font-size:0.75rem;font-weight:600;margin:2px 3px 2px 0;'>{b}</span>"
-                        for b in badge_str.split(" ") if b
-                    )
-                    st.markdown(
-                        f"<div style='display:flex;align-items:center;flex-wrap:wrap;"
-                        f"gap:2px;padding:0.25rem 0;border-bottom:1px solid #F1F5F9;'>"
-                        f"<span style='font-size:0.82rem;font-weight:700;color:#475569;"
-                        f"margin-right:6px;white-space:nowrap;'>{nickname}</span>"
-                        f"{badge_tags}</div>",
-                        unsafe_allow_html=True,
-                    )
+                medal = ["🥇", "🥈", "🥉"][i] if i < 3 else f"{i+1}"
+                tier_b = tier_badge_html(*row["_tier"], font_size="0.68rem")
+                badge_html = "".join(
+                    f"<span style='display:inline-block;background:#F1F5F9;color:#334155;"
+                    f"border:1px solid #E2E8F0;border-radius:4px;padding:1px 5px;"
+                    f"font-size:0.68rem;font-weight:600;margin:2px 2px 0 0;"
+                    f"white-space:nowrap;'>{b}</span>"
+                    for b in row["배지"]
+                ) if row["배지"] else "<span style='color:#94A3B8;font-size:0.72rem;'>-</span>"
+                bg = "#FAFBFF" if i % 2 == 0 else "#FFFFFF"
+                radius = "border-radius:0 0 6px 6px;" if i == len(rows) - 1 else ""
+                wr_color = "#10B981" if row["_wr"] >= 0.6 else "#EF4444" if row["_wr"] < 0.4 else "#334155"
+                st.markdown(
+                    f"<div style='display:flex;align-items:center;background:{bg};"
+                    f"border:1px solid #E2E8F0;border-top:none;{radius}"
+                    f"padding:0.45rem 0.6rem;font-size:0.82rem;'>"
+                    f"<div style='width:38px;font-weight:700;'>{medal}</div>"
+                    f"<div style='flex:2.2;min-width:0;'>"
+                    f"<div style='font-weight:700;color:#1E293B;white-space:nowrap;"
+                    f"overflow:hidden;text-overflow:ellipsis;'>{row['닉네임']}</div>"
+                    f"<div style='margin-top:2px;'>{tier_b}</div>"
+                    f"</div>"
+                    f"<div style='flex:1;text-align:right;font-weight:700;color:#334155;'>{row['내전 MMR']:,}</div>"
+                    f"<div style='flex:1.4;text-align:center;color:#475569;'>{row['전적']}</div>"
+                    f"<div style='flex:0.8;text-align:center;font-weight:700;color:{wr_color};'>"
+                    f"{row['승률']}</div>"
+                    f"<div style='flex:0.9;text-align:center;color:#64748B;'>{row['포지션']}</div>"
+                    f"<div style='flex:2.5;display:flex;flex-wrap:wrap;align-items:center;'>"
+                    f"{badge_html}</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
 
         st.markdown("---")
 
