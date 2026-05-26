@@ -1920,43 +1920,53 @@ with tab4:
                     if c:
                         play_counter[c] = play_counter.get(c, 0) + 1
 
-        top5_ban  = sorted(ban_counter.items(),  key=lambda x: -x[1])[:5]
-        top5_play = sorted(play_counter.items(), key=lambda x: -x[1])[:5]
+        top10_ban  = sorted(ban_counter.items(),  key=lambda x: -x[1])[:10]
+        top10_play = sorted(play_counter.items(), key=lambda x: -x[1])[:10]
+
+        _MEDALS = ["🥇", "🥈", "🥉", "4위", "5위", "6위", "7위", "8위", "9위", "10위"]
+
+        def _champ_row_html(rank_i: int, champ: str, cnt: int) -> str:
+            medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+            img_url = lb_url_map_stat.get(champ, "")
+            img_html = (
+                f"<img src='{img_url}' width='30' height='30' "
+                f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                f"vertical-align:middle;margin-right:7px;'>"
+                if img_url else
+                f"<span style='display:inline-block;width:30px;height:30px;"
+                f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
+                f"vertical-align:middle;margin-right:7px;text-align:center;"
+                f"line-height:30px;font-size:0.7rem;color:#94A3B8;'>?</span>"
+            )
+            return (
+                f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                f"border-bottom:1px solid #F1F5F9;'>"
+                f"{img_html}"
+                f"<span style='font-weight:700;font-size:0.88rem;color:#1E293B;flex:1;'>"
+                f"{medal} {champ}</span>"
+                f"<span style='font-size:0.82rem;color:#64748B;'>{cnt}회</span>"
+                f"</div>"
+            )
 
         def _champ_rank_html(items: list[tuple[str, int]], label: str) -> None:
             st.markdown(f"**{label}**")
             if not items:
                 st.caption("데이터 없음")
                 return
-            for rank_i, (champ, cnt) in enumerate(items):
-                medal = ["🥇", "🥈", "🥉", "4위", "5위"][rank_i]
-                img_url = lb_url_map_stat.get(champ, "")
-                img_html = (
-                    f"<img src='{img_url}' width='30' height='30' "
-                    f"style='border-radius:50%;border:2px solid #E2E8F0;"
-                    f"vertical-align:middle;margin-right:7px;'>"
-                    if img_url else
-                    f"<span style='display:inline-block;width:30px;height:30px;"
-                    f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
-                    f"vertical-align:middle;margin-right:7px;text-align:center;"
-                    f"line-height:30px;font-size:0.7rem;color:#94A3B8;'>?</span>"
-                )
-                st.markdown(
-                    f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
-                    f"border-bottom:1px solid #F1F5F9;'>"
-                    f"{img_html}"
-                    f"<span style='font-weight:700;font-size:0.88rem;color:#1E293B;flex:1;'>"
-                    f"{medal} {champ}</span>"
-                    f"<span style='font-size:0.82rem;color:#64748B;'>{cnt}회</span>"
-                    f"</div>",
-                    unsafe_allow_html=True,
-                )
+            top5 = items[:5]
+            rest = items[5:]
+            for rank_i, (champ, cnt) in enumerate(top5):
+                st.markdown(_champ_row_html(rank_i, champ, cnt), unsafe_allow_html=True)
+            if rest:
+                with st.expander("6~10위 더 보기"):
+                    for rank_i, (champ, cnt) in enumerate(rest, start=5):
+                        st.markdown(_champ_row_html(rank_i, champ, cnt), unsafe_allow_html=True)
 
         stat_col1, stat_col2 = st.columns(2)
         with stat_col1:
-            _champ_rank_html(top5_ban,  "🚫 가장 많이 밴된 챔피언 TOP 5")
+            _champ_rank_html(top10_ban,  "🚫 가장 많이 밴된 챔피언 TOP 10")
         with stat_col2:
-            _champ_rank_html(top5_play, "⚔️ 가장 많이 플레이한 챔피언 TOP 5")
+            _champ_rank_html(top10_play, "⚔️ 가장 많이 플레이한 챔피언 TOP 10")
 
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
