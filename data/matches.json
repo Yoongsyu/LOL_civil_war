@@ -2442,7 +2442,7 @@
           "name": "엄마찾는둘리",
           "tag": "KR1",
           "position": "JNG",
-          "champion": "신짜오"
+          "champion": "신 짜오"
         },
         {
           "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
@@ -2503,7 +2503,11 @@
           "champion": "잔나"
         }
       ],
-      "winner": "red"
+      "winner": "red",
+      "bans": {
+        "blue": [],
+        "red": []
+      }
     },
     {
       "id": "f4d68a86",
