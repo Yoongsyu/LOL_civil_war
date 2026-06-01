@@ -496,7 +496,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 0,
+      "mmr": 1592,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 7,
@@ -537,7 +537,7 @@
           }
         }
       },
-      "solo_mmr": 0
+      "solo_mmr": 1670
     },
     {
       "name": "Aloa",
