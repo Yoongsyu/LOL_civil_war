@@ -6,8 +6,8 @@
       "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
       "solo_tier": "SILVER",
       "solo_rank": "III",
-      "solo_lp": 37,
-      "mmr": 928,
+      "solo_lp": 59,
+      "mmr": 950,
       "inhouse_stats": {
         "win": 16,
         "loss": 17,
@@ -47,16 +47,16 @@
           }
         }
       },
-      "solo_mmr": 937
+      "solo_mmr": 959
     },
     {
       "name": "아몬드봉봉초콜릿",
       "tag": "KR1",
       "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
       "solo_tier": "EMERALD",
-      "solo_rank": "II",
-      "solo_lp": 65,
-      "mmr": 2274,
+      "solo_rank": "III",
+      "solo_lp": 46,
+      "mmr": 2155,
       "inhouse_stats": {
         "win": 17,
         "loss": 16,
@@ -109,7 +109,7 @@
           }
         }
       },
-      "solo_mmr": 2265
+      "solo_mmr": 2146
     },
     {
       "name": "미친과학자",
@@ -176,8 +176,8 @@
       "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
-      "solo_lp": 49,
-      "mmr": 1767,
+      "solo_lp": 31,
+      "mmr": 1749,
       "inhouse_stats": {
         "win": 23,
         "loss": 10,
@@ -228,7 +228,7 @@
           }
         }
       },
-      "solo_mmr": 1649
+      "solo_mmr": 1631
     },
     {
       "name": "보드타는 햄스터",
@@ -281,9 +281,9 @@
       "tag": "KR1",
       "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
       "solo_tier": "PLATINUM",
-      "solo_rank": "III",
-      "solo_lp": 0,
-      "mmr": 1739,
+      "solo_rank": "IV",
+      "solo_lp": 79,
+      "mmr": 1718,
       "inhouse_stats": {
         "win": 17,
         "loss": 13,
@@ -328,7 +328,7 @@
           }
         }
       },
-      "solo_mmr": 1700
+      "solo_mmr": 1679
     },
     {
       "name": "재 인 초 이",
@@ -336,8 +336,8 @@
       "puuid": "PGDYOf8NwhOmZdRVeSrIXY9J4JFDVHmhu3C6JtSAxxLdP4z5Bob9hDBeXfovbcHIJgcbEYQCzq_Bag",
       "solo_tier": "GOLD",
       "solo_rank": "IV",
-      "solo_lp": 29,
-      "mmr": 1328,
+      "solo_lp": 14,
+      "mmr": 1313,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 12,
@@ -377,7 +377,7 @@
           }
         }
       },
-      "solo_mmr": 1229
+      "solo_mmr": 1214
     },
     {
       "name": "지 혜",
@@ -385,8 +385,8 @@
       "puuid": "0UQHy5yEp1wgVAKn8VxjyJW3nscALvfmxj5fPbMCll8Krt3GW_fO2sGj32T7baOTzn5PLU6zMJ8fVA",
       "solo_tier": "GOLD",
       "solo_rank": "II",
-      "solo_lp": 64,
-      "mmr": 1383,
+      "solo_lp": 30,
+      "mmr": 1349,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 12,
@@ -425,7 +425,7 @@
           }
         }
       },
-      "solo_mmr": 1464
+      "solo_mmr": 1430
     },
     {
       "name": "호 균",
@@ -433,8 +433,8 @@
       "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
-      "solo_lp": 97,
-      "mmr": 2070,
+      "solo_lp": 0,
+      "mmr": 1973,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 15,
@@ -487,7 +487,7 @@
           }
         }
       },
-      "solo_mmr": 2097
+      "solo_mmr": 2000
     },
     {
       "name": "검은고목나무1",
@@ -496,7 +496,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1672,
+      "mmr": 0,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 7,
@@ -537,7 +537,7 @@
           }
         }
       },
-      "solo_mmr": 1750
+      "solo_mmr": 0
     },
     {
       "name": "Aloa",
@@ -679,11 +679,11 @@
       "name": "쇠망치 박민규 TV",
       "tag": "KR1",
       "puuid": "PcRJKLZ-wUYcWfnCUKcFCN7O1eUE5MEOVbaEX3CzEV1qLJ3J0ia7yKDRE3As8_a2csrlWLR9RE-WAA",
-      "solo_tier": "GOLD",
-      "solo_rank": "II",
-      "solo_lp": 85,
-      "solo_mmr": 1485,
-      "mmr": 1485,
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 14,
+      "solo_mmr": 1614,
+      "mmr": 1614,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
