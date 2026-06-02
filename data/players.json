@@ -365,8 +365,8 @@
       "puuid": "PGDYOf8NwhOmZdRVeSrIXY9J4JFDVHmhu3C6JtSAxxLdP4z5Bob9hDBeXfovbcHIJgcbEYQCzq_Bag",
       "solo_tier": "GOLD",
       "solo_rank": "IV",
-      "solo_lp": 14,
-      "mmr": 1313,
+      "solo_lp": 39,
+      "mmr": 1338,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 12,
@@ -406,7 +406,7 @@
           }
         }
       },
-      "solo_mmr": 1214
+      "solo_mmr": 1239
     },
     {
       "name": "지 혜",
@@ -466,8 +466,8 @@
       "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
-      "solo_lp": 0,
-      "mmr": 1941,
+      "solo_lp": 32,
+      "mmr": 1973,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 16,
@@ -526,7 +526,7 @@
           }
         }
       },
-      "solo_mmr": 2000
+      "solo_mmr": 2032
     },
     {
       "name": "검은고목나무1",
@@ -535,7 +535,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1672,
+      "mmr": 0,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 7,
@@ -576,7 +576,7 @@
           }
         }
       },
-      "solo_mmr": 1750
+      "solo_mmr": 0
     },
     {
       "name": "Aloa",
@@ -806,9 +806,9 @@
       "puuid": "k9KRpsZyXc-yWYvaLMl1fZGbZSbYOFx9xymzqV4WRn1nu22jqqXNYnxGgdHgR7-xwBLPHoCf-2Vcfg",
       "solo_tier": "GOLD",
       "solo_rank": "IV",
-      "solo_lp": 36,
-      "solo_mmr": 1236,
-      "mmr": 1286,
+      "solo_lp": 59,
+      "solo_mmr": 1259,
+      "mmr": 1309,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 7,
