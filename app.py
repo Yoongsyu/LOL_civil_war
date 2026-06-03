@@ -324,18 +324,22 @@ def save_matches(matches: list, commit_msg: str = "update: matches data") -> boo
         return False
 
 
-def record_match_batch(blue_team, red_team, winner, positions, champions=None, bans=None) -> bool:
+def record_match_batch(blue_team, red_team, winner, positions,
+                       champions=None, bans=None, player_stats=None) -> bool:
     """
     모든 플레이어 stats 일괄 업데이트 + matches.json 저장 (총 2회 GitHub 커밋)
     positions: {puuid: position_str}
     champions: {puuid: champion_name}  (optional)
     bans: {"blue": [champ,...], "red": [champ,...]}  (optional)
+    player_stats: {puuid: {"kills":int,"deaths":int,"assists":int,"damage":int}}  (optional)
     winner: "blue" or "red"
     """
     if champions is None:
         champions = {}
     if bans is None:
         bans = {"blue": [], "red": []}
+    if player_stats is None:
+        player_stats = {}
     players = load_players()
     player_map = {p["puuid"]: p for p in players}
 
@@ -382,13 +386,16 @@ def record_match_batch(blue_team, red_team, winner, positions, champions=None, b
                 ))
                 inhouse_adj = int((win_cnt / total - 0.5) * 600) if total >= 5 else 0
                 p["mmr"] = max(0, solo_mmr + inhouse_adj)
-            match_record[f"{side}_team"].append({
+            entry = {
                 "puuid":    puuid,
                 "name":     pi["name"],
                 "tag":      pi.get("tag", ""),
                 "position": pos,
                 "champion": champions.get(puuid, ""),
-            })
+            }
+            if puuid in player_stats:
+                entry["stats"] = player_stats[puuid]
+            match_record[f"{side}_team"].append(entry)
 
     ok1 = save_players(list(player_map.values()), commit_message=f"update: match {match_id}")
     matches = load_matches()
@@ -858,11 +865,141 @@ def show_team_result(result: dict, with_positions: bool):
     )
 
 
+def show_match_scoreboard(match: dict, highlight_puuid: str = "") -> None:
+    """한 경기 스코어보드를 OP.GG 스타일로 렌더링"""
+    url_map = get_champion_url_map()
+    winner  = match.get("winner", "blue")
+
+    # 전체 딜량 최대값 (딜량 바 계산용)
+    all_dmg = [
+        pi.get("stats", {}).get("damage", 0)
+        for side in ["blue", "red"]
+        for pi in match.get(f"{side}_team", [])
+        if pi.get("stats", {}).get("damage", 0) > 0
+    ]
+    max_dmg = max(all_dmg) if all_dmg else 0
+
+    def _player_row(pi: dict, side: str) -> str:
+        puuid = pi.get("puuid", "")
+        name  = pi.get("name", "")
+        tag   = pi.get("tag", "")
+        pos   = pi.get("position", "")
+        champ = pi.get("champion", "")
+        s     = pi.get("stats", {})
+        k, d, a = s.get("kills"), s.get("deaths"), s.get("assists")
+        dmg   = s.get("damage")
+        tc    = "#3B82F6" if side == "blue" else "#EF4444"
+        is_hl = puuid == highlight_puuid
+        row_bg = "#EFF6FF" if (is_hl and side == "blue") else "#FFF5F5" if (is_hl and side == "red") else "transparent"
+
+        img_url = url_map.get(champ, "")
+        champ_html = (
+            f"<img src='{img_url}' width='32' height='32' "
+            f"style='border-radius:50%;border:2px solid #E2E8F0;object-fit:cover;vertical-align:middle;' title='{champ}'>"
+            if img_url else
+            f"<span style='display:inline-flex;width:32px;height:32px;border-radius:50%;"
+            f"background:#F1F5F9;border:2px solid #E2E8F0;align-items:center;"
+            f"justify-content:center;font-size:0.65rem;color:#94A3B8;'>?</span>"
+        )
+
+        if k is not None and d is not None and a is not None:
+            kda_str = (
+                f"<b style='color:#1E293B;'>{k}</b>"
+                f"<span style='color:#94A3B8;'> / </span>"
+                f"<b style='color:#EF4444;'>{d}</b>"
+                f"<span style='color:#94A3B8;'> / </span>"
+                f"<b style='color:#1E293B;'>{a}</b>"
+            )
+            ratio = (k + a) / max(d, 1)
+            r_color = "#10B981" if ratio >= 4 else "#F59E0B" if ratio >= 2 else "#64748B"
+            kda_ratio = f"<b style='color:{r_color};'>{ratio:.2f}</b>"
+        else:
+            kda_str = kda_ratio = "<span style='color:#CBD5E1;'>-</span>"
+
+        if dmg and dmg > 0:
+            bar_w = int(dmg / max_dmg * 100) if max_dmg > 0 else 0
+            dmg_html = (
+                f"<div style='text-align:right;min-width:70px;'>"
+                f"<div style='font-weight:700;color:#1E293B;font-size:0.82rem;'>{dmg:,}</div>"
+                f"<div style='height:4px;background:#F1F5F9;border-radius:2px;margin-top:2px;'>"
+                f"<div style='width:{bar_w}%;height:100%;background:{tc};border-radius:2px;'></div>"
+                f"</div></div>"
+            )
+        else:
+            dmg_html = "<span style='color:#CBD5E1;'>-</span>"
+
+        name_w = "font-weight:800;" if is_hl else "font-weight:600;"
+        pos_kr = POSITION_KR.get(pos, pos)
+        return (
+            f"<tr style='background:{row_bg};border-bottom:1px solid #F1F5F9;'>"
+            f"<td style='padding:0.35rem 0.5rem;width:36px;'>{champ_html}</td>"
+            f"<td style='padding:0.35rem 0.5rem;{name_w}color:#1E293B;white-space:nowrap;'>"
+            f"{name}<span style='color:#94A3B8;font-size:0.75rem;font-weight:400;'>#{tag}</span></td>"
+            f"<td style='padding:0.35rem 0.5rem;text-align:center;color:#64748B;white-space:nowrap;'>{pos_kr}</td>"
+            f"<td style='padding:0.35rem 0.5rem;text-align:center;white-space:nowrap;'>{kda_str}</td>"
+            f"<td style='padding:0.35rem 0.5rem;text-align:center;'>{kda_ratio}</td>"
+            f"<td style='padding:0.35rem 0.8rem;text-align:right;'>{dmg_html}</td>"
+            f"</tr>"
+        )
+
+    def _team_block(side: str) -> str:
+        is_win   = side == winner
+        tc       = "#3B82F6" if side == "blue" else "#EF4444"
+        bg       = "#EFF6FF" if side == "blue" else "#FFF5F5"
+        label    = "🔵 블루팀" if side == "blue" else "🔴 레드팀"
+        wl_color = "#10B981" if is_win else "#EF4444"
+        wl_label = "WIN" if is_win else "LOSE"
+        th = (
+            "style='padding:0.28rem 0.5rem;text-align:left;font-size:0.73rem;"
+            "font-weight:600;color:#64748B;background:#F8FAFC;'"
+        )
+        rows = "".join(_player_row(pi, side) for pi in match.get(f"{side}_team", []))
+        return (
+            f"<div style='margin-bottom:0.6rem;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;'>"
+            f"<div style='padding:0.4rem 0.7rem;background:{bg};border-left:4px solid {tc};"
+            f"display:flex;align-items:center;gap:0.5rem;'>"
+            f"<span style='font-weight:700;color:#1E293B;'>{label}</span>"
+            f"<span style='font-weight:800;color:{wl_color};font-size:0.82rem;'>{wl_label}</span>"
+            f"</div>"
+            f"<div style='overflow-x:auto;'>"
+            f"<table style='width:100%;border-collapse:collapse;min-width:460px;'>"
+            f"<thead><tr>"
+            f"<th {th}></th>"
+            f"<th {th}>플레이어</th>"
+            f"<th style='padding:0.28rem 0.5rem;text-align:center;font-size:0.73rem;font-weight:600;color:#64748B;background:#F8FAFC;'>포지션</th>"
+            f"<th style='padding:0.28rem 0.5rem;text-align:center;font-size:0.73rem;font-weight:600;color:#64748B;background:#F8FAFC;'>K / D / A</th>"
+            f"<th style='padding:0.28rem 0.5rem;text-align:center;font-size:0.73rem;font-weight:600;color:#64748B;background:#F8FAFC;'>KDA</th>"
+            f"<th style='padding:0.28rem 0.8rem;text-align:right;font-size:0.73rem;font-weight:600;color:#64748B;background:#F8FAFC;'>딜량</th>"
+            f"</tr></thead>"
+            f"<tbody>{rows}</tbody>"
+            f"</table></div></div>"
+        )
+
+    bans = match.get("bans", {})
+    b_bans = [b for b in bans.get("blue", []) if b]
+    r_bans = [b for b in bans.get("red", []) if b]
+    ban_html = ""
+    if b_bans or r_bans:
+        ban_html = (
+            f"<div style='font-size:0.75rem;color:#64748B;margin-top:0.3rem;padding:0.3rem 0.6rem;"
+            f"background:#F8FAFC;border-radius:4px;border:1px solid #F1F5F9;'>"
+            f"🚫 밴 — 블루: {', '.join(b_bans) or '없음'}&nbsp;&nbsp;|&nbsp;&nbsp;"
+            f"레드: {', '.join(r_bans) or '없음'}</div>"
+        )
+
+    st.markdown(
+        f"{_team_block('blue')}{_team_block('red')}{ban_html}",
+        unsafe_allow_html=True,
+    )
+
+
 # ══════════════════════════════════════════════════════════════════
 # 메인 앱
 # ══════════════════════════════════════════════════════════════════
 
-tab1, tab4, tab2, tab3 = st.tabs(["🏠 플레이어 & 팀 구성", "🏆 리더보드", "➕ 플레이어 등록", "🔧 관리자"])
+tab1, tab4, tab5, tab2, tab3 = st.tabs([
+    "🏠 플레이어 & 팀 구성", "🏆 리더보드", "📊 전적 조회", "➕ 플레이어 등록", "🔧 관리자"
+])
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -1077,6 +1214,101 @@ with tab1:
 
 
 # ══════════════════════════════════════════════════════════════════
+# TAB 5: 전적 조회
+# ══════════════════════════════════════════════════════════════════
+with tab5:
+    st.subheader("전적 조회")
+
+    hist_matches = get_matches_cached()
+    hist_players = load_players()
+
+    if not hist_matches:
+        st.info("등록된 경기 기록이 없습니다.")
+    else:
+        # ── 필터 ─────────────────────────────────────────────
+        all_names = ["전체"] + [f"{p['name']}#{p.get('tag','')}" for p in hist_players]
+        hf_col1, hf_col2 = st.columns([2, 1])
+        with hf_col1:
+            selected_name = st.selectbox("플레이어 필터", all_names, key="hist_player_filter")
+        with hf_col2:
+            show_count = st.selectbox("표시 경기 수", [10, 20, 50, 100], index=1, key="hist_show_count")
+
+        # 필터링
+        if selected_name == "전체":
+            filtered = hist_matches[:show_count]
+            hl_puuid = ""
+        else:
+            name_part, tag_part = selected_name.rsplit("#", 1)
+            hl_player = next(
+                (p for p in hist_players if p["name"] == name_part and p.get("tag", "") == tag_part),
+                None,
+            )
+            hl_puuid = hl_player["puuid"] if hl_player else ""
+            filtered = [
+                m for m in hist_matches
+                if any(
+                    pi.get("puuid") == hl_puuid
+                    for side in ["blue", "red"]
+                    for pi in m.get(f"{side}_team", [])
+                )
+            ][:show_count]
+
+        st.caption(f"총 {len(hist_matches)}경기 중 {len(filtered)}경기 표시")
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── 경기 카드 목록 ────────────────────────────────────
+        for m in filtered:
+            winner  = m.get("winner", "blue")
+            date    = m.get("date", "")
+            mid     = m.get("id", "")
+
+            # 플레이어 필터 선택 시 해당 플레이어의 승패 표시
+            if hl_puuid:
+                hl_side = next(
+                    (side for side in ["blue", "red"]
+                     if any(pi.get("puuid") == hl_puuid for pi in m.get(f"{side}_team", []))),
+                    None,
+                )
+                is_win = hl_side == winner if hl_side else None
+                wl_label = "🔵 WIN" if is_win else "🔴 LOSE"
+                wl_color = "#10B981" if is_win else "#EF4444"
+
+                # 해당 플레이어의 챔피언/KDA 요약
+                pi_self = next(
+                    (pi for pi in m.get(f"{hl_side}_team", []) if pi.get("puuid") == hl_puuid),
+                    None,
+                ) if hl_side else None
+                champ_summary = ""
+                if pi_self:
+                    champ = pi_self.get("champion", "")
+                    s = pi_self.get("stats", {})
+                    k, d, a = s.get("kills"), s.get("deaths"), s.get("assists")
+                    url_map_h = get_champion_url_map()
+                    img_url = url_map_h.get(champ, "")
+                    img_tag = (
+                        f"<img src='{img_url}' width='20' height='20' "
+                        f"style='border-radius:50%;vertical-align:middle;margin-right:4px;'>"
+                        if img_url else ""
+                    )
+                    kda_text = f"&nbsp;{k}/{d}/{a}" if k is not None else ""
+                    champ_summary = f"{img_tag}<b>{champ}</b>{kda_text}" if champ else ""
+
+                expander_label = (
+                    f":{('green' if is_win else 'red')}[{wl_label}]"
+                    f"&ensp;{date}&ensp;#{mid}"
+                )
+            else:
+                blue_win = winner == "blue"
+                expander_label = (
+                    f":blue[🔵 블루팀 WIN]" if blue_win else ":red[🔴 레드팀 WIN]"
+                )
+                expander_label += f"&ensp;{date}&ensp;#{mid}"
+
+            with st.expander(f"{date}  |  {'🔵 블루팀 WIN' if winner == 'blue' else '🔴 레드팀 WIN'}  |  #{mid}"):
+                show_match_scoreboard(m, highlight_puuid=hl_puuid)
+
+
+# ══════════════════════════════════════════════════════════════════
 # TAB 2: 플레이어 등록 (기능 6)
 # ══════════════════════════════════════════════════════════════════
 with tab2:
@@ -1224,6 +1456,37 @@ with tab3:
                         ))
 
                 st.markdown("---")
+                # ── KDA / 딜량 입력 (선택) ────────────────────────
+                with st.expander("📊 KDA / 딜량 입력 (선택 사항)"):
+                    st.caption("입력하지 않아도 전적 등록이 가능합니다.")
+                    kda_col_b, kda_col_r = st.columns(2)
+                    kda_inputs: dict = {}   # puuid → {kills, deaths, assists, damage}
+                    with kda_col_b:
+                        st.caption("🔵 블루팀")
+                        for i, label in enumerate(blue_picks):
+                            p_obj = label_to_player[label]
+                            puuid = p_obj["puuid"]
+                            st.markdown(f"**{label}**")
+                            kc1, kc2, kc3, kc4 = st.columns(4)
+                            k = kc1.number_input("K", min_value=0, max_value=99, value=0, key=f"bk_k_{i}")
+                            d = kc2.number_input("D", min_value=0, max_value=99, value=0, key=f"bk_d_{i}")
+                            a = kc3.number_input("A", min_value=0, max_value=99, value=0, key=f"bk_a_{i}")
+                            dmg = kc4.number_input("딜량(천)", min_value=0, max_value=200, value=0, key=f"bk_dmg_{i}")
+                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg * 1000}
+                    with kda_col_r:
+                        st.caption("🔴 레드팀")
+                        for i, label in enumerate(red_picks):
+                            p_obj = label_to_player[label]
+                            puuid = p_obj["puuid"]
+                            st.markdown(f"**{label}**")
+                            kc1, kc2, kc3, kc4 = st.columns(4)
+                            k = kc1.number_input("K", min_value=0, max_value=99, value=0, key=f"rk_k_{i}")
+                            d = kc2.number_input("D", min_value=0, max_value=99, value=0, key=f"rk_d_{i}")
+                            a = kc3.number_input("A", min_value=0, max_value=99, value=0, key=f"rk_a_{i}")
+                            dmg = kc4.number_input("딜량(천)", min_value=0, max_value=200, value=0, key=f"rk_dmg_{i}")
+                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg * 1000}
+
+                st.markdown("---")
                 winner = st.radio("승리팀", ["블루팀", "레드팀"], horizontal=True)
                 winner_key = "blue" if winner == "블루팀" else "red"
 
@@ -1248,9 +1511,18 @@ with tab3:
                             "blue": [b for b in blue_bans if b],
                             "red":  [b for b in red_bans  if b],
                         }
+                        # KDA가 모두 0이면 저장 안 함
+                        final_stats = {
+                            puuid: s for puuid, s in kda_inputs.items()
+                            if any(v > 0 for v in s.values())
+                        }
 
                         with st.spinner("전적 등록 중... (GitHub 저장에 잠시 시간이 걸릴 수 있습니다)"):
-                            ok = record_match_batch(blue_team, red_team, winner_key, positions, champions, bans)
+                            ok = record_match_batch(
+                                blue_team, red_team, winner_key,
+                                positions, champions, bans,
+                                player_stats=final_stats if final_stats else None,
+                            )
 
                         if ok:
                             st.success("✅ 전적이 등록되었습니다!")
