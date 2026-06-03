@@ -9,35 +9,65 @@
           "name": "보드타는 햄스터",
           "tag": "CUTE",
           "position": "TOP",
-          "champion": "나서스"
+          "champion": "나서스",
+          "stats": {
+            "kills": 13,
+            "deaths": 5,
+            "assists": 17,
+            "damage": 46128
+          }
         },
         {
           "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
           "name": "미친과학자",
           "tag": "KR1",
           "position": "JNG",
-          "champion": "문도 박사"
+          "champion": "문도 박사",
+          "stats": {
+            "kills": 8,
+            "deaths": 6,
+            "assists": 15,
+            "damage": 32181
+          }
         },
         {
           "puuid": "0UQHy5yEp1wgVAKn8VxjyJW3nscALvfmxj5fPbMCll8Krt3GW_fO2sGj32T7baOTzn5PLU6zMJ8fVA",
           "name": "지 혜",
           "tag": "1111",
           "position": "MID",
-          "champion": "모르가나"
+          "champion": "모르가나",
+          "stats": {
+            "kills": 3,
+            "deaths": 7,
+            "assists": 14,
+            "damage": 29225
+          }
         },
         {
           "puuid": "IJXeARSJhYwTZO49pnVyY4tu9cB6oyRDcp7uofRryWs_IDl8RSl09ygguJpq68heQEdxZPuxpaEoIA",
           "name": "호브론 제임스",
           "tag": "KR1",
           "position": "ADC",
-          "champion": "코그모"
+          "champion": "코그모",
+          "stats": {
+            "kills": 19,
+            "deaths": 7,
+            "assists": 14,
+            "damage": 59294
+          }
         },
         {
           "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
           "name": "Izykite",
           "tag": "사막여우",
           "position": "SUP",
-          "champion": "질리언"
+          "champion": "질리언",
+          "stats": {
+            "kills": 6,
+            "deaths": 7,
+            "assists": 23,
+            "damage": 16085
+          }
         }
       ],
       "red_team": [
@@ -46,35 +76,65 @@
           "name": "융슈타인",
           "tag": "KR1",
           "position": "TOP",
-          "champion": "티모"
+          "champion": "티모",
+          "stats": {
+            "kills": 3,
+            "deaths": 9,
+            "assists": 13,
+            "damage": 36542
+          }
         },
         {
           "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
           "name": "엄마찾는둘리",
           "tag": "KR1",
           "position": "JNG",
-          "champion": "신 짜오"
+          "champion": "신 짜오",
+          "stats": {
+            "kills": 5,
+            "deaths": 10,
+            "assists": 13,
+            "damage": 26968
+          }
         },
         {
           "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
           "name": "호 균",
           "tag": "Kr2",
           "position": "MID",
-          "champion": "아크샨"
+          "champion": "아크샨",
+          "stats": {
+            "kills": 6,
+            "deaths": 7,
+            "assists": 8,
+            "damage": 34899
+          }
         },
         {
           "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
           "name": "아몬드봉봉초콜릿",
           "tag": "KR1",
           "position": "ADC",
-          "champion": "트위치"
+          "champion": "트위치",
+          "stats": {
+            "kills": 13,
+            "deaths": 12,
+            "assists": 9,
+            "damage": 60068
+          }
         },
         {
           "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
           "name": "Aloa",
           "tag": "KR1",
           "position": "SUP",
-          "champion": "쓰레쉬"
+          "champion": "쓰레쉬",
+          "stats": {
+            "kills": 5,
+            "deaths": 11,
+            "assists": 16,
+            "damage": 17146
+          }
         }
       ],
       "winner": "blue",
