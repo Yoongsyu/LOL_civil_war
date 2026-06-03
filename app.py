@@ -723,11 +723,11 @@ def show_player_detail(player: dict):
             wr_color = "#10B981" if wr_val >= 60 else "#EF4444" if wr_val < 40 else "#64748B"
             img_url = url_map.get(champ, "")
             img_html = (
-                f"<img src='{img_url}' "
-                f"style='width:32px;height:32px;border-radius:50%;border:2px solid #E2E8F0;"
-                f"object-fit:cover;flex-shrink:0;display:block;'>"
+                f"<div style='width:32px;height:32px;min-width:32px;border-radius:50%;"
+                f"border:2px solid #E2E8F0;background:url({img_url}) center/cover no-repeat;"
+                f"flex-shrink:0;display:inline-block;'></div>"
                 if img_url else
-                f"<div style='width:32px;height:32px;border-radius:50%;"
+                f"<div style='width:32px;height:32px;min-width:32px;border-radius:50%;"
                 f"background:#F1F5F9;border:2px solid #E2E8F0;"
                 f"display:flex;align-items:center;justify-content:center;"
                 f"font-size:0.7rem;color:#94A3B8;flex-shrink:0;'>?</div>"
@@ -808,10 +808,9 @@ def show_team_result(result: dict, with_positions: bool):
                 champ_url = url_map.get(champ, "") if champ else ""
                 if champ_url:
                     champ_img_html = (
-                        f"<img src='{champ_url}' "
-                        f"style='width:44px;height:44px;border-radius:50%;border:2px solid #E2E8F0;"
-                        f"object-fit:cover;flex-shrink:0;display:block;' "
-                        f"title='{champ}'>"
+                        f"<div style='width:44px;height:44px;min-width:44px;border-radius:50%;"
+                        f"border:2px solid #E2E8F0;background:url({champ_url}) center/cover no-repeat;"
+                        f"flex-shrink:0;' title='{champ}'></div>"
                     )
                     champ_name_html = (
                         f"<div style='font-size:0.68rem;color:#94A3B8;"
@@ -894,10 +893,11 @@ def show_match_scoreboard(match: dict, highlight_puuid: str = "") -> None:
 
         img_url = url_map.get(champ, "")
         champ_html = (
-            f"<img src='{img_url}' "
-            f"style='width:32px;height:32px;border-radius:50%;border:2px solid #E2E8F0;object-fit:cover;display:inline-block;vertical-align:middle;' title='{champ}'>"
+            f"<div style='width:32px;height:32px;min-width:32px;border-radius:50%;"
+            f"border:2px solid #E2E8F0;background:url({img_url}) center/cover no-repeat;"
+            f"display:inline-block;vertical-align:middle;' title='{champ}'></div>"
             if img_url else
-            f"<span style='display:inline-flex;width:32px;height:32px;border-radius:50%;"
+            f"<span style='display:inline-flex;width:32px;height:32px;min-width:32px;border-radius:50%;"
             f"background:#F1F5F9;border:2px solid #E2E8F0;align-items:center;"
             f"justify-content:center;font-size:0.65rem;color:#94A3B8;'>?</span>"
         )
