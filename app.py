@@ -7,7 +7,7 @@ app.py
 import json
 import uuid
 import time
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import streamlit as st
 from github import GithubException
@@ -346,7 +346,7 @@ def record_match_batch(blue_team, red_team, winner, positions,
     match_id = str(uuid.uuid4())[:8]
     match_record = {
         "id": match_id,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "date": datetime.now(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M"),
         "blue_team": [],
         "red_team": [],
         "winner": winner,
