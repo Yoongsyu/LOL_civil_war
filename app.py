@@ -723,9 +723,9 @@ def show_player_detail(player: dict):
             wr_color = "#10B981" if wr_val >= 60 else "#EF4444" if wr_val < 40 else "#64748B"
             img_url = url_map.get(champ, "")
             img_html = (
-                f"<img src='{img_url}' width='32' height='32' "
-                f"style='border-radius:50%;border:2px solid #E2E8F0;"
-                f"object-fit:cover;flex-shrink:0;'>"
+                f"<img src='{img_url}' "
+                f"style='width:32px;height:32px;border-radius:50%;border:2px solid #E2E8F0;"
+                f"object-fit:cover;flex-shrink:0;display:block;'>"
                 if img_url else
                 f"<div style='width:32px;height:32px;border-radius:50%;"
                 f"background:#F1F5F9;border:2px solid #E2E8F0;"
@@ -808,9 +808,9 @@ def show_team_result(result: dict, with_positions: bool):
                 champ_url = url_map.get(champ, "") if champ else ""
                 if champ_url:
                     champ_img_html = (
-                        f"<img src='{champ_url}' width='44' height='44' "
-                        f"style='border-radius:50%;border:2px solid #E2E8F0;"
-                        f"object-fit:cover;flex-shrink:0;' "
+                        f"<img src='{champ_url}' "
+                        f"style='width:44px;height:44px;border-radius:50%;border:2px solid #E2E8F0;"
+                        f"object-fit:cover;flex-shrink:0;display:block;' "
                         f"title='{champ}'>"
                     )
                     champ_name_html = (
@@ -894,8 +894,8 @@ def show_match_scoreboard(match: dict, highlight_puuid: str = "") -> None:
 
         img_url = url_map.get(champ, "")
         champ_html = (
-            f"<img src='{img_url}' width='32' height='32' "
-            f"style='border-radius:50%;border:2px solid #E2E8F0;object-fit:cover;vertical-align:middle;' title='{champ}'>"
+            f"<img src='{img_url}' "
+            f"style='width:32px;height:32px;border-radius:50%;border:2px solid #E2E8F0;object-fit:cover;display:inline-block;vertical-align:middle;' title='{champ}'>"
             if img_url else
             f"<span style='display:inline-flex;width:32px;height:32px;border-radius:50%;"
             f"background:#F1F5F9;border:2px solid #E2E8F0;align-items:center;"
@@ -1471,8 +1471,8 @@ with tab3:
                             k = kc1.number_input("K", min_value=0, max_value=99, value=0, key=f"bk_k_{i}")
                             d = kc2.number_input("D", min_value=0, max_value=99, value=0, key=f"bk_d_{i}")
                             a = kc3.number_input("A", min_value=0, max_value=99, value=0, key=f"bk_a_{i}")
-                            dmg = kc4.number_input("딜량(천)", min_value=0, max_value=200, value=0, key=f"bk_dmg_{i}")
-                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg * 1000}
+                            dmg = kc4.number_input("딜량", min_value=0, max_value=200000, value=0, step=1000, key=f"bk_dmg_{i}")
+                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg}
                     with kda_col_r:
                         st.caption("🔴 레드팀")
                         for i, label in enumerate(red_picks):
@@ -1483,8 +1483,8 @@ with tab3:
                             k = kc1.number_input("K", min_value=0, max_value=99, value=0, key=f"rk_k_{i}")
                             d = kc2.number_input("D", min_value=0, max_value=99, value=0, key=f"rk_d_{i}")
                             a = kc3.number_input("A", min_value=0, max_value=99, value=0, key=f"rk_a_{i}")
-                            dmg = kc4.number_input("딜량(천)", min_value=0, max_value=200, value=0, key=f"rk_dmg_{i}")
-                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg * 1000}
+                            dmg = kc4.number_input("딜량", min_value=0, max_value=200000, value=0, step=1000, key=f"rk_dmg_{i}")
+                            kda_inputs[puuid] = {"kills": k, "deaths": d, "assists": a, "damage": dmg}
 
                 st.markdown("---")
                 winner = st.radio("승리팀", ["블루팀", "레드팀"], horizontal=True)
@@ -1647,14 +1647,15 @@ with tab3:
                                         value=cur_s.get("assists", 0),
                                         key=f"edit_{mid}_{team_key}_a_{i}",
                                     )
-                                    new_dmg_k = kc4.number_input(
-                                        "딜량(천)", min_value=0, max_value=200,
-                                        value=cur_s.get("damage", 0) // 1000,
+                                    new_dmg = kc4.number_input(
+                                        "딜량", min_value=0, max_value=200000,
+                                        value=cur_s.get("damage", 0),
+                                        step=1000,
                                         key=f"edit_{mid}_{team_key}_dmg_{i}",
                                     )
                                     new_stats = {
                                         "kills": new_k, "deaths": new_d,
-                                        "assists": new_a, "damage": new_dmg_k * 1000,
+                                        "assists": new_a, "damage": new_dmg,
                                     }
                                     has_stats = any(v > 0 for v in new_stats.values())
                                     had_stats = bool(cur_s)
