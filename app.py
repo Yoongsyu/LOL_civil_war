@@ -1629,7 +1629,39 @@ with tab3:
                                         key=f"edit_{mid}_{team_key}_champ_{i}",
                                         label_visibility="collapsed",
                                     )
-                                    new_list.append({**pm, "position": new_pos, "champion": new_champ})
+                                    # KDA / 딜량
+                                    cur_s = pm.get("stats", {})
+                                    kc1, kc2, kc3, kc4, _ = st.columns([0.6, 0.6, 0.6, 0.9, 1.7])
+                                    new_k = kc1.number_input(
+                                        "K", min_value=0, max_value=99,
+                                        value=cur_s.get("kills", 0),
+                                        key=f"edit_{mid}_{team_key}_k_{i}",
+                                    )
+                                    new_d = kc2.number_input(
+                                        "D", min_value=0, max_value=99,
+                                        value=cur_s.get("deaths", 0),
+                                        key=f"edit_{mid}_{team_key}_d_{i}",
+                                    )
+                                    new_a = kc3.number_input(
+                                        "A", min_value=0, max_value=99,
+                                        value=cur_s.get("assists", 0),
+                                        key=f"edit_{mid}_{team_key}_a_{i}",
+                                    )
+                                    new_dmg_k = kc4.number_input(
+                                        "딜량(천)", min_value=0, max_value=200,
+                                        value=cur_s.get("damage", 0) // 1000,
+                                        key=f"edit_{mid}_{team_key}_dmg_{i}",
+                                    )
+                                    new_stats = {
+                                        "kills": new_k, "deaths": new_d,
+                                        "assists": new_a, "damage": new_dmg_k * 1000,
+                                    }
+                                    has_stats = any(v > 0 for v in new_stats.values())
+                                    had_stats = bool(cur_s)
+                                    entry = {**pm, "position": new_pos, "champion": new_champ}
+                                    if has_stats or had_stats:
+                                        entry["stats"] = new_stats
+                                    new_list.append(entry)
 
                             # 밴 수정
                             st.markdown("**🚫 밴**")
