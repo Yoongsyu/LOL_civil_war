@@ -414,8 +414,8 @@
       "puuid": "0UQHy5yEp1wgVAKn8VxjyJW3nscALvfmxj5fPbMCll8Krt3GW_fO2sGj32T7baOTzn5PLU6zMJ8fVA",
       "solo_tier": "GOLD",
       "solo_rank": "II",
-      "solo_lp": 30,
-      "mmr": 1340,
+      "solo_lp": 12,
+      "mmr": 1322,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 14,
@@ -458,7 +458,7 @@
           }
         }
       },
-      "solo_mmr": 1430
+      "solo_mmr": 1412
     },
     {
       "name": "호 균",
@@ -535,7 +535,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 1672,
+      "mmr": 0,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 7,
@@ -576,7 +576,7 @@
           }
         }
       },
-      "solo_mmr": 1750
+      "solo_mmr": 0
     },
     {
       "name": "Aloa",
