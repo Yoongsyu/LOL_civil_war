@@ -1162,30 +1162,76 @@ with tab1:
                 f"{selected_count}/10명 선택됨. 정확히 10명을 선택해야 팀 구성이 가능합니다."
             )
         else:
-            if mmr_mode_key == "solo":
-                target_players = with_pure_mmr(selected_players)
-            elif mmr_mode_key == "inhouse":
-                target_players = with_inhouse_only_mmr(selected_players)
-            else:
-                target_players = selected_players
+            # ── 팀 고정 설정 ─────────────────────────────────
+            with st.expander("🔒 팀 고정 설정 (선택 사항)"):
+                st.caption("특정 플레이어를 같은 팀으로 묶으려면 팀을 지정하세요. 지정하지 않은 플레이어는 자동 배정됩니다.")
+                fix_assigns: dict[str, str] = {}  # puuid → "blue" | "red"
+                left_col, right_col = st.columns(2)
+                for idx, p in enumerate(selected_players):
+                    label = f"{p['name']}#{p.get('tag', '')}"
+                    with (left_col if idx % 2 == 0 else right_col):
+                        val = st.radio(
+                            label,
+                            ["자동", "🔵 블루팀", "🔴 레드팀"],
+                            horizontal=True,
+                            key=f"fix_{p['puuid']}_{st.session_state.chk_reset_count}",
+                        )
+                        if val == "🔵 블루팀":
+                            fix_assigns[p["puuid"]] = "blue"
+                        elif val == "🔴 레드팀":
+                            fix_assigns[p["puuid"]] = "red"
 
-            with col_btn1:
-                if st.button("⚡ 팀 구성하기", type="primary", use_container_width=True):
-                    result = find_balanced_teams(target_players, tolerance=tolerance)
-                    st.session_state.team_result = (
-                        "random", result, selected_players, tolerance, mmr_mode_key
-                    )
+            fixed_blue_sel = [p for p in selected_players if fix_assigns.get(p["puuid"]) == "blue"]
+            fixed_red_sel  = [p for p in selected_players if fix_assigns.get(p["puuid"]) == "red"]
+            fix_err = None
+            if len(fixed_blue_sel) > 5:
+                fix_err = f"블루팀 고정 인원이 {len(fixed_blue_sel)}명입니다. 5명 이하로 설정해주세요."
+            elif len(fixed_red_sel) > 5:
+                fix_err = f"레드팀 고정 인원이 {len(fixed_red_sel)}명입니다. 5명 이하로 설정해주세요."
+            if fix_err:
+                st.error(fix_err)
 
-            with col_btn2:
-                if st.button("📌 고정 포지션 팀 구성하기", use_container_width=True):
-                    result = find_balanced_teams_with_positions(target_players, tolerance=tolerance)
-                    st.session_state.team_result = (
-                        "position", result, selected_players, tolerance, mmr_mode_key
-                    )
+            if not fix_err:
+                if mmr_mode_key == "solo":
+                    target_players = with_pure_mmr(selected_players)
+                elif mmr_mode_key == "inhouse":
+                    target_players = with_inhouse_only_mmr(selected_players)
+                else:
+                    target_players = selected_players
+
+                # 고정 플레이어를 target_players 기준으로 재구성 (MMR 변환 반영)
+                target_map = {p["puuid"]: p for p in target_players}
+                fixed_blue_t = [target_map[p["puuid"]] for p in fixed_blue_sel]
+                fixed_red_t  = [target_map[p["puuid"]] for p in fixed_red_sel]
+
+                with col_btn1:
+                    if st.button("⚡ 팀 구성하기", type="primary", use_container_width=True):
+                        result = find_balanced_teams(
+                            target_players, tolerance=tolerance,
+                            fixed_blue=fixed_blue_t, fixed_red=fixed_red_t,
+                        )
+                        st.session_state.team_result = (
+                            "random", result, selected_players, tolerance,
+                            mmr_mode_key, fix_assigns,
+                        )
+
+                with col_btn2:
+                    if st.button("📌 고정 포지션 팀 구성하기", use_container_width=True):
+                        result = find_balanced_teams_with_positions(
+                            target_players, tolerance=tolerance,
+                            fixed_blue=fixed_blue_t, fixed_red=fixed_red_t,
+                        )
+                        st.session_state.team_result = (
+                            "position", result, selected_players, tolerance,
+                            mmr_mode_key, fix_assigns,
+                        )
 
         # 팀 구성 결과 표시
         if st.session_state.team_result:
-            mode, result, saved_players, saved_tol, saved_mode_key = st.session_state.team_result
+            saved = st.session_state.team_result
+            mode, result, saved_players, saved_tol, saved_mode_key = saved[:5]
+            saved_fix = saved[5] if len(saved) > 5 else {}
+
             st.markdown("---")
             st.subheader("팀 구성 결과")
 
@@ -1194,7 +1240,11 @@ with tab1:
                 "solo":     "🎮 솔랭 MMR 기준",
                 "inhouse":  "🏆 내전 성적만 기준",
             }
-            st.caption(mode_labels.get(saved_mode_key, "📊 내전 성적 반영 기준"))
+            caption_parts = [mode_labels.get(saved_mode_key, "📊 내전 성적 반영 기준")]
+            n_fix = sum(1 for v in saved_fix.values() if v in ("blue", "red"))
+            if n_fix:
+                caption_parts.append(f"🔒 {n_fix}명 팀 고정 적용")
+            st.caption("  |  ".join(caption_parts))
 
             show_team_result(result, with_positions=(mode == "position"))
 
@@ -1205,11 +1255,17 @@ with tab1:
                     t = with_inhouse_only_mmr(saved_players)
                 else:
                     t = saved_players
+                t_map = {p["puuid"]: p for p in t}
+                fb = [t_map[pu] for pu, v in saved_fix.items() if v == "blue" and pu in t_map]
+                fr = [t_map[pu] for pu, v in saved_fix.items() if v == "red"  and pu in t_map]
                 if mode == "position":
-                    new_result = find_balanced_teams_with_positions(t, tolerance=saved_tol)
+                    new_result = find_balanced_teams_with_positions(
+                        t, tolerance=saved_tol, fixed_blue=fb, fixed_red=fr)
                 else:
-                    new_result = find_balanced_teams(t, tolerance=saved_tol)
-                st.session_state.team_result = (mode, new_result, saved_players, saved_tol, saved_mode_key)
+                    new_result = find_balanced_teams(
+                        t, tolerance=saved_tol, fixed_blue=fb, fixed_red=fr)
+                st.session_state.team_result = (
+                    mode, new_result, saved_players, saved_tol, saved_mode_key, saved_fix)
                 st.rerun()
 
 

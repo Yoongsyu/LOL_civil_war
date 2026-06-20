@@ -13,10 +13,18 @@ POSITIONS = ["TOP", "JNG", "MID", "ADC", "SUP"]
 
 # ─── MMR 기반 랜덤 팀 구성 ─────────────────────────────────────
 
-def find_balanced_teams(players: list, tolerance: int = 100) -> dict:
+def find_balanced_teams(
+    players: list,
+    tolerance: int = 100,
+    fixed_blue: list = None,
+    fixed_red: list = None,
+) -> dict:
     """
     10명의 플레이어에서 MMR 합 차이가 최소 + tolerance 이내인
     5:5 조합 중 하나를 무작위로 선택하여 반환.
+
+    fixed_blue / fixed_red: 특정 팀으로 미리 고정할 플레이어 목록.
+    고정 인원을 제외한 나머지에서만 조합을 탐색한다.
 
     반환 형태:
     {
@@ -30,34 +38,51 @@ def find_balanced_teams(players: list, tolerance: int = 100) -> dict:
     if len(players) != 10:
         raise ValueError(f"정확히 10명의 플레이어가 필요합니다. (현재 {len(players)}명)")
 
-    indices = list(range(10))
-    # 10 C 5 = 252 가지 조합 생성
-    all_combos = list(combinations(indices, 5))
+    fixed_blue = fixed_blue or []
+    fixed_red  = fixed_red  or []
+
+    if len(fixed_blue) > 5 or len(fixed_red) > 5:
+        raise ValueError("고정 인원이 한 팀 최대 5명을 초과합니다.")
+
+    fixed_blue_puuids = {p["puuid"] for p in fixed_blue}
+    fixed_red_puuids  = {p["puuid"] for p in fixed_red}
+    free = [p for p in players
+            if p["puuid"] not in fixed_blue_puuids | fixed_red_puuids]
+
+    need_blue = 5 - len(fixed_blue)
+    need_red  = 5 - len(fixed_red)
+
+    if need_blue + need_red != len(free):
+        raise ValueError("고정 인원과 자유 인원 수가 맞지 않습니다.")
+
+    all_combos = list(combinations(range(len(free)), need_blue))
 
     best_diff = float("inf")
     candidates = []
 
     for combo in all_combos:
-        blue_idx = list(combo)
-        red_idx  = [i for i in indices if i not in blue_idx]
+        blue_free = [free[i] for i in combo]
+        red_free  = [free[i] for i in range(len(free)) if i not in combo]
 
-        blue_mmr = sum(players[i]["mmr"] for i in blue_idx)
-        red_mmr  = sum(players[i]["mmr"] for i in red_idx)
+        blue_team = fixed_blue + blue_free
+        red_team  = fixed_red  + red_free
+
+        blue_mmr = sum(p["mmr"] for p in blue_team)
+        red_mmr  = sum(p["mmr"] for p in red_team)
         diff = abs(blue_mmr - red_mmr)
 
         if diff < best_diff:
             best_diff = diff
-            candidates = [(blue_idx, red_idx, blue_mmr, red_mmr, diff)]
+            candidates = [(blue_team, red_team, blue_mmr, red_mmr, diff)]
         elif diff <= best_diff + tolerance:
-            candidates.append((blue_idx, red_idx, blue_mmr, red_mmr, diff))
+            candidates.append((blue_team, red_team, blue_mmr, red_mmr, diff))
 
-    # 후보군 중 무작위 선택
     chosen = random.choice(candidates)
-    blue_idx, red_idx, blue_mmr, red_mmr, diff = chosen
+    blue, red, blue_mmr, red_mmr, diff = chosen
 
     return {
-        "blue":     [players[i] for i in blue_idx],
-        "red":      [players[i] for i in red_idx],
+        "blue":     blue,
+        "red":      red,
         "blue_mmr": blue_mmr,
         "red_mmr":  red_mmr,
         "diff":     diff,
@@ -93,7 +118,12 @@ def _best_position_assignment(team: list) -> dict:
     return best_assign
 
 
-def find_balanced_teams_with_positions(players: list, tolerance: int = 100) -> dict:
+def find_balanced_teams_with_positions(
+    players: list,
+    tolerance: int = 100,
+    fixed_blue: list = None,
+    fixed_red: list = None,
+) -> dict:
     """
     MMR 기반 밸런스 팀 구성 후, 각 팀 내부에서 포지션 최적화까지 적용.
 
@@ -108,7 +138,8 @@ def find_balanced_teams_with_positions(players: list, tolerance: int = 100) -> d
         "red_positions":  {name: position, ...},
     }
     """
-    result = find_balanced_teams(players, tolerance)
+    result = find_balanced_teams(players, tolerance,
+                                 fixed_blue=fixed_blue, fixed_red=fixed_red)
 
     blue_positions = _best_position_assignment(result["blue"])
     red_positions  = _best_position_assignment(result["red"])
