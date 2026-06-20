@@ -1165,7 +1165,7 @@ with tab1:
             # ── 팀 고정 설정 ─────────────────────────────────
             with st.expander("🔒 팀 고정 설정 (선택 사항)"):
                 st.caption("특정 플레이어를 같은 팀으로 묶으려면 팀을 지정하세요. 지정하지 않은 플레이어는 자동 배정됩니다.")
-                fix_assigns: dict[str, str] = {}  # puuid → "blue" | "red"
+                fix_assigns = {}  # puuid → "blue" | "red"
                 left_col, right_col = st.columns(2)
                 for idx, p in enumerate(selected_players):
                     label = f"{p['name']}#{p.get('tag', '')}"

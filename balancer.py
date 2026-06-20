@@ -61,14 +61,15 @@ def find_balanced_teams(
     candidates = []
 
     for combo in all_combos:
+        combo_set = set(combo)
         blue_free = [free[i] for i in combo]
-        red_free  = [free[i] for i in range(len(free)) if i not in combo]
+        red_free  = [free[i] for i in range(len(free)) if i not in combo_set]
 
         blue_team = fixed_blue + blue_free
         red_team  = fixed_red  + red_free
 
-        blue_mmr = sum(p["mmr"] for p in blue_team)
-        red_mmr  = sum(p["mmr"] for p in red_team)
+        blue_mmr = sum(int(p["mmr"]) for p in blue_team)
+        red_mmr  = sum(int(p["mmr"]) for p in red_team)
         diff = abs(blue_mmr - red_mmr)
 
         if diff < best_diff:
