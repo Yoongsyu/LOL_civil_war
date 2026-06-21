@@ -875,6 +875,35 @@
           }
         }
       }
+    },
+    {
+      "name": "마나많아",
+      "tag": "KR1",
+      "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "solo_mmr": 0,
+      "mmr": 0,
+      "source_type": "NONE",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
