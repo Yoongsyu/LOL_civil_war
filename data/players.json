@@ -995,6 +995,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "닉 추천좀 해도가",
+      "tag": "우르르쾅쾅",
+      "puuid": "WFQi7znLKESYeFElZg81b562C8hiAqIoSot_xuvub0OiFehFR2nvpVxq_qksdenS2sTRu0A4F3FyZA",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "solo_mmr": 0,
+      "mmr": 0,
+      "source_type": "NONE",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
