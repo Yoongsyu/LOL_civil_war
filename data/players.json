@@ -1024,6 +1024,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "아비타의겨울왕국",
+      "tag": "KR1",
+      "puuid": "4ISJ-mP_49WlBnKUjI9mdNlWtTarB0CFlhKZRq5BwPFy20UvreIRnfvkfUXloN19JFY0SJsr0Gb0Jw",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "solo_mmr": 0,
+      "mmr": 0,
+      "source_type": "NONE",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
