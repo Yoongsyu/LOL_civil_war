@@ -1099,6 +1099,35 @@
           }
         }
       }
+    },
+    {
+      "name": "너무 착한 소환사",
+      "tag": "KR1",
+      "puuid": "EMCsTIPU0JN3CHLz-FC1ZAcsKoVlnpjyPwPdI4afNtuElNLVPvA6qcluZpl7i9OYY4jrKgdIZEYe2w",
+      "solo_tier": "UNRANKED",
+      "solo_rank": "",
+      "solo_lp": 0,
+      "solo_mmr": 0,
+      "mmr": 0,
+      "source_type": "NONE",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
