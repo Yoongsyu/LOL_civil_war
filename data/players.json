@@ -1183,6 +1183,35 @@
           "SUP": 0
         }
       }
+    },
+    {
+      "name": "매미박사",
+      "tag": "IYG",
+      "puuid": "lseVorK16N-7Xy5ixjqZxie1rBiMB0bKO8-P5xJRTdNYGDUA-K8RXv6IiTsi8kpIItyzmYZpYI2UoA",
+      "solo_tier": "PLATINUM",
+      "solo_rank": "I",
+      "solo_lp": 59,
+      "solo_mmr": 1959,
+      "mmr": 1959,
+      "source_type": "SOLO",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
