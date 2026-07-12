@@ -1174,40 +1174,6 @@
     },
     {
       "name": "매미박사",
-      "tag": "KR1",
-      "puuid": "3BB4Z6L5x3ssFtuEFVQIqW4BAoTkMFjYEP5oRXqDPmlTnOJoITwKYcGxkHEpG1Io7dtxd_ElEtUFxw",
-      "solo_tier": "UNRANKED",
-      "solo_rank": "",
-      "solo_lp": 0,
-      "solo_mmr": 0,
-      "mmr": 0,
-      "source_type": "NONE",
-      "inhouse_stats": {
-        "win": 1,
-        "loss": 0,
-        "positions": {
-          "TOP": 1,
-          "JNG": 0,
-          "MID": 0,
-          "ADC": 0,
-          "SUP": 0
-        },
-        "position_wins": {
-          "TOP": 1,
-          "JNG": 0,
-          "MID": 0,
-          "ADC": 0,
-          "SUP": 0
-        },
-        "position_champions": {
-          "TOP": {
-            "우르곳": 1
-          }
-        }
-      }
-    },
-    {
-      "name": "매미박사",
       "tag": "IYG",
       "puuid": "lseVorK16N-7Xy5ixjqZxie1rBiMB0bKO8-P5xJRTdNYGDUA-K8RXv6IiTsi8kpIItyzmYZpYI2UoA",
       "solo_tier": "PLATINUM",
