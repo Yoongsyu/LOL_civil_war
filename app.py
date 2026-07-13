@@ -1470,6 +1470,20 @@ with tab3:
                         )
                     )
 
+                swap_col, _ = st.columns([1, 4])
+                if swap_col.button("🔄 팀 교체", help="블루팀↔레드팀 선수를 서로 바꿉니다", use_container_width=True):
+                    for i in range(5):
+                        for b_key, r_key in [
+                            (f"b_pick_{i}", f"r_pick_{i}"),
+                            (f"b_pos_{i}",  f"r_pos_{i}"),
+                            (f"b_champ_{i}", f"r_champ_{i}"),
+                        ]:
+                            if b_key in st.session_state and r_key in st.session_state:
+                                st.session_state[b_key], st.session_state[r_key] = (
+                                    st.session_state[r_key], st.session_state[b_key]
+                                )
+                    st.rerun()
+
                 st.markdown("**🔴 레드팀 (5명)**")
                 red_picks, red_pos_picks, red_champ_picks = [], [], []
                 for i in range(5):
