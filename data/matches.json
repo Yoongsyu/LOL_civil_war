@@ -1,6 +1,101 @@
 {
   "matches": [
     {
+      "id": "43a2d793",
+      "date": "2026-07-16 21:26",
+      "blue_team": [
+        {
+          "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
+          "name": "미친과학자",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "말자하"
+        },
+        {
+          "puuid": "pqwBFlDErWmFSj0LJ27OHSaiLN9Svi8DGxT6I8iqXl21Q3xtEDCnw23vham_mwkdTKya_gxVHtnYsw",
+          "name": "검은고목나무1",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "오공"
+        },
+        {
+          "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
+          "name": "벌레에용",
+          "tag": "보급벌레",
+          "position": "MID",
+          "champion": "애니비아"
+        },
+        {
+          "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
+          "name": "아몬드봉봉초콜릿",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "징크스"
+        },
+        {
+          "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
+          "name": "Aloa",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "쓰레쉬"
+        }
+      ],
+      "red_team": [
+        {
+          "puuid": "lseVorK16N-7Xy5ixjqZxie1rBiMB0bKO8-P5xJRTdNYGDUA-K8RXv6IiTsi8kpIItyzmYZpYI2UoA",
+          "name": "매미박사",
+          "tag": "IYG",
+          "position": "TOP",
+          "champion": "사이온"
+        },
+        {
+          "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
+          "name": "호 균",
+          "tag": "Kr2",
+          "position": "JNG",
+          "champion": "신 짜오"
+        },
+        {
+          "puuid": "EMCsTIPU0JN3CHLz-FC1ZAcsKoVlnpjyPwPdI4afNtuElNLVPvA6qcluZpl7i9OYY4jrKgdIZEYe2w",
+          "name": "너무 착한 소환사",
+          "tag": "KR1",
+          "position": "MID",
+          "champion": "빅토르"
+        },
+        {
+          "puuid": "tUVcxsH7XrISFQ0F_q8J6A5vsdioh6pZEzWCbe6IPFA6_rIMvZzUDpNt3LVH384-DPMKaiaTYc2seg",
+          "name": "잭스 버프좀",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "진"
+        },
+        {
+          "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
+          "name": "마나많아",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "타릭"
+        }
+      ],
+      "winner": "red",
+      "bans": {
+        "blue": [
+          "가렌",
+          "로크",
+          "하이머딩거",
+          "조이",
+          "올라프"
+        ],
+        "red": [
+          "트위치",
+          "하이머딩거",
+          "신지드",
+          "베인",
+          "제이스"
+        ]
+      }
+    },
+    {
       "id": "b21dc9bd",
       "date": "2026-07-16 21:01",
       "blue_team": [
