@@ -1,6 +1,101 @@
 {
   "matches": [
     {
+      "id": "92c27550",
+      "date": "2026-07-25 01:41",
+      "blue_team": [
+        {
+          "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
+          "name": "미친과학자",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "문도 박사"
+        },
+        {
+          "puuid": "pqwBFlDErWmFSj0LJ27OHSaiLN9Svi8DGxT6I8iqXl21Q3xtEDCnw23vham_mwkdTKya_gxVHtnYsw",
+          "name": "검은고목나무1",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "탈리야"
+        },
+        {
+          "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
+          "name": "호 균",
+          "tag": "Kr2",
+          "position": "MID",
+          "champion": "애니"
+        },
+        {
+          "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
+          "name": "벌레에용",
+          "tag": "보급벌레",
+          "position": "ADC",
+          "champion": "미스 포츈"
+        },
+        {
+          "puuid": "NuU_wxZFKdz2cwZFEyYkVtxB2B8pN_4uNvZf7pwIyea2Is74L7sxCpgrBERuSanDD3K6VdwpUrFuhw",
+          "name": "물단지",
+          "tag": "항아리",
+          "position": "SUP",
+          "champion": "레오나"
+        }
+      ],
+      "red_team": [
+        {
+          "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
+          "name": "Aloa",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "갱플랭크"
+        },
+        {
+          "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
+          "name": "아몬드봉봉초콜릿",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "볼리베어"
+        },
+        {
+          "puuid": "k9KRpsZyXc-yWYvaLMl1fZGbZSbYOFx9xymzqV4WRn1nu22jqqXNYnxGgdHgR7-xwBLPHoCf-2Vcfg",
+          "name": "케 인",
+          "tag": "아님말고",
+          "position": "MID",
+          "champion": "럭스"
+        },
+        {
+          "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
+          "name": "엄마찾는둘리",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "직스"
+        },
+        {
+          "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
+          "name": "융슈타인",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "세나"
+        }
+      ],
+      "winner": "blue",
+      "bans": {
+        "blue": [
+          "브라이어",
+          "야스오",
+          "벨베스",
+          "베인",
+          "신 짜오"
+        ],
+        "red": [
+          "흐웨이",
+          "사일러스",
+          "로크",
+          "신드라",
+          "럼블"
+        ]
+      }
+    },
+    {
       "id": "97f4f718",
       "date": "2026-07-25 00:55",
       "blue_team": [
