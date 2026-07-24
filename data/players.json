@@ -7,23 +7,23 @@
       "solo_tier": "SILVER",
       "solo_rank": "II",
       "solo_lp": 3,
-      "mmr": 1006,
+      "mmr": 1010,
       "inhouse_stats": {
-        "win": 40,
+        "win": 41,
         "loss": 39,
         "positions": {
           "TOP": 7,
           "JNG": 2,
           "MID": 2,
           "ADC": 34,
-          "SUP": 34
+          "SUP": 35
         },
         "position_wins": {
           "TOP": 2,
           "JNG": 1,
           "MID": 1,
           "ADC": 18,
-          "SUP": 18
+          "SUP": 19
         },
         "position_champions": {
           "SUP": {
@@ -34,7 +34,7 @@
             "룰루": 5,
             "소라카": 1,
             "모르가나": 3,
-            "니코": 4,
+            "니코": 5,
             "럭스": 1,
             "노틸러스": 1,
             "나미": 1,
@@ -74,21 +74,21 @@
       "solo_tier": "EMERALD",
       "solo_rank": "III",
       "solo_lp": 46,
-      "mmr": 2143,
+      "mmr": 2146,
       "inhouse_stats": {
-        "win": 39,
+        "win": 40,
         "loss": 40,
         "positions": {
           "TOP": 20,
           "JNG": 21,
-          "MID": 2,
+          "MID": 3,
           "ADC": 15,
           "SUP": 21
         },
         "position_wins": {
           "TOP": 9,
           "JNG": 12,
-          "MID": 0,
+          "MID": 1,
           "ADC": 8,
           "SUP": 10
         },
@@ -148,7 +148,8 @@
           },
           "MID": {
             "오리아나": 1,
-            "니코": 1
+            "니코": 1,
+            "요네": 1
           }
         }
       },
@@ -161,16 +162,16 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1265,
+      "mmr": 1260,
       "inhouse_stats": {
         "win": 45,
-        "loss": 31,
+        "loss": 32,
         "positions": {
           "TOP": 33,
           "JNG": 14,
           "MID": 3,
           "ADC": 14,
-          "SUP": 12
+          "SUP": 13
         },
         "position_wins": {
           "TOP": 20,
@@ -220,7 +221,7 @@
             "레오나": 1,
             "라칸": 4,
             "마오카이": 1,
-            "하이머딩거": 3,
+            "하이머딩거": 4,
             "룰루": 1,
             "노틸러스": 1,
             "신지드": 1
@@ -236,13 +237,13 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 65,
-      "mmr": 1691,
+      "mmr": 1687,
       "inhouse_stats": {
         "win": 43,
-        "loss": 36,
+        "loss": 37,
         "positions": {
           "TOP": 14,
-          "JNG": 3,
+          "JNG": 4,
           "MID": 55,
           "ADC": 0,
           "SUP": 7
@@ -296,7 +297,8 @@
           "JNG": {
             "아무무": 1,
             "세주아니": 1,
-            "그레이브즈": 1
+            "그레이브즈": 1,
+            "나피리": 1
           },
           "SUP": {
             "질리언": 1,
@@ -370,22 +372,22 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 75,
-      "mmr": 1703,
+      "mmr": 1708,
       "inhouse_stats": {
-        "win": 29,
+        "win": 30,
         "loss": 24,
         "positions": {
           "TOP": 12,
           "JNG": 29,
           "MID": 4,
-          "ADC": 5,
+          "ADC": 6,
           "SUP": 3
         },
         "position_wins": {
           "TOP": 8,
           "JNG": 14,
           "MID": 2,
-          "ADC": 4,
+          "ADC": 5,
           "SUP": 1
         },
         "position_champions": {
@@ -423,7 +425,8 @@
             "티모": 2,
             "케이틀린": 1,
             "시비르": 1,
-            "트리스타나": 1
+            "트리스타나": 1,
+            "제라스": 1
           }
         }
       },
@@ -561,15 +564,15 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 2,
-      "mmr": 1985,
+      "mmr": 1982,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 40,
-        "loss": 45,
+        "loss": 46,
         "positions": {
           "TOP": 21,
           "JNG": 21,
-          "MID": 9,
+          "MID": 10,
           "ADC": 30,
           "SUP": 4
         },
@@ -606,7 +609,7 @@
             "베인": 1,
             "바루스": 1,
             "애니비아": 1,
-            "빅토르": 2,
+            "빅토르": 3,
             "아크샨": 1,
             "트위스티드 페이트": 1
           },
@@ -657,16 +660,16 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 2221,
+      "mmr": 2213,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 14,
-        "loss": 17,
+        "loss": 18,
         "positions": {
           "TOP": 8,
           "JNG": 15,
           "MID": 4,
-          "ADC": 4,
+          "ADC": 5,
           "SUP": 0
         },
         "position_wins": {
@@ -704,7 +707,7 @@
             "아트록스": 1
           },
           "ADC": {
-            "진": 1,
+            "진": 2,
             "애쉬": 1,
             "세나": 1,
             "자야": 1
@@ -721,20 +724,20 @@
       "solo_rank": "IV",
       "solo_lp": 31,
       "solo_mmr": 2031,
-      "mmr": 1907,
+      "mmr": 1923,
       "source_type": "SOLO",
       "inhouse_stats": {
-        "win": 7,
+        "win": 8,
         "loss": 17,
         "positions": {
-          "TOP": 2,
+          "TOP": 3,
           "JNG": 1,
           "MID": 4,
           "ADC": 12,
           "SUP": 5
         },
         "position_wins": {
-          "TOP": 1,
+          "TOP": 2,
           "JNG": 0,
           "MID": 0,
           "ADC": 5,
@@ -758,7 +761,7 @@
           },
           "TOP": {
             "모데카이저": 1,
-            "오른": 1
+            "오른": 2
           },
           "SUP": {
             "쓰레쉬": 2,
@@ -780,13 +783,13 @@
       "solo_rank": "IV",
       "solo_lp": 32,
       "solo_mmr": 1632,
-      "mmr": 1554,
+      "mmr": 1542,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 7,
-        "loss": 12,
+        "loss": 13,
         "positions": {
-          "TOP": 13,
+          "TOP": 14,
           "JNG": 5,
           "MID": 0,
           "ADC": 1,
@@ -808,7 +811,8 @@
             "레넥톤": 1,
             "그웬": 1,
             "말파이트": 2,
-            "티모": 1
+            "티모": 1,
+            "뽀삐": 1
           },
           "JNG": {
             "신 짜오": 2,
@@ -967,21 +971,21 @@
       "solo_rank": "IV",
       "solo_lp": 62,
       "solo_mmr": 1262,
-      "mmr": 1275,
+      "mmr": 1286,
       "source_type": "SOLO",
       "inhouse_stats": {
-        "win": 12,
+        "win": 13,
         "loss": 11,
         "positions": {
           "TOP": 0,
-          "JNG": 9,
+          "JNG": 10,
           "MID": 14,
           "ADC": 0,
           "SUP": 0
         },
         "position_wins": {
           "TOP": 0,
-          "JNG": 5,
+          "JNG": 6,
           "MID": 7,
           "ADC": 0,
           "SUP": 0
@@ -1007,7 +1011,8 @@
             "다이애나": 1,
             "신 짜오": 1,
             "릴리아": 1,
-            "로크": 1
+            "로크": 1,
+            "스카너": 1
           }
         }
       }
