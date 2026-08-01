@@ -1,6 +1,101 @@
 {
   "matches": [
     {
+      "id": "d7c335cb",
+      "date": "2026-08-02 00:22",
+      "blue_team": [
+        {
+          "puuid": "H-F6ieKEVDAfiYeaUyeHqWEN63EjPy7_8L3qAXtJYOywv7o41D1YN_XqOak45brRxhA0-QD_HrAIKA",
+          "name": "Jin기명기",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "크산테"
+        },
+        {
+          "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
+          "name": "Aloa",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "자르반 4세"
+        },
+        {
+          "puuid": "yT0EdviL3Gy8GhelCm5Zc7cDIw9mw5V0WVbP2HFZ1E0veXf8b1rUXQ7o2wArr3-2bKEDXVhbXtabkA",
+          "name": "잠와죽것네",
+          "tag": "KR1",
+          "position": "MID",
+          "champion": "럭스"
+        },
+        {
+          "puuid": "EMCsTIPU0JN3CHLz-FC1ZAcsKoVlnpjyPwPdI4afNtuElNLVPvA6qcluZpl7i9OYY4jrKgdIZEYe2w",
+          "name": "너무 착한 소환사",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "카이사"
+        },
+        {
+          "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
+          "name": "마나많아",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "브라움"
+        }
+      ],
+      "red_team": [
+        {
+          "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
+          "name": "아몬드봉봉초콜릿",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "뽀삐"
+        },
+        {
+          "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
+          "name": "엄마찾는둘리",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "제이스"
+        },
+        {
+          "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
+          "name": "벌레에용",
+          "tag": "보급벌레",
+          "position": "MID",
+          "champion": "흐웨이"
+        },
+        {
+          "puuid": "tUVcxsH7XrISFQ0F_q8J6A5vsdioh6pZEzWCbe6IPFA6_rIMvZzUDpNt3LVH384-DPMKaiaTYc2seg",
+          "name": "잭스 버프좀",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "이즈리얼"
+        },
+        {
+          "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
+          "name": "융슈타인",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "니코"
+        }
+      ],
+      "winner": "red",
+      "bans": {
+        "blue": [
+          "나르",
+          "세라핀",
+          "제라스",
+          "신드라",
+          "베인"
+        ],
+        "red": [
+          "녹턴",
+          "신 짜오",
+          "노틸러스",
+          "브랜드",
+          "리 신"
+        ]
+      }
+    },
+    {
       "id": "997da3c9",
       "date": "2026-08-01 23:13",
       "blue_team": [
