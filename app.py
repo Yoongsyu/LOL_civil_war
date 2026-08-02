@@ -2641,3 +2641,76 @@ with tab4:
                     )
 
         st.caption(f"※ {MIN_POS_GAMES}판 이상 플레이한 챔피언만 집계")
+
+        # ── 바텀 조합 승률 TOP 10 ──────────────────────────────────
+        st.markdown("---")
+        st.subheader("🏹💊 바텀 조합 승률 TOP 10")
+
+        MIN_BOT_GAMES = 2
+        bot_record: dict = {}
+        for m in lb_all_matches:
+            winner = m.get("winner", "")
+            for side in ["blue", "red"]:
+                is_win = side == winner
+                team = m.get(f"{side}_team", [])
+                adc = next((pi["champion"] for pi in team
+                            if pi.get("position") == "ADC" and pi.get("champion")), None)
+                sup = next((pi["champion"] for pi in team
+                            if pi.get("position") == "SUP" and pi.get("champion")), None)
+                if not adc or not sup:
+                    continue
+                pair = (adc, sup)
+                rec = bot_record.setdefault(pair, {"win": 0, "loss": 0})
+                if is_win:
+                    rec["win"] += 1
+                else:
+                    rec["loss"] += 1
+
+        bot_wr_list = sorted(
+            [
+                (adc, sup, d["win"], d["win"] + d["loss"],
+                 d["win"] / (d["win"] + d["loss"]))
+                for (adc, sup), d in bot_record.items()
+                if d["win"] + d["loss"] >= MIN_BOT_GAMES
+            ],
+            key=lambda x: (-x[4], -x[3])
+        )[:10]
+
+        if not bot_wr_list:
+            st.caption(f"데이터 없음 (최소 {MIN_BOT_GAMES}판 이상 필요)")
+        else:
+            for rank_i, (adc, sup, wins, total, wr) in enumerate(bot_wr_list):
+                medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+                adc_url = lb_url_map_stat.get(adc, "")
+                sup_url = lb_url_map_stat.get(sup, "")
+
+                def _duo_img(url, name):
+                    if url:
+                        return (f"<img src='{url}' width='32' height='32' "
+                                f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                                f"vertical-align:middle;'>")
+                    return (f"<span style='display:inline-block;width:32px;height:32px;"
+                            f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
+                            f"vertical-align:middle;text-align:center;line-height:32px;"
+                            f"font-size:0.65rem;color:#94A3B8;'>{name[:2]}</span>")
+
+                wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+                st.markdown(
+                    f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                    f"border-bottom:1px solid #F1F5F9;gap:6px;'>"
+                    f"<span style='font-size:0.82rem;width:28px;flex-shrink:0;'>{medal}</span>"
+                    f"{_duo_img(adc_url, adc)}"
+                    f"<span style='font-size:0.78rem;color:#64748B;margin:0 2px;'>🏹</span>"
+                    f"{_duo_img(sup_url, sup)}"
+                    f"<div style='flex:1;margin-left:6px;'>"
+                    f"<span style='font-weight:700;font-size:0.85rem;'>{adc}</span>"
+                    f"<span style='font-size:0.78rem;color:#94A3B8;'> + {sup}</span>"
+                    f"</div>"
+                    f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
+                    f"{wins}승 {total-wins}패</span>"
+                    f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
+                    f"{wr*100:.1f}%</span>"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
+            st.caption(f"※ {MIN_BOT_GAMES}판 이상 플레이한 조합만 집계")
