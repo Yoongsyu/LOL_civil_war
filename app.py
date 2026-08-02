@@ -2498,13 +2498,70 @@ with tab4:
                     for rank_i, (champ, wins, total, wr) in enumerate(rest, start=5):
                         st.markdown(_champ_wr_row_html(rank_i, champ, wins, total, wr), unsafe_allow_html=True)
 
-        wr_col1, wr_col2 = st.columns(2)
-        with wr_col1:
-            _champ_wr_rank_html(top10_wr_high, "📈 승률 높은 챔피언 TOP 10")
-        with wr_col2:
-            _champ_wr_rank_html(top10_wr_low,  "📉 승률 낮은 챔피언 TOP 10")
-
+        _champ_wr_rank_html(top10_wr_high, "📈 승률 높은 챔피언 TOP 10")
         st.caption(f"※ {MIN_CHAMP_GAMES}판 이상 플레이한 챔피언만 집계")
+
+        # ── 포지션별 승률 1위 챔피언 ──────────────────────────────
+        st.markdown("---")
+        st.subheader("포지션별 승률 1위 챔피언")
+
+        MIN_POS_GAMES = 2
+        pos_champ_record: dict = {pos: {} for pos in POSITIONS}
+        for m in lb_all_matches:
+            winner = m.get("winner", "")
+            for side in ["blue", "red"]:
+                is_win = side == winner
+                for pi in m.get(f"{side}_team", []):
+                    c   = pi.get("champion", "")
+                    pos = pi.get("position", "")
+                    if not c or pos not in pos_champ_record:
+                        continue
+                    rec = pos_champ_record[pos].setdefault(c, {"win": 0, "loss": 0})
+                    if is_win:
+                        rec["win"] += 1
+                    else:
+                        rec["loss"] += 1
+
+        POS_KR_ICON = {"TOP": "🛡️ 탑", "JNG": "🌲 정글", "MID": "⚡ 미드",
+                       "ADC": "🏹 원딜", "SUP": "💊 서포터"}
+
+        pos_stat_cols = st.columns(5)
+        for col, pos in zip(pos_stat_cols, POSITIONS):
+            with col:
+                st.markdown(f"**{POS_KR_ICON[pos]}**")
+                candidates = [
+                    (c, d["win"], d["win"] + d["loss"],
+                     d["win"] / (d["win"] + d["loss"]))
+                    for c, d in pos_champ_record[pos].items()
+                    if d["win"] + d["loss"] >= MIN_POS_GAMES
+                ]
+                if not candidates:
+                    st.caption("데이터 없음")
+                    continue
+                best = max(candidates, key=lambda x: (x[3], x[2]))
+                champ, wins, total, wr = best
+                img_url = lb_url_map_stat.get(champ, "")
+                img_html = (
+                    f"<img src='{img_url}' width='48' height='48' "
+                    f"style='border-radius:50%;border:3px solid #E2E8F0;display:block;margin:4px auto;'>"
+                    if img_url else
+                    f"<div style='width:48px;height:48px;border-radius:50%;"
+                    f"background:#F1F5F9;border:3px solid #E2E8F0;"
+                    f"margin:4px auto;text-align:center;line-height:48px;"
+                    f"font-size:0.7rem;color:#94A3B8;'>?</div>"
+                )
+                wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+                st.markdown(
+                    f"<div style='text-align:center;'>"
+                    f"{img_html}"
+                    f"<div style='font-weight:700;font-size:0.9rem;margin-top:4px;'>{champ}</div>"
+                    f"<div style='font-size:0.85rem;font-weight:700;color:{wr_color};'>{wr*100:.1f}%</div>"
+                    f"<div style='font-size:0.75rem;color:#94A3B8;'>{wins}승 {total-wins}패</div>"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
+
+        st.caption(f"※ {MIN_POS_GAMES}판 이상 플레이한 챔피언만 집계")
 
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
