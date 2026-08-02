@@ -537,6 +537,54 @@ def update_match(old_match: dict, new_match: dict) -> bool:
     return ok1 and ok2
 
 
+def recalculate_all_elo() -> bool:
+    """전체 매치 히스토리를 ELO로 재시뮬레이션해 inhouse_delta 재산출"""
+    players = load_players()
+    player_map = {p["puuid"]: p for p in players}
+
+    # 모든 플레이어 inhouse_delta 초기화
+    for p in player_map.values():
+        solo_mmr = p.get("solo_mmr", calculate_mmr(
+            p.get("solo_tier", "UNRANKED"), p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
+        ))
+        p["inhouse_delta"] = 0
+        p["mmr"] = solo_mmr
+
+    # 오래된 경기부터 순서대로 재생 (저장 순서가 최신 우선이므로 역순)
+    matches = load_matches()
+    for match in reversed(matches):
+        blue = match.get("blue_team", [])
+        red  = match.get("red_team",  [])
+        winner = match.get("winner", "blue")
+
+        b_mmrs = [player_map[pi["puuid"]]["mmr"] for pi in blue  if pi["puuid"] in player_map]
+        r_mmrs = [player_map[pi["puuid"]]["mmr"] for pi in red   if pi["puuid"] in player_map]
+        b_avg = sum(b_mmrs) / len(b_mmrs) if b_mmrs else 1500
+        r_avg = sum(r_mmrs) / len(r_mmrs) if r_mmrs else 1500
+        exp_b = 1 / (1 + 10 ** ((r_avg - b_avg) / 400))
+        elo_exp = {"blue": exp_b, "red": 1 - exp_b}
+
+        for side, team in [("blue", blue), ("red", red)]:
+            is_win = side == winner
+            actual = 1 if is_win else 0
+            for pi in team:
+                puuid = pi["puuid"]
+                if puuid not in player_map:
+                    continue
+                p = player_map[puuid]
+                delta = round(ELO_K * (actual - elo_exp[side]))
+                p["inhouse_delta"] += delta
+                solo_mmr = p.get("solo_mmr", calculate_mmr(
+                    p.get("solo_tier", "UNRANKED"), p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
+                ))
+                p["mmr"] = max(0, solo_mmr + p["inhouse_delta"])
+
+    return save_players(
+        list(player_map.values()),
+        commit_message="update: recalculate all inhouse ELO from match history",
+    )
+
+
 # ─── 캐시된 로더 ─────────────────────────────────────────────────
 
 @st.cache_data(ttl=300)
@@ -1834,7 +1882,7 @@ with tab3:
         with admin_tab3:
             st.markdown("등록된 플레이어를 관리합니다.")
             
-            c_sync, c_recalc, _ = st.columns([2, 2, 3])
+            c_sync, c_recalc, c_elo = st.columns([2, 2, 2])
             with c_recalc:
                 if st.button("⚡ MMR 전체 재계산 (600배율)", use_container_width=True):
                     recalc_players = load_players()
@@ -1857,6 +1905,17 @@ with tab3:
                             st.rerun()
                         else:
                             st.error("저장 중 오류가 발생했습니다.")
+            with c_elo:
+                if st.button("🎯 ELO 전체 재계산", use_container_width=True,
+                             help="전체 매치 기록을 처음부터 ELO로 재시뮬레이션합니다"):
+                    with st.spinner("ELO 재계산 중..."):
+                        ok = recalculate_all_elo()
+                    if ok:
+                        st.success("✅ ELO 재계산 완료!")
+                        st.cache_data.clear()
+                        st.rerun()
+                    else:
+                        st.error("저장 중 오류가 발생했습니다.")
             with c_sync:
                 if st.button("🔄 플레이어 티어 전체 동기화", use_container_width=True):
                     mgmt_players = load_players()
