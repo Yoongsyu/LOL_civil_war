@@ -2574,7 +2574,7 @@ with tab4:
         st.markdown("---")
         st.subheader("포지션별 승률 TOP 3 챔피언")
 
-        MIN_POS_GAMES = 2
+        MIN_POS_GAMES = 3
         pos_champ_record: dict = {pos: {} for pos in POSITIONS}
         for m in lb_all_matches:
             winner = m.get("winner", "")
