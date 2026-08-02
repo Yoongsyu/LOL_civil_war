@@ -2499,7 +2499,7 @@ with tab4:
                         st.markdown(_champ_wr_row_html(rank_i, champ, wins, total, wr), unsafe_allow_html=True)
 
         # 바텀 조합 데이터 집계 (승률 챔피언 옆에 나란히 표시)
-        MIN_BOT_GAMES = 3
+        MIN_BOT_GAMES = 2
         bot_record: dict = {}
         for m in lb_all_matches:
             winner = m.get("winner", "")
@@ -2548,7 +2548,7 @@ with tab4:
             if not bot_wr_list:
                 st.caption(f"데이터 없음 (최소 {MIN_BOT_GAMES}판 이상 필요)")
             else:
-                for rank_i, (adc, sup, wins, total, wr) in enumerate(bot_wr_list):
+                def _bot_row(rank_i, adc, sup, wins, total, wr):
                     medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
                     adc_url = lb_url_map_stat.get(adc, "")
                     sup_url = lb_url_map_stat.get(sup, "")
@@ -2571,11 +2571,18 @@ with tab4:
                         f"</div>",
                         unsafe_allow_html=True
                     )
+                for rank_i, row in enumerate(bot_wr_list[:5]):
+                    _bot_row(rank_i, *row)
+                if len(bot_wr_list) > 5:
+                    with st.expander("6~10위 더 보기"):
+                        for rank_i, row in enumerate(bot_wr_list[5:], start=5):
+                            _bot_row(rank_i, *row)
                 st.caption(f"※ {MIN_BOT_GAMES}판 이상 플레이한 조합만 집계")
 
         # ── 챔피언 2인조 승률 TOP 10 & 플레이어 2인조 승률 TOP 10 ──
         st.markdown("---")
-        MIN_PAIR_GAMES = 3
+        MIN_CHAMP_PAIR_GAMES = 3
+        MIN_PLAYER_PAIR_GAMES = 5
 
         from itertools import combinations
 
@@ -2603,28 +2610,28 @@ with tab4:
                     else:
                         rec["loss"] += 1
 
-        def _pair_wr_list(record):
+        def _pair_wr_list(record, min_games):
             return sorted(
                 [
                     (a, b, d["win"], d["win"] + d["loss"],
                      d["win"] / (d["win"] + d["loss"]))
                     for (a, b), d in record.items()
-                    if d["win"] + d["loss"] >= MIN_PAIR_GAMES
+                    if d["win"] + d["loss"] >= min_games
                 ],
                 key=lambda x: (-x[4], -x[3])
             )[:10]
 
-        top_champ_pairs  = _pair_wr_list(champ_pair_record)
-        top_player_pairs = _pair_wr_list(player_pair_record)
+        top_champ_pairs  = _pair_wr_list(champ_pair_record,  MIN_CHAMP_PAIR_GAMES)
+        top_player_pairs = _pair_wr_list(player_pair_record, MIN_PLAYER_PAIR_GAMES)
 
         pair_col1, pair_col2 = st.columns(2)
 
         with pair_col1:
             st.markdown("**🤝 함께할 때 승률 높은 챔피언 조합 TOP 10**")
             if not top_champ_pairs:
-                st.caption(f"데이터 없음 (최소 {MIN_PAIR_GAMES}판 이상 필요)")
+                st.caption(f"데이터 없음 (최소 {MIN_CHAMP_PAIR_GAMES}판 이상 필요)")
             else:
-                for rank_i, (a, b, wins, total, wr) in enumerate(top_champ_pairs):
+                def _champ_pair_row(rank_i, a, b, wins, total, wr):
                     medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
                     url_a = lb_url_map_stat.get(a, "")
                     url_b = lb_url_map_stat.get(b, "")
@@ -2647,14 +2654,20 @@ with tab4:
                         f"</div>",
                         unsafe_allow_html=True
                     )
-                st.caption(f"※ {MIN_PAIR_GAMES}판 이상 함께한 조합만 집계")
+                for rank_i, row in enumerate(top_champ_pairs[:5]):
+                    _champ_pair_row(rank_i, *row)
+                if len(top_champ_pairs) > 5:
+                    with st.expander("6~10위 더 보기"):
+                        for rank_i, row in enumerate(top_champ_pairs[5:], start=5):
+                            _champ_pair_row(rank_i, *row)
+                st.caption(f"※ {MIN_CHAMP_PAIR_GAMES}판 이상 함께한 조합만 집계")
 
         with pair_col2:
             st.markdown("**👥 함께할 때 승률 높은 플레이어 조합 TOP 10**")
             if not top_player_pairs:
-                st.caption(f"데이터 없음 (최소 {MIN_PAIR_GAMES}판 이상 필요)")
+                st.caption(f"데이터 없음 (최소 {MIN_PLAYER_PAIR_GAMES}판 이상 필요)")
             else:
-                for rank_i, (a, b, wins, total, wr) in enumerate(top_player_pairs):
+                def _player_pair_row(rank_i, a, b, wins, total, wr):
                     medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
                     wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
                     st.markdown(
@@ -2672,7 +2685,13 @@ with tab4:
                         f"</div>",
                         unsafe_allow_html=True
                     )
-                st.caption(f"※ {MIN_PAIR_GAMES}판 이상 함께한 조합만 집계")
+                for rank_i, row in enumerate(top_player_pairs[:5]):
+                    _player_pair_row(rank_i, *row)
+                if len(top_player_pairs) > 5:
+                    with st.expander("6~10위 더 보기"):
+                        for rank_i, row in enumerate(top_player_pairs[5:], start=5):
+                            _player_pair_row(rank_i, *row)
+                st.caption(f"※ {MIN_PLAYER_PAIR_GAMES}판 이상 함께한 조합만 집계")
 
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
