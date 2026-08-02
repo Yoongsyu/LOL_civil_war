@@ -2431,6 +2431,81 @@ with tab4:
         with stat_col2:
             _champ_rank_html(top10_play, "⚔️ 가장 많이 플레이한 챔피언 TOP 10")
 
+        # ── 챔피언 승률 통계 ──────────────────────────────────────
+        st.markdown("---")
+
+        MIN_CHAMP_GAMES = 3  # 최소 게임 수 미만은 통계에서 제외
+        champ_record: dict = {}
+        for m in lb_all_matches:
+            winner = m.get("winner", "")
+            for side in ["blue", "red"]:
+                is_win = side == winner
+                for pi in m.get(f"{side}_team", []):
+                    c = pi.get("champion", "")
+                    if not c:
+                        continue
+                    if c not in champ_record:
+                        champ_record[c] = {"win": 0, "loss": 0}
+                    if is_win:
+                        champ_record[c]["win"] += 1
+                    else:
+                        champ_record[c]["loss"] += 1
+
+        champ_wr_list = [
+            (c, d["win"], d["win"] + d["loss"], d["win"] / (d["win"] + d["loss"]))
+            for c, d in champ_record.items()
+            if d["win"] + d["loss"] >= MIN_CHAMP_GAMES
+        ]
+        top10_wr_high = sorted(champ_wr_list, key=lambda x: (-x[3], -x[2]))[:10]
+        top10_wr_low  = sorted(champ_wr_list, key=lambda x: ( x[3], -x[2]))[:10]
+
+        def _champ_wr_row_html(rank_i: int, champ: str, wins: int, total: int, wr: float) -> str:
+            medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+            img_url = lb_url_map_stat.get(champ, "")
+            img_html = (
+                f"<img src='{img_url}' width='30' height='30' "
+                f"style='border-radius:50%;border:2px solid #E2E8F0;"
+                f"vertical-align:middle;margin-right:7px;'>"
+                if img_url else
+                f"<span style='display:inline-block;width:30px;height:30px;"
+                f"border-radius:50%;background:#F1F5F9;border:2px solid #E2E8F0;"
+                f"vertical-align:middle;margin-right:7px;text-align:center;"
+                f"line-height:30px;font-size:0.7rem;color:#94A3B8;'>?</span>"
+            )
+            wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+            return (
+                f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                f"border-bottom:1px solid #F1F5F9;'>"
+                f"{img_html}"
+                f"<span style='font-weight:700;font-size:0.88rem;color:#1E293B;flex:1;'>"
+                f"{medal} {champ}</span>"
+                f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>{wins}승/{total-wins}패</span>"
+                f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>{wr*100:.1f}%</span>"
+                f"</div>"
+            )
+
+        def _champ_wr_rank_html(items, label: str) -> None:
+            st.markdown(f"**{label}**")
+            if not items:
+                st.caption(f"데이터 없음 (최소 {MIN_CHAMP_GAMES}판 이상 필요)")
+                return
+            top5 = items[:5]
+            rest = items[5:]
+            for rank_i, (champ, wins, total, wr) in enumerate(top5):
+                st.markdown(_champ_wr_row_html(rank_i, champ, wins, total, wr), unsafe_allow_html=True)
+            if rest:
+                with st.expander("6~10위 더 보기"):
+                    for rank_i, (champ, wins, total, wr) in enumerate(rest, start=5):
+                        st.markdown(_champ_wr_row_html(rank_i, champ, wins, total, wr), unsafe_allow_html=True)
+
+        wr_col1, wr_col2 = st.columns(2)
+        with wr_col1:
+            _champ_wr_rank_html(top10_wr_high, "📈 승률 높은 챔피언 TOP 10")
+        with wr_col2:
+            _champ_wr_rank_html(top10_wr_low,  "📉 승률 낮은 챔피언 TOP 10")
+
+        st.caption(f"※ {MIN_CHAMP_GAMES}판 이상 플레이한 챔피언만 집계")
+
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
         st.subheader("포지션별 TOP 3")
