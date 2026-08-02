@@ -2434,7 +2434,7 @@ with tab4:
         # ── 챔피언 승률 통계 ──────────────────────────────────────
         st.markdown("---")
 
-        MIN_CHAMP_GAMES = 2  # 최소 게임 수 미만은 통계에서 제외
+        MIN_CHAMP_GAMES = 3  # 최소 게임 수 미만은 통계에서 제외
         champ_record: dict = {}
         for m in lb_all_matches:
             winner = m.get("winner", "")
