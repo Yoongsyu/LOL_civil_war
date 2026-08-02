@@ -9,35 +9,70 @@
           "name": "Jin기명기",
           "tag": "KR1",
           "position": "TOP",
-          "champion": "문도 박사"
+          "champion": "문도 박사",
+          "stats": {
+            "kills": 4,
+            "deaths": 4,
+            "assists": 10,
+            "damage": 0
+          },
+          "mmr_delta": 20
         },
         {
           "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
           "name": "호 균",
           "tag": "Kr2",
           "position": "JNG",
-          "champion": "판테온"
+          "champion": "판테온",
+          "stats": {
+            "kills": 9,
+            "deaths": 5,
+            "assists": 15,
+            "damage": 0
+          },
+          "mmr_delta": 20
         },
         {
           "puuid": "yT0EdviL3Gy8GhelCm5Zc7cDIw9mw5V0WVbP2HFZ1E0veXf8b1rUXQ7o2wArr3-2bKEDXVhbXtabkA",
           "name": "잠와죽것네",
           "tag": "KR1",
           "position": "MID",
-          "champion": "멜"
+          "champion": "멜",
+          "stats": {
+            "kills": 2,
+            "deaths": 4,
+            "assists": 9,
+            "damage": 0
+          },
+          "mmr_delta": 20
         },
         {
           "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
           "name": "Aloa",
           "tag": "KR1",
           "position": "ADC",
-          "champion": "아펠리오스"
+          "champion": "아펠리오스",
+          "stats": {
+            "kills": 14,
+            "deaths": 4,
+            "assists": 5,
+            "damage": 0
+          },
+          "mmr_delta": 20
         },
         {
           "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
           "name": "마나많아",
           "tag": "KR1",
           "position": "SUP",
-          "champion": "타릭"
+          "champion": "타릭",
+          "stats": {
+            "kills": 1,
+            "deaths": 4,
+            "assists": 15,
+            "damage": 0
+          },
+          "mmr_delta": 20
         }
       ],
       "red_team": [
@@ -46,35 +81,70 @@
           "name": "엄마찾는둘리",
           "tag": "KR1",
           "position": "TOP",
-          "champion": "요릭"
+          "champion": "요릭",
+          "stats": {
+            "kills": 2,
+            "deaths": 5,
+            "assists": 4,
+            "damage": 0
+          },
+          "mmr_delta": -20
         },
         {
           "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
           "name": "벌레에용",
           "tag": "보급벌레",
           "position": "JNG",
-          "champion": "아무무"
+          "champion": "아무무",
+          "stats": {
+            "kills": 6,
+            "deaths": 9,
+            "assists": 13,
+            "damage": 0
+          },
+          "mmr_delta": -20
         },
         {
           "puuid": "tUVcxsH7XrISFQ0F_q8J6A5vsdioh6pZEzWCbe6IPFA6_rIMvZzUDpNt3LVH384-DPMKaiaTYc2seg",
           "name": "잭스 버프좀",
           "tag": "KR1",
           "position": "MID",
-          "champion": "빅토르"
+          "champion": "빅토르",
+          "stats": {
+            "kills": 6,
+            "deaths": 5,
+            "assists": 3,
+            "damage": 0
+          },
+          "mmr_delta": -20
         },
         {
           "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
           "name": "아몬드봉봉초콜릿",
           "tag": "KR1",
           "position": "ADC",
-          "champion": "세나"
+          "champion": "세나",
+          "stats": {
+            "kills": 6,
+            "deaths": 4,
+            "assists": 12,
+            "damage": 0
+          },
+          "mmr_delta": -20
         },
         {
           "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
           "name": "융슈타인",
           "tag": "KR1",
           "position": "SUP",
-          "champion": "레오나"
+          "champion": "레오나",
+          "stats": {
+            "kills": 1,
+            "deaths": 7,
+            "assists": 12,
+            "damage": 0
+          },
+          "mmr_delta": -20
         }
       ],
       "winner": "blue",
