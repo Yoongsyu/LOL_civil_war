@@ -2582,7 +2582,7 @@ with tab4:
         # ── 챔피언 2인조 승률 TOP 10 & 플레이어 2인조 승률 TOP 10 ──
         st.markdown("---")
         MIN_CHAMP_PAIR_GAMES = 3
-        MIN_PLAYER_PAIR_GAMES = 5
+        MIN_PLAYER_PAIR_GAMES = 7
 
         from itertools import combinations
 
