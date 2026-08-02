@@ -32,6 +32,9 @@ from balancer import (
 MATCHES_FILE = "data/matches.json"
 POSITION_KR = {"TOP": "탑", "JNG": "정글", "MID": "미드", "ADC": "원딜", "SUP": "서포터"}
 
+# ELO K 팩터: 팀 MMR이 균등할 때 한 판 ±20점. 팀 격차가 클수록 ±9~31점 범위
+ELO_K = 40
+
 # 티어+랭크별 MMR (base + rank_offset + 평균 LP 50)
 # 각 항목: (표시 레이블, tier, rank, mmr)
 _TIER_BASE = [
@@ -353,6 +356,16 @@ def record_match_batch(blue_team, red_team, winner, positions,
         "bans": bans,
     }
 
+    # ELO: 게임 전 팀 평균 MMR로 기대 승률 계산
+    def _team_avg(team):
+        mmrs = [player_map[p["puuid"]]["mmr"] for p in team if p["puuid"] in player_map]
+        return sum(mmrs) / len(mmrs) if mmrs else 1500
+
+    blue_avg = _team_avg(blue_team)
+    red_avg  = _team_avg(red_team)
+    exp_blue = 1 / (1 + 10 ** ((red_avg - blue_avg) / 400))
+    elo_exp  = {"blue": exp_blue, "red": 1 - exp_blue}
+
     for side, team in [("blue", blue_team), ("red", red_team)]:
         is_win = side == winner
         for pi in team:
@@ -372,26 +385,30 @@ def record_match_batch(blue_team, red_team, winner, positions,
                 else:
                     stats["loss"] = stats.get("loss", 0) + 1
                 stats["positions"][pos] = stats["positions"].get(pos, 0) + 1
-                # 포지션별 챔피언 픽 카운트
                 champ = champions.get(puuid, "")
                 if champ:
                     pos_champs = stats.setdefault("position_champions", {})
                     pos_champs.setdefault(pos, {})
                     pos_champs[pos][champ] = pos_champs[pos].get(champ, 0) + 1
-                win_cnt  = stats.get("win", 0)
-                loss_cnt = stats.get("loss", 0)
-                total    = win_cnt + loss_cnt
                 solo_mmr = p.get("solo_mmr", calculate_mmr(
                     p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
                 ))
-                inhouse_adj = int((win_cnt / total - 0.5) * 600) if total >= 5 else 0
-                p["mmr"] = max(0, solo_mmr + inhouse_adj)
+                # 기존 플레이어 첫 ELO 전환 시 현재 조정치 유지
+                if "inhouse_delta" not in p:
+                    p["inhouse_delta"] = p.get("mmr", solo_mmr) - solo_mmr
+                actual = 1 if is_win else 0
+                elo_delta = round(ELO_K * (actual - elo_exp[side]))
+                p["inhouse_delta"] += elo_delta
+                p["mmr"] = max(0, solo_mmr + p["inhouse_delta"])
+            else:
+                elo_delta = 0
             entry = {
-                "puuid":    puuid,
-                "name":     pi["name"],
-                "tag":      pi.get("tag", ""),
-                "position": pos,
-                "champion": champions.get(puuid, ""),
+                "puuid":     puuid,
+                "name":      pi["name"],
+                "tag":       pi.get("tag", ""),
+                "position":  pos,
+                "champion":  champions.get(puuid, ""),
+                "mmr_delta": elo_delta,
             }
             if puuid in player_stats:
                 entry["stats"] = player_stats[puuid]
@@ -438,14 +455,14 @@ def revert_match(match: dict) -> bool:
                     pos_champs[pos][champ] -= 1
                     if pos_champs[pos][champ] == 0:
                         del pos_champs[pos][champ]
-            win_cnt  = stats.get("win", 0)
-            loss_cnt = stats.get("loss", 0)
-            total    = win_cnt + loss_cnt
             solo_mmr = p.get("solo_mmr", calculate_mmr(
                 p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
             ))
-            inhouse_adj = int((win_cnt / total - 0.5) * 600) if total >= 5 else 0
-            p["mmr"] = max(0, solo_mmr + inhouse_adj)
+            if "inhouse_delta" not in p:
+                p["inhouse_delta"] = p.get("mmr", solo_mmr) - solo_mmr
+            elo_delta = pi.get("mmr_delta", 0)
+            p["inhouse_delta"] -= elo_delta
+            p["mmr"] = max(0, solo_mmr + p["inhouse_delta"])
 
     return save_players(
         list(player_map.values()),
@@ -463,6 +480,19 @@ def update_match(old_match: dict, new_match: dict) -> bool:
     player_map = {p["puuid"]: p for p in players}
 
     winner = new_match["winner"]
+
+    # ELO: revert 후 MMR로 기대 승률 재계산
+    def _avg(side_key):
+        mmrs = [player_map[pi["puuid"]]["mmr"]
+                for pi in new_match[f"{side_key}_team"]
+                if pi["puuid"] in player_map]
+        return sum(mmrs) / len(mmrs) if mmrs else 1500
+
+    b_avg = _avg("blue")
+    r_avg = _avg("red")
+    exp_b = 1 / (1 + 10 ** ((r_avg - b_avg) / 400))
+    elo_exp = {"blue": exp_b, "red": 1 - exp_b}
+
     for side in ["blue", "red"]:
         is_win = side == winner
         for pi in new_match[f"{side}_team"]:
@@ -488,14 +518,16 @@ def update_match(old_match: dict, new_match: dict) -> bool:
                 pos_champs = stats.setdefault("position_champions", {})
                 pos_champs.setdefault(pos, {})
                 pos_champs[pos][champ] = pos_champs[pos].get(champ, 0) + 1
-            wc = stats.get("win", 0)
-            lc = stats.get("loss", 0)
-            tot = wc + lc
             solo_mmr = p.get("solo_mmr", calculate_mmr(
                 p["solo_tier"], p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0
             ))
-            inhouse_adj = int((wc / tot - 0.5) * 600) if tot >= 5 else 0
-            p["mmr"] = max(0, solo_mmr + inhouse_adj)
+            if "inhouse_delta" not in p:
+                p["inhouse_delta"] = p.get("mmr", solo_mmr) - solo_mmr
+            actual = 1 if is_win else 0
+            elo_delta = round(ELO_K * (actual - elo_exp[side]))
+            p["inhouse_delta"] += elo_delta
+            p["mmr"] = max(0, solo_mmr + p["inhouse_delta"])
+            pi["mmr_delta"] = elo_delta
 
     ok1 = save_players(list(player_map.values()),
                        commit_message=f"update: edit match {new_match['id']}")
@@ -1818,8 +1850,7 @@ with tab3:
                                 p.get("solo_tier", "UNRANKED"),
                                 p.get("solo_rank", ""), p.get("solo_lp", 0), 0, 0,
                             ))
-                            inhouse_adj = int((w / t - 0.5) * 600) if t >= 5 else 0
-                            p["mmr"] = max(0, solo_mmr + inhouse_adj)
+                            p["mmr"] = max(0, solo_mmr + p.get("inhouse_delta", 0))
                         if save_players(recalc_players, commit_message="update: recalculate all MMR with 600x multiplier"):
                             st.success(f"✅ {len(recalc_players)}명 MMR 재계산 완료!")
                             st.cache_data.clear()
@@ -1868,8 +1899,7 @@ with tab3:
                                 win = stats.get("win", 0)
                                 loss = stats.get("loss", 0)
                                 total = win + loss
-                                inhouse_adj = int((win / total - 0.5) * 600) if total >= 5 else 0
-                                p["mmr"] = max(0, p["solo_mmr"] + inhouse_adj)
+                                p["mmr"] = max(0, p["solo_mmr"] + p.get("inhouse_delta", 0))
 
                                 success_count += 1
                                 time.sleep(0.1)  # API Rate Limit (최소한의 간격)
@@ -1974,8 +2004,7 @@ with tab3:
                                     w = s.get("win", 0)
                                     l = s.get("loss", 0)
                                     t = w + l
-                                    inhouse_adj = int((w / t - 0.5) * 600) if t >= 5 else 0
-                                    p["mmr"] = max(0, int(new_mmr) + inhouse_adj)
+                                    p["mmr"] = max(0, int(new_mmr) + p.get("inhouse_delta", 0))
                                     break
                             ok = save_players(
                                 all_players,
