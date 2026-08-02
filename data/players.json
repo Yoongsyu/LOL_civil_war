@@ -7,7 +7,7 @@
       "solo_tier": "SILVER",
       "solo_rank": "II",
       "solo_lp": 3,
-      "mmr": 1000,
+      "mmr": 972,
       "inhouse_stats": {
         "win": 45,
         "loss": 46,
@@ -71,7 +71,8 @@
           }
         }
       },
-      "solo_mmr": 1003
+      "solo_mmr": 1003,
+      "inhouse_delta": -31
     },
     {
       "name": "아몬드봉봉초콜릿",
@@ -80,7 +81,7 @@
       "solo_tier": "EMERALD",
       "solo_rank": "III",
       "solo_lp": 46,
-      "mmr": 2137,
+      "mmr": 1810,
       "inhouse_stats": {
         "win": 44,
         "loss": 47,
@@ -164,7 +165,8 @@
           }
         }
       },
-      "solo_mmr": 2146
+      "solo_mmr": 2146,
+      "inhouse_delta": -336
     },
     {
       "name": "미친과학자",
@@ -173,7 +175,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1265,
+      "mmr": 1587,
       "inhouse_stats": {
         "win": 48,
         "loss": 33,
@@ -240,7 +242,8 @@
           }
         }
       },
-      "solo_mmr": 1210
+      "solo_mmr": 1210,
+      "inhouse_delta": 377
     },
     {
       "name": "벌레에용",
@@ -249,7 +252,7 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 65,
-      "mmr": 1701,
+      "mmr": 1703,
       "inhouse_stats": {
         "win": 51,
         "loss": 40,
@@ -329,7 +332,8 @@
           }
         }
       },
-      "solo_mmr": 1665
+      "solo_mmr": 1665,
+      "inhouse_delta": 38
     },
     {
       "name": "보드타는 햄스터",
@@ -338,7 +342,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 35,
-      "mmr": 1235,
+      "mmr": 1310,
       "inhouse_stats": {
         "win": 13,
         "loss": 13,
@@ -383,7 +387,8 @@
           }
         }
       },
-      "solo_mmr": 1235
+      "solo_mmr": 1235,
+      "inhouse_delta": 75
     },
     {
       "name": "엄마찾는둘리",
@@ -392,7 +397,7 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 75,
-      "mmr": 1688,
+      "mmr": 1808,
       "inhouse_stats": {
         "win": 34,
         "loss": 31,
@@ -459,7 +464,8 @@
           }
         }
       },
-      "solo_mmr": 1675
+      "solo_mmr": 1675,
+      "inhouse_delta": 133
     },
     {
       "name": "내R전문가",
@@ -468,7 +474,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 74,
-      "mmr": 1274,
+      "mmr": 1253,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 18,
@@ -518,7 +524,8 @@
           }
         }
       },
-      "solo_mmr": 1274
+      "solo_mmr": 1274,
+      "inhouse_delta": -21
     },
     {
       "name": "지 혜",
@@ -527,7 +534,7 @@
       "solo_tier": "GOLD",
       "solo_rank": "II",
       "solo_lp": 12,
-      "mmr": 1331,
+      "mmr": 1151,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 31,
@@ -585,7 +592,8 @@
           }
         }
       },
-      "solo_mmr": 1412
+      "solo_mmr": 1412,
+      "inhouse_delta": -261
     },
     {
       "name": "호 균",
@@ -594,7 +602,7 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 2,
-      "mmr": 1996,
+      "mmr": 2064,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 47,
@@ -687,7 +695,8 @@
           }
         }
       },
-      "solo_mmr": 2002
+      "solo_mmr": 2002,
+      "inhouse_delta": 62
     },
     {
       "name": "검은고목나무1",
@@ -696,7 +705,7 @@
       "solo_tier": "UNRANKED",
       "solo_rank": "",
       "solo_lp": 0,
-      "mmr": 2234,
+      "mmr": 1984,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 17,
@@ -751,7 +760,8 @@
           }
         }
       },
-      "solo_mmr": 2250
+      "solo_mmr": 2250,
+      "inhouse_delta": -266
     },
     {
       "name": "Aloa",
@@ -761,7 +771,7 @@
       "solo_rank": "IV",
       "solo_lp": 31,
       "solo_mmr": 2031,
-      "mmr": 1948,
+      "mmr": 1742,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 13,
@@ -818,7 +828,8 @@
             "자르반 4세": 1
           }
         }
-      }
+      },
+      "inhouse_delta": -289
     },
     {
       "name": "물단지",
@@ -828,7 +839,7 @@
       "solo_rank": "IV",
       "solo_lp": 32,
       "solo_mmr": 1632,
-      "mmr": 1583,
+      "mmr": 1521,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 10,
@@ -873,7 +884,8 @@
             "알리스타": 1
           }
         }
-      }
+      },
+      "inhouse_delta": -111
     },
     {
       "name": "호브론 제임스",
@@ -883,7 +895,7 @@
       "solo_rank": "II",
       "solo_lp": 11,
       "solo_mmr": 1811,
-      "mmr": 1743,
+      "mmr": 1515,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 17,
@@ -935,7 +947,8 @@
             "직스": 1
           }
         }
-      }
+      },
+      "inhouse_delta": -296
     },
     {
       "name": "쇠망치 박민규 TV",
@@ -945,7 +958,7 @@
       "solo_rank": "IV",
       "solo_lp": 14,
       "solo_mmr": 1614,
-      "mmr": 1614,
+      "mmr": 1663,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
@@ -970,7 +983,8 @@
             "쉔": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 49
     },
     {
       "name": "Jin기명기",
@@ -980,7 +994,7 @@
       "solo_rank": "I",
       "solo_lp": 75,
       "solo_mmr": 2375,
-      "mmr": 2474,
+      "mmr": 2336,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 8,
@@ -1012,7 +1026,8 @@
             "카르마": 1
           }
         }
-      }
+      },
+      "inhouse_delta": -39
     },
     {
       "name": "케 인",
@@ -1022,7 +1037,7 @@
       "solo_rank": "IV",
       "solo_lp": 62,
       "solo_mmr": 1262,
-      "mmr": 1262,
+      "mmr": 1480,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 14,
@@ -1068,7 +1083,8 @@
             "스카너": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 218
     },
     {
       "name": "마나많아",
@@ -1078,7 +1094,7 @@
       "solo_rank": "",
       "solo_lp": 0,
       "solo_mmr": 1450,
-      "mmr": 1474,
+      "mmr": 1508,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 26,
@@ -1130,7 +1146,8 @@
             "징크스": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 58
     },
     {
       "name": "잭스 버프좀",
@@ -1140,7 +1157,7 @@
       "solo_rank": "III",
       "solo_lp": 16,
       "solo_mmr": 1316,
-      "mmr": 1379,
+      "mmr": 1594,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 23,
@@ -1196,7 +1213,8 @@
             "녹턴": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 278
     },
     {
       "name": "닉 추천좀 해도가",
@@ -1206,7 +1224,7 @@
       "solo_rank": "",
       "solo_lp": 0,
       "solo_mmr": 0,
-      "mmr": 0,
+      "mmr": 2,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 1,
@@ -1231,7 +1249,8 @@
             "럼블": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 2
     },
     {
       "name": "아비타의겨울왕국",
@@ -1271,7 +1290,8 @@
             "애쉬": 2
           }
         }
-      }
+      },
+      "inhouse_delta": -56
     },
     {
       "name": "너무 착한 소환사",
@@ -1281,7 +1301,7 @@
       "solo_rank": "",
       "solo_lp": 0,
       "solo_mmr": 0,
-      "mmr": 90,
+      "mmr": 261,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 13,
@@ -1323,7 +1343,8 @@
             "카이사": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 261
     },
     {
       "name": "매미박사",
@@ -1333,7 +1354,7 @@
       "solo_rank": "I",
       "solo_lp": 59,
       "solo_mmr": 1959,
-      "mmr": 2125,
+      "mmr": 2115,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 7,
@@ -1366,7 +1387,8 @@
             "세주아니": 1
           }
         }
-      }
+      },
+      "inhouse_delta": 156
     },
     {
       "name": "잠와죽것네",
@@ -1376,7 +1398,7 @@
       "solo_rank": "IV",
       "solo_lp": 22,
       "solo_mmr": 1622,
-      "mmr": 1622,
+      "mmr": 1621,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 2,
@@ -1402,7 +1424,8 @@
             "멜": 1
           }
         }
-      }
+      },
+      "inhouse_delta": -1
     }
   ]
 }
