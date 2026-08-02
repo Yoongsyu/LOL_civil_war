@@ -1448,37 +1448,39 @@ with tab3:
 
                 champ_list = get_champion_list()
 
-                # 팀 교체 버튼 클릭 시 selectbox 렌더링 전에 swap 적용
+                # 버전 키 방식: 스왑 시 새 키 세대로 위젯을 새로 만들어
+                # 브라우저 캐시 상태가 덮어쓰는 문제를 근본 해결
+                _g = st.session_state.get("_pick_gen", 0)
                 if st.session_state.pop("_swap_teams", False):
+                    _ng = _g + 1
                     for i in range(5):
-                        for b_key, r_key in [
-                            (f"b_pick_{i}", f"r_pick_{i}"),
-                            (f"b_pos_{i}",  f"r_pos_{i}"),
-                            (f"b_champ_{i}", f"r_champ_{i}"),
-                        ]:
-                            if b_key in st.session_state and r_key in st.session_state:
-                                st.session_state[b_key], st.session_state[r_key] = (
-                                    st.session_state[r_key], st.session_state[b_key]
-                                )
+                        st.session_state[f"b_pick_{i}_g{_ng}"]  = st.session_state.get(f"r_pick_{i}_g{_g}",  labels[0])
+                        st.session_state[f"r_pick_{i}_g{_ng}"]  = st.session_state.get(f"b_pick_{i}_g{_g}",  labels[0])
+                        st.session_state[f"b_pos_{i}_g{_ng}"]   = st.session_state.get(f"r_pos_{i}_g{_g}",   POSITIONS[i])
+                        st.session_state[f"r_pos_{i}_g{_ng}"]   = st.session_state.get(f"b_pos_{i}_g{_g}",   POSITIONS[i])
+                        st.session_state[f"b_champ_{i}_g{_ng}"] = st.session_state.get(f"r_champ_{i}_g{_g}", "")
+                        st.session_state[f"r_champ_{i}_g{_ng}"] = st.session_state.get(f"b_champ_{i}_g{_g}", "")
+                    st.session_state["_pick_gen"] = _ng
+                    _g = _ng
 
                 st.markdown("**🔵 블루팀 (5명)**")
                 blue_picks, blue_pos_picks, blue_champ_picks = [], [], []
                 for i in range(5):
                     c1, c2, c3 = st.columns([2.5, 1, 1.5])
                     blue_picks.append(
-                        c1.selectbox(f"블루팀 {i+1}번", labels, key=f"b_pick_{i}")
+                        c1.selectbox(f"블루팀 {i+1}번", labels, key=f"b_pick_{i}_g{_g}")
                     )
                     blue_pos_picks.append(
                         c2.selectbox(
                             "포지션", POSITIONS,
                             index=i,
                             format_func=lambda x: POSITION_KR[x],
-                            key=f"b_pos_{i}",
+                            key=f"b_pos_{i}_g{_g}",
                         )
                     )
                     blue_champ_picks.append(
                         c3.selectbox(
-                            "챔피언", champ_list, key=f"b_champ_{i}",
+                            "챔피언", champ_list, key=f"b_champ_{i}_g{_g}",
                             format_func=lambda x: x if x else "선택 안 함",
                         )
                     )
@@ -1493,19 +1495,19 @@ with tab3:
                 for i in range(5):
                     c1, c2, c3 = st.columns([2.5, 1, 1.5])
                     red_picks.append(
-                        c1.selectbox(f"레드팀 {i+1}번", labels, key=f"r_pick_{i}")
+                        c1.selectbox(f"레드팀 {i+1}번", labels, key=f"r_pick_{i}_g{_g}")
                     )
                     red_pos_picks.append(
                         c2.selectbox(
                             "포지션", POSITIONS,
                             index=i,
                             format_func=lambda x: POSITION_KR[x],
-                            key=f"r_pos_{i}",
+                            key=f"r_pos_{i}_g{_g}",
                         )
                     )
                     red_champ_picks.append(
                         c3.selectbox(
-                            "챔피언", champ_list, key=f"r_champ_{i}",
+                            "챔피언", champ_list, key=f"r_champ_{i}_g{_g}",
                             format_func=lambda x: x if x else "선택 안 함",
                         )
                     )
