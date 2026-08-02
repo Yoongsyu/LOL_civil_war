@@ -2573,6 +2573,107 @@ with tab4:
                     )
                 st.caption(f"※ {MIN_BOT_GAMES}판 이상 플레이한 조합만 집계")
 
+        # ── 챔피언 2인조 승률 TOP 10 & 플레이어 2인조 승률 TOP 10 ──
+        st.markdown("---")
+        MIN_PAIR_GAMES = 3
+
+        from itertools import combinations
+
+        champ_pair_record: dict = {}
+        player_pair_record: dict = {}
+        for m in lb_all_matches:
+            winner = m.get("winner", "")
+            for side in ["blue", "red"]:
+                is_win = side == winner
+                team = m.get(f"{side}_team", [])
+                champs  = [pi.get("champion", "") for pi in team if pi.get("champion")]
+                players = [pi.get("name", "")    for pi in team if pi.get("name")]
+                for a, b in combinations(sorted(champs), 2):
+                    key = (a, b)
+                    rec = champ_pair_record.setdefault(key, {"win": 0, "loss": 0})
+                    if is_win:
+                        rec["win"] += 1
+                    else:
+                        rec["loss"] += 1
+                for a, b in combinations(sorted(players), 2):
+                    key = (a, b)
+                    rec = player_pair_record.setdefault(key, {"win": 0, "loss": 0})
+                    if is_win:
+                        rec["win"] += 1
+                    else:
+                        rec["loss"] += 1
+
+        def _pair_wr_list(record):
+            return sorted(
+                [
+                    (a, b, d["win"], d["win"] + d["loss"],
+                     d["win"] / (d["win"] + d["loss"]))
+                    for (a, b), d in record.items()
+                    if d["win"] + d["loss"] >= MIN_PAIR_GAMES
+                ],
+                key=lambda x: (-x[4], -x[3])
+            )[:10]
+
+        top_champ_pairs  = _pair_wr_list(champ_pair_record)
+        top_player_pairs = _pair_wr_list(player_pair_record)
+
+        pair_col1, pair_col2 = st.columns(2)
+
+        with pair_col1:
+            st.markdown("**🤝 함께할 때 승률 높은 챔피언 조합 TOP 10**")
+            if not top_champ_pairs:
+                st.caption(f"데이터 없음 (최소 {MIN_PAIR_GAMES}판 이상 필요)")
+            else:
+                for rank_i, (a, b, wins, total, wr) in enumerate(top_champ_pairs):
+                    medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+                    url_a = lb_url_map_stat.get(a, "")
+                    url_b = lb_url_map_stat.get(b, "")
+                    wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+                    st.markdown(
+                        f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                        f"border-bottom:1px solid #F1F5F9;gap:6px;'>"
+                        f"<span style='font-size:0.82rem;width:28px;flex-shrink:0;'>{medal}</span>"
+                        f"{_duo_img(url_a, a)}"
+                        f"<span style='font-size:0.78rem;color:#64748B;margin:0 2px;'>+</span>"
+                        f"{_duo_img(url_b, b)}"
+                        f"<div style='flex:1;margin-left:6px;'>"
+                        f"<span style='font-weight:700;font-size:0.85rem;'>{a}</span>"
+                        f"<span style='font-size:0.78rem;color:#94A3B8;'> + {b}</span>"
+                        f"</div>"
+                        f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
+                        f"{wins}승 {total-wins}패</span>"
+                        f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
+                        f"{wr*100:.1f}%</span>"
+                        f"</div>",
+                        unsafe_allow_html=True
+                    )
+                st.caption(f"※ {MIN_PAIR_GAMES}판 이상 함께한 조합만 집계")
+
+        with pair_col2:
+            st.markdown("**👥 함께할 때 승률 높은 플레이어 조합 TOP 10**")
+            if not top_player_pairs:
+                st.caption(f"데이터 없음 (최소 {MIN_PAIR_GAMES}판 이상 필요)")
+            else:
+                for rank_i, (a, b, wins, total, wr) in enumerate(top_player_pairs):
+                    medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+                    wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+                    st.markdown(
+                        f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                        f"border-bottom:1px solid #F1F5F9;gap:6px;'>"
+                        f"<span style='font-size:0.82rem;width:28px;flex-shrink:0;'>{medal}</span>"
+                        f"<div style='flex:1;'>"
+                        f"<span style='font-weight:700;font-size:0.88rem;'>{a}</span>"
+                        f"<span style='font-size:0.82rem;color:#94A3B8;'> + {b}</span>"
+                        f"</div>"
+                        f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
+                        f"{wins}승 {total-wins}패</span>"
+                        f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
+                        f"{wr*100:.1f}%</span>"
+                        f"</div>",
+                        unsafe_allow_html=True
+                    )
+                st.caption(f"※ {MIN_PAIR_GAMES}판 이상 함께한 조합만 집계")
+
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
         st.subheader("포지션별 TOP 3")
