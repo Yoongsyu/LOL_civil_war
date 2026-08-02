@@ -358,7 +358,9 @@ def record_match_batch(blue_team, red_team, winner, positions,
 
     # ELO: 게임 전 팀 평균 MMR로 기대 승률 계산
     def _team_avg(team):
-        mmrs = [player_map[p["puuid"]]["mmr"] for p in team if p["puuid"] in player_map]
+        # 솔랭 무관, 순수 내전 성적만으로 기대 승률 계산 (기준 1500)
+        mmrs = [1500 + player_map[p["puuid"]].get("inhouse_delta", 0)
+                for p in team if p["puuid"] in player_map]
         return sum(mmrs) / len(mmrs) if mmrs else 1500
 
     blue_avg = _team_avg(blue_team)
@@ -481,9 +483,9 @@ def update_match(old_match: dict, new_match: dict) -> bool:
 
     winner = new_match["winner"]
 
-    # ELO: revert 후 MMR로 기대 승률 재계산
+    # ELO: 순수 내전 성적(inhouse_delta)만으로 기대 승률 재계산
     def _avg(side_key):
-        mmrs = [player_map[pi["puuid"]]["mmr"]
+        mmrs = [1500 + player_map[pi["puuid"]].get("inhouse_delta", 0)
                 for pi in new_match[f"{side_key}_team"]
                 if pi["puuid"] in player_map]
         return sum(mmrs) / len(mmrs) if mmrs else 1500
@@ -557,8 +559,10 @@ def recalculate_all_elo() -> bool:
         red  = match.get("red_team",  [])
         winner = match.get("winner", "blue")
 
-        b_mmrs = [player_map[pi["puuid"]]["mmr"] for pi in blue  if pi["puuid"] in player_map]
-        r_mmrs = [player_map[pi["puuid"]]["mmr"] for pi in red   if pi["puuid"] in player_map]
+        b_mmrs = [1500 + player_map[pi["puuid"]].get("inhouse_delta", 0)
+                  for pi in blue if pi["puuid"] in player_map]
+        r_mmrs = [1500 + player_map[pi["puuid"]].get("inhouse_delta", 0)
+                  for pi in red  if pi["puuid"] in player_map]
         b_avg = sum(b_mmrs) / len(b_mmrs) if b_mmrs else 1500
         r_avg = sum(r_mmrs) / len(r_mmrs) if r_mmrs else 1500
         exp_b = 1 / (1 + 10 ** ((r_avg - b_avg) / 400))
@@ -680,22 +684,12 @@ def with_pure_mmr(players: list) -> list:
 
 def with_inhouse_only_mmr(players: list) -> list:
     """내전 성적만으로 팀 구성할 때 사용하는 복사본 반환 (솔랭 무시)
-    기준 MMR 1500에서 내전 승률에 따라 ±300 보정.
-    5판 미만이면 1500으로 동일 처리.
+    기준 MMR 1500에서 ELO 누적 inhouse_delta를 더해 사용.
     """
-    BASE = 1500
     result = []
     for p in players:
         copy = dict(p)
-        stats = p.get("inhouse_stats", {})
-        win = stats.get("win", 0)
-        loss = stats.get("loss", 0)
-        total = win + loss
-        if total >= 5:
-            adj = int((win / total - 0.5) * 600)
-            copy["mmr"] = max(0, BASE + adj)
-        else:
-            copy["mmr"] = BASE
+        copy["mmr"] = max(0, 1500 + p.get("inhouse_delta", 0))
         result.append(copy)
     return result
 
