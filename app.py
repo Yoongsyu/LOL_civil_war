@@ -2693,7 +2693,7 @@ with tab4:
                             _player_pair_row(rank_i, *row)
                 st.caption(f"※ {MIN_PLAYER_PAIR_GAMES}판 이상 함께한 조합만 집계")
 
-        # ── 가장 함께 게임한 판수가 많은 듀오 / 바텀 듀오 TOP 10 ──
+        # ── 함께한 판수가 많은 듀오 / 바텀 듀오 TOP 10 ──
         st.markdown("---")
 
         most_played_player_pairs = sorted(
@@ -2744,7 +2744,7 @@ with tab4:
                 f"<span style='font-size:0.78rem;color:#94A3B8;'> {icon} {b}</span>"
                 f"</div>"
                 f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
-                f"{total}판 {wins}승</span>"
+                f"<span style='font-size:1.0rem;font-weight:800;color:#334155;'>{total}판</span> {wins}승</span>"
                 f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
                 f"{wr*100:.1f}%</span>"
                 f"</div>",
@@ -2753,7 +2753,7 @@ with tab4:
 
         games_col1, games_col2 = st.columns(2)
         with games_col1:
-            st.markdown("**🎮 가장 함께 게임한 판수가 많은 듀오 TOP 10**")
+            st.markdown("**🎮 함께한 판수가 많은 듀오 TOP 10**")
             if not most_played_player_pairs:
                 st.caption("데이터 없음")
             else:
@@ -2765,7 +2765,7 @@ with tab4:
                             _games_pair_row(rank_i, *row)
 
         with games_col2:
-            st.markdown("**🏹💊 가장 함께 게임한 판수가 많은 바텀 듀오 TOP 10**")
+            st.markdown("**🏹💊 함께한 판수가 많은 바텀 듀오 TOP 10**")
             st.caption("원딜/서포터 역할 무관")
             if not most_played_bot_pairs:
                 st.caption("데이터 없음")
