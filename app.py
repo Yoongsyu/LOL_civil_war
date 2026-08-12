@@ -2693,6 +2693,90 @@ with tab4:
                             _player_pair_row(rank_i, *row)
                 st.caption(f"※ {MIN_PLAYER_PAIR_GAMES}판 이상 함께한 조합만 집계")
 
+        # ── 가장 함께 게임한 판수가 많은 듀오 / 바텀 듀오 TOP 10 ──
+        st.markdown("---")
+
+        most_played_player_pairs = sorted(
+            [
+                (a, b, d["win"], d["win"] + d["loss"])
+                for (a, b), d in player_pair_record.items()
+            ],
+            key=lambda x: -x[3]
+        )[:10]
+
+        bot_duo_games_record: dict = {}
+        for m in lb_all_matches:
+            winner = m.get("winner", "")
+            for side in ["blue", "red"]:
+                is_win = side == winner
+                team = m.get(f"{side}_team", [])
+                adc_name = next((pi.get("name") for pi in team
+                                  if pi.get("position") == "ADC" and pi.get("name")), None)
+                sup_name = next((pi.get("name") for pi in team
+                                  if pi.get("position") == "SUP" and pi.get("name")), None)
+                if not adc_name or not sup_name:
+                    continue
+                key = tuple(sorted([adc_name, sup_name]))
+                rec = bot_duo_games_record.setdefault(key, {"win": 0, "loss": 0})
+                if is_win:
+                    rec["win"] += 1
+                else:
+                    rec["loss"] += 1
+
+        most_played_bot_pairs = sorted(
+            [
+                (a, b, d["win"], d["win"] + d["loss"])
+                for (a, b), d in bot_duo_games_record.items()
+            ],
+            key=lambda x: -x[3]
+        )[:10]
+
+        def _games_pair_row(rank_i, a, b, wins, total, icon="👥"):
+            medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
+            wr = wins / total if total else 0
+            wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
+            st.markdown(
+                f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
+                f"border-bottom:1px solid #F1F5F9;gap:6px;'>"
+                f"<span style='font-size:0.82rem;width:28px;flex-shrink:0;'>{medal}</span>"
+                f"<div style='flex:1;'>"
+                f"<span style='font-weight:700;font-size:0.88rem;'>{a}</span>"
+                f"<span style='font-size:0.78rem;color:#94A3B8;'> {icon} {b}</span>"
+                f"</div>"
+                f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
+                f"{total}판 {wins}승</span>"
+                f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
+                f"{wr*100:.1f}%</span>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
+
+        games_col1, games_col2 = st.columns(2)
+        with games_col1:
+            st.markdown("**🎮 가장 함께 게임한 판수가 많은 듀오 TOP 10**")
+            if not most_played_player_pairs:
+                st.caption("데이터 없음")
+            else:
+                for rank_i, row in enumerate(most_played_player_pairs[:5]):
+                    _games_pair_row(rank_i, *row)
+                if len(most_played_player_pairs) > 5:
+                    with st.expander("6~10위 더 보기"):
+                        for rank_i, row in enumerate(most_played_player_pairs[5:], start=5):
+                            _games_pair_row(rank_i, *row)
+
+        with games_col2:
+            st.markdown("**🏹💊 가장 함께 게임한 판수가 많은 바텀 듀오 TOP 10**")
+            st.caption("원딜/서포터 역할 무관")
+            if not most_played_bot_pairs:
+                st.caption("데이터 없음")
+            else:
+                for rank_i, row in enumerate(most_played_bot_pairs[:5]):
+                    _games_pair_row(rank_i, *row, icon="🏹💊")
+                if len(most_played_bot_pairs) > 5:
+                    with st.expander("6~10위 더 보기"):
+                        for rank_i, row in enumerate(most_played_bot_pairs[5:], start=5):
+                            _games_pair_row(rank_i, *row, icon="🏹💊")
+
         st.markdown("---")
         # ── 포지션별 리더보드 ─────────────────────────────────────
         st.subheader("포지션별 TOP 3")
