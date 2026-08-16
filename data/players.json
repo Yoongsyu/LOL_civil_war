@@ -7,29 +7,29 @@
       "solo_tier": "SILVER",
       "solo_rank": "II",
       "solo_lp": 8,
-      "mmr": 749,
+      "mmr": 774,
       "inhouse_stats": {
-        "win": 47,
+        "win": 48,
         "loss": 57,
         "positions": {
           "TOP": 7,
           "JNG": 2,
           "MID": 5,
           "ADC": 45,
-          "SUP": 45
+          "SUP": 46
         },
         "position_wins": {
           "TOP": 2,
           "JNG": 1,
           "MID": 3,
           "ADC": 20,
-          "SUP": 21
+          "SUP": 22
         },
         "position_champions": {
           "SUP": {
             "세라핀": 4,
             "잔나": 6,
-            "브라움": 8,
+            "브라움": 9,
             "카르마": 2,
             "룰루": 6,
             "소라카": 1,
@@ -74,7 +74,7 @@
         }
       },
       "solo_mmr": 1008,
-      "inhouse_delta": -259
+      "inhouse_delta": -234
     },
     {
       "name": "아몬드봉봉초콜릿",
@@ -83,21 +83,21 @@
       "solo_tier": "EMERALD",
       "solo_rank": "III",
       "solo_lp": 70,
-      "mmr": 1943,
+      "mmr": 1968,
       "inhouse_stats": {
-        "win": 46,
+        "win": 47,
         "loss": 58,
         "positions": {
           "TOP": 28,
           "JNG": 28,
-          "MID": 6,
+          "MID": 7,
           "ADC": 18,
           "SUP": 24
         },
         "position_wins": {
           "TOP": 11,
           "JNG": 13,
-          "MID": 3,
+          "MID": 4,
           "ADC": 8,
           "SUP": 11
         },
@@ -166,13 +166,13 @@
             "니코": 1,
             "요네": 1,
             "피즈": 1,
-            "브라이어": 1,
+            "브라이어": 2,
             "이렐리아": 1
           }
         }
       },
       "solo_mmr": 2170,
-      "inhouse_delta": -227
+      "inhouse_delta": -202
     },
     {
       "name": "미친과학자",
@@ -181,20 +181,20 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1350,
+      "mmr": 1375,
       "inhouse_stats": {
-        "win": 53,
+        "win": 54,
         "loss": 41,
         "positions": {
           "TOP": 37,
-          "JNG": 17,
+          "JNG": 18,
           "MID": 3,
           "ADC": 19,
           "SUP": 18
         },
         "position_wins": {
           "TOP": 23,
-          "JNG": 6,
+          "JNG": 7,
           "MID": 0,
           "ADC": 10,
           "SUP": 14
@@ -210,7 +210,7 @@
             "문도 박사": 4,
             "녹턴": 1,
             "세주아니": 4,
-            "다이애나": 1,
+            "다이애나": 2,
             "신 짜오": 1,
             "아무무": 1
           },
@@ -252,7 +252,7 @@
         }
       },
       "solo_mmr": 1210,
-      "inhouse_delta": 140
+      "inhouse_delta": 165
     },
     {
       "name": "벌레에용",
@@ -261,12 +261,12 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 65,
-      "mmr": 1836,
+      "mmr": 1811,
       "inhouse_stats": {
         "win": 60,
-        "loss": 44,
+        "loss": 45,
         "positions": {
-          "TOP": 14,
+          "TOP": 15,
           "JNG": 5,
           "MID": 65,
           "ADC": 9,
@@ -321,7 +321,8 @@
             "모데카이저": 1,
             "블라디미르": 1,
             "아칼리": 1,
-            "초가스": 1
+            "초가스": 1,
+            "암베사": 1
           },
           "JNG": {
             "아무무": 2,
@@ -348,7 +349,7 @@
         }
       },
       "solo_mmr": 1665,
-      "inhouse_delta": 171
+      "inhouse_delta": 146
     },
     {
       "name": "보드타는 햄스터",
@@ -551,17 +552,17 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 20,
-      "mmr": 1395,
+      "mmr": 1370,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 37,
-        "loss": 59,
+        "loss": 60,
         "positions": {
           "TOP": 0,
           "JNG": 2,
           "MID": 31,
           "ADC": 2,
-          "SUP": 61
+          "SUP": 62
         },
         "position_wins": {
           "TOP": 0,
@@ -588,7 +589,8 @@
             "티모": 1,
             "소라카": 1,
             "라칸": 1,
-            "제드": 1
+            "제드": 1,
+            "레나타 글라스크": 1
           },
           "MID": {
             "모르가나": 10,
@@ -613,7 +615,7 @@
         }
       },
       "solo_mmr": 1620,
-      "inhouse_delta": -225
+      "inhouse_delta": -250
     },
     {
       "name": "호 균",
@@ -622,15 +624,15 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 83,
-      "mmr": 2230,
+      "mmr": 2205,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 55,
-        "loss": 54,
+        "loss": 55,
         "positions": {
           "TOP": 31,
           "JNG": 30,
-          "MID": 14,
+          "MID": 15,
           "ADC": 30,
           "SUP": 4
         },
@@ -671,7 +673,8 @@
             "아크샨": 1,
             "트위스티드 페이트": 1,
             "애니": 1,
-            "신드라": 1
+            "신드라": 1,
+            "라이즈": 1
           },
           "TOP": {
             "자헨": 2,
@@ -720,7 +723,7 @@
         }
       },
       "solo_mmr": 2083,
-      "inhouse_delta": 147
+      "inhouse_delta": 122
     },
     {
       "name": "검은고목나무1",
@@ -1133,20 +1136,20 @@
       "solo_rank": "IV",
       "solo_lp": 20,
       "solo_mmr": 2020,
-      "mmr": 2124,
+      "mmr": 2149,
       "source_type": "NONE",
       "inhouse_stats": {
-        "win": 28,
+        "win": 29,
         "loss": 24,
         "positions": {
-          "TOP": 2,
+          "TOP": 3,
           "JNG": 23,
           "MID": 0,
           "ADC": 2,
           "SUP": 25
         },
         "position_wins": {
-          "TOP": 0,
+          "TOP": 1,
           "JNG": 12,
           "MID": 0,
           "ADC": 1,
@@ -1187,11 +1190,12 @@
           },
           "TOP": {
             "사이온": 1,
-            "문도 박사": 1
+            "문도 박사": 1,
+            "나르": 1
           }
         }
       },
-      "inhouse_delta": 104
+      "inhouse_delta": 129
     },
     {
       "name": "잭스 버프좀",
@@ -1201,14 +1205,14 @@
       "solo_rank": "IV",
       "solo_lp": 34,
       "solo_mmr": 1634,
-      "mmr": 1772,
+      "mmr": 1747,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 29,
-        "loss": 22,
+        "loss": 23,
         "positions": {
           "TOP": 10,
-          "JNG": 3,
+          "JNG": 4,
           "MID": 13,
           "ADC": 24,
           "SUP": 1
@@ -1262,14 +1266,15 @@
           "JNG": {
             "녹턴": 1,
             "오공": 1,
-            "쉬바나": 1
+            "쉬바나": 1,
+            "리 신": 1
           },
           "SUP": {
             "쓰레쉬": 1
           }
         }
       },
-      "inhouse_delta": 138
+      "inhouse_delta": 113
     },
     {
       "name": "닉 추천좀 해도가",
@@ -1356,23 +1361,23 @@
       "solo_rank": "III",
       "solo_lp": 45,
       "solo_mmr": 945,
-      "mmr": 1067,
+      "mmr": 1092,
       "source_type": "NONE",
       "inhouse_stats": {
-        "win": 15,
+        "win": 16,
         "loss": 9,
         "positions": {
           "TOP": 0,
           "JNG": 0,
           "MID": 21,
-          "ADC": 2,
+          "ADC": 3,
           "SUP": 1
         },
         "position_wins": {
           "TOP": 0,
           "JNG": 0,
           "MID": 15,
-          "ADC": 0,
+          "ADC": 1,
           "SUP": 0
         },
         "position_champions": {
@@ -1396,11 +1401,12 @@
           },
           "ADC": {
             "트위치": 1,
-            "카이사": 1
+            "카이사": 1,
+            "루시안": 1
           }
         }
       },
-      "inhouse_delta": 122
+      "inhouse_delta": 147
     },
     {
       "name": "매미박사",
@@ -1491,16 +1497,16 @@
       "solo_rank": "IV",
       "solo_lp": 80,
       "solo_mmr": 880,
-      "mmr": 948,
+      "mmr": 923,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 4,
-        "loss": 0,
+        "loss": 1,
         "positions": {
           "TOP": 3,
           "JNG": 0,
           "MID": 0,
-          "ADC": 1,
+          "ADC": 2,
           "SUP": 0
         },
         "position_wins": {
@@ -1517,11 +1523,12 @@
             "아트록스": 1
           },
           "ADC": {
-            "이즈리얼": 1
+            "이즈리얼": 1,
+            "칼리스타": 1
           }
         }
       },
-      "inhouse_delta": 68
+      "inhouse_delta": 43
     }
   ]
 }
