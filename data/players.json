@@ -1465,6 +1465,35 @@
         }
       },
       "inhouse_delta": 48
+    },
+    {
+      "name": "쇼호쿠",
+      "tag": "KR5",
+      "puuid": "3z51QNtQ1bNmmJNE12c6PbXcHaiCWb13-UWV_JNwW9janHg416esOkSULwQWpAFF5lByDwZR6j30Qg",
+      "solo_tier": "SILVER",
+      "solo_rank": "IV",
+      "solo_lp": 80,
+      "solo_mmr": 880,
+      "mmr": 880,
+      "source_type": "FLEX",
+      "inhouse_stats": {
+        "win": 0,
+        "loss": 0,
+        "positions": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        },
+        "position_wins": {
+          "TOP": 0,
+          "JNG": 0,
+          "MID": 0,
+          "ADC": 0,
+          "SUP": 0
+        }
+      }
     }
   ]
 }
