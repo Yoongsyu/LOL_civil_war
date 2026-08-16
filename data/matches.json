@@ -1,6 +1,99 @@
 {
   "matches": [
     {
+      "id": "ae86ca02",
+      "date": "2026-08-17 00:07",
+      "blue_team": [
+        {
+          "puuid": "3z51QNtQ1bNmmJNE12c6PbXcHaiCWb13-UWV_JNwW9janHg416esOkSULwQWpAFF5lByDwZR6j30Qg",
+          "name": "쇼호쿠",
+          "tag": "KR5",
+          "position": "TOP",
+          "champion": "제이스",
+          "mmr_delta": 18
+        },
+        {
+          "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
+          "name": "호 균",
+          "tag": "Kr2",
+          "position": "JNG",
+          "champion": "나피리",
+          "mmr_delta": 18
+        },
+        {
+          "puuid": "EMCsTIPU0JN3CHLz-FC1ZAcsKoVlnpjyPwPdI4afNtuElNLVPvA6qcluZpl7i9OYY4jrKgdIZEYe2w",
+          "name": "알 거 없잖아",
+          "tag": "8786",
+          "position": "MID",
+          "champion": "피즈",
+          "mmr_delta": 18
+        },
+        {
+          "puuid": "tUVcxsH7XrISFQ0F_q8J6A5vsdioh6pZEzWCbe6IPFA6_rIMvZzUDpNt3LVH384-DPMKaiaTYc2seg",
+          "name": "잭스 버프좀",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "스웨인",
+          "mmr_delta": 18
+        },
+        {
+          "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
+          "name": "마나많아",
+          "tag": "KR1",
+          "position": "SUP",
+          "champion": "베이가",
+          "mmr_delta": 18
+        }
+      ],
+      "red_team": [
+        {
+          "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
+          "name": "아몬드봉봉초콜릿",
+          "tag": "KR1",
+          "position": "TOP",
+          "champion": "볼리베어",
+          "mmr_delta": -18
+        },
+        {
+          "puuid": "Zi-7BOvjPzSxEuJ5DTbTzFISwhoQCL3Ejg78NvxoA2S8V-B12x2aa_KPAUsxzzHpLwXD3vSjhmSFjA",
+          "name": "미친과학자",
+          "tag": "KR1",
+          "position": "JNG",
+          "champion": "세주아니",
+          "mmr_delta": -18
+        },
+        {
+          "puuid": "3meZxMaZmEblx6i9N_703cOhaRuhy_NPAKf_ogRm_9NZIVLO_-9YmKfMWmuqI-So3koZnLMliODcYw",
+          "name": "벌레에용",
+          "tag": "보급벌레",
+          "position": "MID",
+          "champion": "제라스",
+          "mmr_delta": -18
+        },
+        {
+          "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
+          "name": "융슈타인",
+          "tag": "KR1",
+          "position": "ADC",
+          "champion": "직스",
+          "mmr_delta": -18
+        },
+        {
+          "puuid": "ed-0aFGSNHRCKv8yFlN3LlnXi4WtA8dKiwzXjmlcN1fmRHpFMlQI3aJoT4Tim765OFbWIG04LY0X6g",
+          "name": "보드타는 햄스터",
+          "tag": "CUTE",
+          "position": "SUP",
+          "champion": "자이라",
+          "mmr_delta": -18
+        }
+      ],
+      "winner": "blue",
+      "bans": {
+        "blue": [],
+        "red": []
+      }
+    },
+    {
       "id": "d89a329f",
       "date": "2026-08-17 00:05",
       "blue_team": [
