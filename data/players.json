@@ -7,23 +7,23 @@
       "solo_tier": "SILVER",
       "solo_rank": "II",
       "solo_lp": 8,
-      "mmr": 823,
+      "mmr": 799,
       "inhouse_stats": {
-        "win": 48,
+        "win": 47,
         "loss": 54,
         "positions": {
           "TOP": 7,
           "JNG": 2,
           "MID": 5,
           "ADC": 43,
-          "SUP": 45
+          "SUP": 44
         },
         "position_wins": {
           "TOP": 2,
           "JNG": 1,
           "MID": 3,
           "ADC": 20,
-          "SUP": 22
+          "SUP": 21
         },
         "position_champions": {
           "SUP": {
@@ -41,8 +41,7 @@
             "밀리오": 1,
             "세나": 1,
             "유미": 1,
-            "레오나": 1,
-            "라칸": 1
+            "레오나": 1
           },
           "ADC": {
             "미스 포츈": 9,
@@ -74,7 +73,7 @@
         }
       },
       "solo_mmr": 1008,
-      "inhouse_delta": -185
+      "inhouse_delta": -209
     },
     {
       "name": "아몬드봉봉초콜릿",
@@ -83,19 +82,19 @@
       "solo_tier": "EMERALD",
       "solo_rank": "III",
       "solo_lp": 70,
-      "mmr": 2017,
+      "mmr": 1993,
       "inhouse_stats": {
-        "win": 47,
+        "win": 46,
         "loss": 55,
         "positions": {
-          "TOP": 28,
+          "TOP": 27,
           "JNG": 27,
           "MID": 6,
           "ADC": 18,
           "SUP": 23
         },
         "position_wins": {
-          "TOP": 12,
+          "TOP": 11,
           "JNG": 13,
           "MID": 3,
           "ADC": 8,
@@ -106,7 +105,7 @@
             "사이온": 2,
             "뽀삐": 4,
             "피오라": 2,
-            "그웬": 3,
+            "그웬": 2,
             "다리우스": 2,
             "신지드": 2,
             "하이머딩거": 1,
@@ -171,7 +170,7 @@
         }
       },
       "solo_mmr": 2170,
-      "inhouse_delta": -153
+      "inhouse_delta": -177
     },
     {
       "name": "미친과학자",
@@ -180,22 +179,22 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 10,
-      "mmr": 1424,
+      "mmr": 1400,
       "inhouse_stats": {
-        "win": 54,
+        "win": 53,
         "loss": 38,
         "positions": {
           "TOP": 37,
           "JNG": 16,
           "MID": 3,
-          "ADC": 19,
+          "ADC": 18,
           "SUP": 17
         },
         "position_wins": {
           "TOP": 23,
           "JNG": 6,
           "MID": 0,
-          "ADC": 11,
+          "ADC": 10,
           "SUP": 14
         },
         "position_champions": {
@@ -232,7 +231,7 @@
             "케이틀린": 5,
             "애니": 1,
             "애쉬": 1,
-            "자야": 3,
+            "자야": 2,
             "미스 포츈": 1,
             "소나": 1,
             "문도 박사": 1
@@ -250,7 +249,7 @@
         }
       },
       "solo_mmr": 1210,
-      "inhouse_delta": 214
+      "inhouse_delta": 190
     },
     {
       "name": "벌레에용",
@@ -259,21 +258,21 @@
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
       "solo_lp": 65,
-      "mmr": 1838,
+      "mmr": 1814,
       "inhouse_stats": {
-        "win": 59,
+        "win": 58,
         "loss": 43,
         "positions": {
           "TOP": 14,
           "JNG": 5,
-          "MID": 64,
+          "MID": 63,
           "ADC": 8,
           "SUP": 11
         },
         "position_wins": {
           "TOP": 6,
           "JNG": 2,
-          "MID": 38,
+          "MID": 37,
           "ADC": 7,
           "SUP": 6
         },
@@ -282,7 +281,7 @@
             "신드라": 4,
             "멜": 2,
             "오로라": 2,
-            "탈리야": 3,
+            "탈리야": 2,
             "아리": 2,
             "빅토르": 3,
             "브랜드": 2,
@@ -345,7 +344,7 @@
         }
       },
       "solo_mmr": 1665,
-      "inhouse_delta": 173
+      "inhouse_delta": 149
     },
     {
       "name": "보드타는 햄스터",
@@ -354,20 +353,20 @@
       "solo_tier": "GOLD",
       "solo_rank": "IV",
       "solo_lp": 35,
-      "mmr": 1222,
+      "mmr": 1198,
       "inhouse_stats": {
-        "win": 14,
+        "win": 13,
         "loss": 14,
         "positions": {
           "TOP": 2,
-          "JNG": 20,
+          "JNG": 19,
           "MID": 2,
           "ADC": 0,
           "SUP": 4
         },
         "position_wins": {
           "TOP": 2,
-          "JNG": 8,
+          "JNG": 7,
           "MID": 2,
           "ADC": 0,
           "SUP": 2
@@ -384,8 +383,7 @@
             "세주아니": 1,
             "자헨": 1,
             "샤코": 1,
-            "올라프": 1,
-            "신 짜오": 1
+            "올라프": 1
           },
           "MID": {
             "판테온": 1,
@@ -402,7 +400,7 @@
         }
       },
       "solo_mmr": 1235,
-      "inhouse_delta": -13
+      "inhouse_delta": -37
     },
     {
       "name": "엄마찾는둘리",
@@ -619,14 +617,14 @@
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
       "solo_lp": 83,
-      "mmr": 2156,
+      "mmr": 2180,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 52,
-        "loss": 55,
+        "loss": 54,
         "positions": {
           "TOP": 30,
-          "JNG": 29,
+          "JNG": 28,
           "MID": 14,
           "ADC": 30,
           "SUP": 4
@@ -701,7 +699,7 @@
             "판테온": 2,
             "자르반 4세": 2,
             "녹턴": 1,
-            "바이": 3,
+            "바이": 2,
             "나피리": 2,
             "신 짜오": 1,
             "케인": 1,
@@ -717,7 +715,7 @@
         }
       },
       "solo_mmr": 2083,
-      "inhouse_delta": 73
+      "inhouse_delta": 97
     },
     {
       "name": "검은고목나무1",
@@ -1130,17 +1128,17 @@
       "solo_rank": "IV",
       "solo_lp": 20,
       "solo_mmr": 2020,
-      "mmr": 2122,
+      "mmr": 2146,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 27,
-        "loss": 23,
+        "loss": 22,
         "positions": {
           "TOP": 0,
           "JNG": 23,
           "MID": 0,
           "ADC": 2,
-          "SUP": 25
+          "SUP": 24
         },
         "position_wins": {
           "TOP": 0,
@@ -1160,7 +1158,7 @@
             "노틸러스": 3,
             "스웨인": 1,
             "알리스타": 2,
-            "타릭": 3,
+            "타릭": 2,
             "세라핀": 1,
             "잔나": 1,
             "소나": 1,
@@ -1184,7 +1182,7 @@
           }
         }
       },
-      "inhouse_delta": 102
+      "inhouse_delta": 126
     },
     {
       "name": "잭스 버프좀",
@@ -1194,16 +1192,16 @@
       "solo_rank": "IV",
       "solo_lp": 34,
       "solo_mmr": 1634,
-      "mmr": 1698,
+      "mmr": 1722,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 26,
-        "loss": 23,
+        "loss": 22,
         "positions": {
           "TOP": 10,
           "JNG": 2,
           "MID": 13,
-          "ADC": 24,
+          "ADC": 23,
           "SUP": 0
         },
         "position_wins": {
@@ -1217,7 +1215,7 @@
           "ADC": {
             "바루스": 3,
             "트리스타나": 1,
-            "시비르": 3,
+            "시비르": 2,
             "이즈리얼": 2,
             "자야": 2,
             "세나": 3,
@@ -1258,7 +1256,7 @@
           }
         }
       },
-      "inhouse_delta": 64
+      "inhouse_delta": 88
     },
     {
       "name": "닉 추천좀 해도가",
@@ -1345,15 +1343,15 @@
       "solo_rank": "III",
       "solo_lp": 45,
       "solo_mmr": 945,
-      "mmr": 1065,
+      "mmr": 1089,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 14,
-        "loss": 8,
+        "loss": 7,
         "positions": {
           "TOP": 0,
           "JNG": 0,
-          "MID": 19,
+          "MID": 18,
           "ADC": 2,
           "SUP": 1
         },
@@ -1377,8 +1375,7 @@
             "제라스": 1,
             "로크": 2,
             "나피리": 1,
-            "오리아나": 1,
-            "아칼리": 1
+            "오리아나": 1
           },
           "SUP": {
             "브랜드": 1
@@ -1389,7 +1386,7 @@
           }
         }
       },
-      "inhouse_delta": 120
+      "inhouse_delta": 144
     },
     {
       "name": "매미박사",
@@ -1480,13 +1477,13 @@
       "solo_rank": "IV",
       "solo_lp": 80,
       "solo_mmr": 880,
-      "mmr": 874,
+      "mmr": 898,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 1,
-        "loss": 1,
+        "loss": 0,
         "positions": {
-          "TOP": 2,
+          "TOP": 1,
           "JNG": 0,
           "MID": 0,
           "ADC": 0,
@@ -1501,12 +1498,11 @@
         },
         "position_champions": {
           "TOP": {
-            "신지드": 1,
             "제이스": 1
           }
         }
       },
-      "inhouse_delta": -6
+      "inhouse_delta": 18
     }
   ]
 }
