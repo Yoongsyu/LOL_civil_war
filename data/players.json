@@ -6,8 +6,8 @@
       "puuid": "5_QfKd0Mo2yxWPq2I6n7wEjTrpq9QWVxANoX3qfRB9QNuKOfJ7lAxaeK8bElL5SRfi-W9qs8WODVqg",
       "solo_tier": "SILVER",
       "solo_rank": "II",
-      "solo_lp": 3,
-      "mmr": 812,
+      "solo_lp": 8,
+      "mmr": 817,
       "inhouse_stats": {
         "win": 47,
         "loss": 53,
@@ -72,7 +72,7 @@
           }
         }
       },
-      "solo_mmr": 1003,
+      "solo_mmr": 1008,
       "inhouse_delta": -191
     },
     {
@@ -81,8 +81,8 @@
       "puuid": "BwK1m7x-1S2V2SZw7gVXsC20fiIKyzyYaSYeR3wPx6C4XT7U-o4nK0itCYrjxzP-jmVzb6VBjMzO9w",
       "solo_tier": "EMERALD",
       "solo_rank": "III",
-      "solo_lp": 46,
-      "mmr": 1987,
+      "solo_lp": 70,
+      "mmr": 2011,
       "inhouse_stats": {
         "win": 46,
         "loss": 54,
@@ -169,7 +169,7 @@
           }
         }
       },
-      "solo_mmr": 2146,
+      "solo_mmr": 2170,
       "inhouse_delta": -159
     },
     {
@@ -407,8 +407,8 @@
       "puuid": "Iqw1E_eVmni_lD9UwBedx2KJi0nsvTNGmXjc2vzzAOCIDBI3w9FfdUnQPdUIMTTNO5FdqaOAdwzB0Q",
       "solo_tier": "PLATINUM",
       "solo_rank": "IV",
-      "solo_lp": 75,
-      "mmr": 1652,
+      "solo_lp": 51,
+      "mmr": 1628,
       "inhouse_stats": {
         "win": 34,
         "loss": 31,
@@ -475,17 +475,17 @@
           }
         }
       },
-      "solo_mmr": 1675,
+      "solo_mmr": 1651,
       "inhouse_delta": -23
     },
     {
       "name": "내R전문가",
       "tag": "8969",
       "puuid": "PGDYOf8NwhOmZdRVeSrIXY9J4JFDVHmhu3C6JtSAxxLdP4z5Bob9hDBeXfovbcHIJgcbEYQCzq_Bag",
-      "solo_tier": "GOLD",
-      "solo_rank": "IV",
-      "solo_lp": 74,
-      "mmr": 1268,
+      "solo_tier": "SILVER",
+      "solo_rank": "II",
+      "solo_lp": 95,
+      "mmr": 1089,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 18,
@@ -535,17 +535,17 @@
           }
         }
       },
-      "solo_mmr": 1274,
+      "solo_mmr": 1095,
       "inhouse_delta": -6
     },
     {
       "name": "지 혜",
       "tag": "1111",
       "puuid": "0UQHy5yEp1wgVAKn8VxjyJW3nscALvfmxj5fPbMCll8Krt3GW_fO2sGj32T7baOTzn5PLU6zMJ8fVA",
-      "solo_tier": "GOLD",
-      "solo_rank": "II",
-      "solo_lp": 12,
-      "mmr": 1151,
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 20,
+      "mmr": 1359,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 35,
@@ -606,7 +606,7 @@
           }
         }
       },
-      "solo_mmr": 1412,
+      "solo_mmr": 1620,
       "inhouse_delta": -261
     },
     {
@@ -615,8 +615,8 @@
       "puuid": "OM7aReZiirn9QwjwWcN_5X4kJl8mmSlaFGnTzs9mPgiFh7cd64rbSUVwbmgGTk1yme9tftEwSLkrng",
       "solo_tier": "EMERALD",
       "solo_rank": "IV",
-      "solo_lp": 2,
-      "mmr": 2081,
+      "solo_lp": 83,
+      "mmr": 2162,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 51,
@@ -713,17 +713,17 @@
           }
         }
       },
-      "solo_mmr": 2002,
+      "solo_mmr": 2083,
       "inhouse_delta": 79
     },
     {
       "name": "검은고목나무1",
       "tag": "KR1",
       "puuid": "pqwBFlDErWmFSj0LJ27OHSaiLN9Svi8DGxT6I8iqXl21Q3xtEDCnw23vham_mwkdTKya_gxVHtnYsw",
-      "solo_tier": "UNRANKED",
-      "solo_rank": "",
-      "solo_lp": 0,
-      "mmr": 2195,
+      "solo_tier": "GOLD",
+      "solo_rank": "III",
+      "solo_lp": 50,
+      "mmr": 1295,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 22,
@@ -786,7 +786,7 @@
           }
         }
       },
-      "solo_mmr": 2250,
+      "solo_mmr": 1350,
       "inhouse_delta": -55
     },
     {
@@ -794,10 +794,10 @@
       "tag": "KR1",
       "puuid": "uqEVm38T6DsONXSCcwrQpSQfK4numziC8hc2_9dKfMfCAcKG9hkkEY1oMF7sdaiFShU-tP_zQjozOg",
       "solo_tier": "EMERALD",
-      "solo_rank": "IV",
-      "solo_lp": 31,
-      "solo_mmr": 2031,
-      "mmr": 1960,
+      "solo_rank": "III",
+      "solo_lp": 42,
+      "solo_mmr": 2142,
+      "mmr": 2071,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 16,
@@ -922,10 +922,10 @@
       "tag": "KR1",
       "puuid": "IJXeARSJhYwTZO49pnVyY4tu9cB6oyRDcp7uofRryWs_IDl8RSl09ygguJpq68heQEdxZPuxpaEoIA",
       "solo_tier": "PLATINUM",
-      "solo_rank": "II",
-      "solo_lp": 11,
-      "solo_mmr": 1811,
-      "mmr": 1612,
+      "solo_rank": "I",
+      "solo_lp": 1,
+      "solo_mmr": 1901,
+      "mmr": 1702,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 17,
@@ -1020,11 +1020,11 @@
       "name": "Jin기명기",
       "tag": "KR1",
       "puuid": "H-F6ieKEVDAfiYeaUyeHqWEN63EjPy7_8L3qAXtJYOywv7o41D1YN_XqOak45brRxhA0-QD_HrAIKA",
-      "solo_tier": "EMERALD",
-      "solo_rank": "I",
-      "solo_lp": 75,
-      "solo_mmr": 2375,
-      "mmr": 2484,
+      "solo_tier": "DIAMOND",
+      "solo_rank": "IV",
+      "solo_lp": 24,
+      "solo_mmr": 2424,
+      "mmr": 2533,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 8,
@@ -1065,9 +1065,9 @@
       "puuid": "k9KRpsZyXc-yWYvaLMl1fZGbZSbYOFx9xymzqV4WRn1nu22jqqXNYnxGgdHgR7-xwBLPHoCf-2Vcfg",
       "solo_tier": "GOLD",
       "solo_rank": "IV",
-      "solo_lp": 62,
-      "solo_mmr": 1262,
-      "mmr": 1341,
+      "solo_lp": 39,
+      "solo_mmr": 1239,
+      "mmr": 1318,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 21,
@@ -1123,11 +1123,11 @@
       "name": "마나많아",
       "tag": "KR1",
       "puuid": "umoP68pgqiLXCw92YZrtbNnpJQ5SuDOx9NzkFMbUsr6WSrT-gX8YOnsS63r1LiJ_OtvX5KpkeC1pyQ",
-      "solo_tier": "UNRANKED",
-      "solo_rank": "",
-      "solo_lp": 0,
-      "solo_mmr": 1450,
-      "mmr": 1558,
+      "solo_tier": "EMERALD",
+      "solo_rank": "IV",
+      "solo_lp": 20,
+      "solo_mmr": 2020,
+      "mmr": 2128,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 26,
@@ -1186,11 +1186,11 @@
       "name": "잭스 버프좀",
       "tag": "KR1",
       "puuid": "tUVcxsH7XrISFQ0F_q8J6A5vsdioh6pZEzWCbe6IPFA6_rIMvZzUDpNt3LVH384-DPMKaiaTYc2seg",
-      "solo_tier": "GOLD",
-      "solo_rank": "III",
-      "solo_lp": 16,
-      "solo_mmr": 1316,
-      "mmr": 1386,
+      "solo_tier": "PLATINUM",
+      "solo_rank": "IV",
+      "solo_lp": 34,
+      "solo_mmr": 1634,
+      "mmr": 1704,
       "source_type": "FLEX",
       "inhouse_stats": {
         "win": 25,
@@ -1333,14 +1333,14 @@
       "inhouse_delta": -45
     },
     {
-      "name": "너무 착한 소환사",
-      "tag": "KR1",
+      "name": "알 거 없잖아",
+      "tag": "8786",
       "puuid": "EMCsTIPU0JN3CHLz-FC1ZAcsKoVlnpjyPwPdI4afNtuElNLVPvA6qcluZpl7i9OYY4jrKgdIZEYe2w",
       "solo_tier": "SILVER",
       "solo_rank": "III",
       "solo_lp": 45,
-      "solo_mmr": 0,
-      "mmr": 945,
+      "solo_mmr": 945,
+      "mmr": 1071,
       "source_type": "NONE",
       "inhouse_stats": {
         "win": 13,
@@ -1391,9 +1391,9 @@
       "puuid": "lseVorK16N-7Xy5ixjqZxie1rBiMB0bKO8-P5xJRTdNYGDUA-K8RXv6IiTsi8kpIItyzmYZpYI2UoA",
       "solo_tier": "PLATINUM",
       "solo_rank": "I",
-      "solo_lp": 59,
-      "solo_mmr": 1959,
-      "mmr": 2051,
+      "solo_lp": 43,
+      "solo_mmr": 1943,
+      "mmr": 2035,
       "source_type": "SOLO",
       "inhouse_stats": {
         "win": 7,
