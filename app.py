@@ -2498,8 +2498,7 @@ with tab4:
                     for rank_i, (champ, wins, total, wr) in enumerate(rest, start=5):
                         st.markdown(_champ_wr_row_html(rank_i, champ, wins, total, wr), unsafe_allow_html=True)
 
-        # 바텀 조합 데이터 집계 (승률 챔피언 옆에 나란히 표시)
-        MIN_BOT_GAMES = 2
+        # 바텀 조합 데이터 집계 (원딜/서포터 역할 무관, 많이 나온 순)
         bot_record: dict = {}
         for m in lb_all_matches:
             winner = m.get("winner", "")
@@ -2512,21 +2511,19 @@ with tab4:
                             if pi.get("position") == "SUP" and pi.get("champion")), None)
                 if not adc or not sup:
                     continue
-                pair = (adc, sup)
+                pair = tuple(sorted([adc, sup]))
                 rec = bot_record.setdefault(pair, {"win": 0, "loss": 0})
                 if is_win:
                     rec["win"] += 1
                 else:
                     rec["loss"] += 1
 
-        bot_wr_list = sorted(
+        bot_freq_list = sorted(
             [
-                (adc, sup, d["win"], d["win"] + d["loss"],
-                 d["win"] / (d["win"] + d["loss"]))
-                for (adc, sup), d in bot_record.items()
-                if d["win"] + d["loss"] >= MIN_BOT_GAMES
+                (a, b, d["win"], d["win"] + d["loss"])
+                for (a, b), d in bot_record.items()
             ],
-            key=lambda x: (-x[4], -x[3])
+            key=lambda x: -x[3]
         )[:10]
 
         def _duo_img(url, name):
@@ -2544,40 +2541,41 @@ with tab4:
             _champ_wr_rank_html(top10_wr_high, "📈 승률 높은 챔피언 TOP 10")
             st.caption(f"※ {MIN_CHAMP_GAMES}판 이상 플레이한 챔피언만 집계")
         with wr_col2:
-            st.markdown("**🏹💊 바텀 조합 승률 TOP 10**")
-            if not bot_wr_list:
-                st.caption(f"데이터 없음 (최소 {MIN_BOT_GAMES}판 이상 필요)")
+            st.markdown("**🏹💊 바텀에서 많이 나온 챔피언 조합 TOP 10**")
+            st.caption("원딜/서포터 역할 무관")
+            if not bot_freq_list:
+                st.caption("데이터 없음")
             else:
-                def _bot_row(rank_i, adc, sup, wins, total, wr):
+                def _bot_row(rank_i, a, b, wins, total):
                     medal = _MEDALS[rank_i] if rank_i < len(_MEDALS) else f"{rank_i+1}위"
-                    adc_url = lb_url_map_stat.get(adc, "")
-                    sup_url = lb_url_map_stat.get(sup, "")
+                    url_a = lb_url_map_stat.get(a, "")
+                    url_b = lb_url_map_stat.get(b, "")
+                    wr = wins / total if total else 0
                     wr_color = "#16A34A" if wr >= 0.5 else "#DC2626"
                     st.markdown(
                         f"<div style='display:flex;align-items:center;padding:0.3rem 0;"
                         f"border-bottom:1px solid #F1F5F9;gap:6px;'>"
                         f"<span style='font-size:0.82rem;width:28px;flex-shrink:0;'>{medal}</span>"
-                        f"{_duo_img(adc_url, adc)}"
-                        f"<span style='font-size:0.78rem;color:#64748B;margin:0 2px;'>🏹</span>"
-                        f"{_duo_img(sup_url, sup)}"
+                        f"{_duo_img(url_a, a)}"
+                        f"<span style='font-size:0.78rem;color:#64748B;margin:0 2px;'>+</span>"
+                        f"{_duo_img(url_b, b)}"
                         f"<div style='flex:1;margin-left:6px;'>"
-                        f"<span style='font-weight:700;font-size:0.85rem;'>{adc}</span>"
-                        f"<span style='font-size:0.78rem;color:#94A3B8;'> + {sup}</span>"
+                        f"<span style='font-weight:700;font-size:0.85rem;'>{a}</span>"
+                        f"<span style='font-size:0.78rem;color:#94A3B8;'> + {b}</span>"
                         f"</div>"
                         f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
-                        f"{wins}승 {total-wins}패</span>"
+                        f"<span style='font-weight:800;color:#334155;'>{total}판</span> {wins}승</span>"
                         f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
                         f"{wr*100:.1f}%</span>"
                         f"</div>",
                         unsafe_allow_html=True
                     )
-                for rank_i, row in enumerate(bot_wr_list[:5]):
+                for rank_i, row in enumerate(bot_freq_list[:5]):
                     _bot_row(rank_i, *row)
-                if len(bot_wr_list) > 5:
+                if len(bot_freq_list) > 5:
                     with st.expander("6~10위 더 보기"):
-                        for rank_i, row in enumerate(bot_wr_list[5:], start=5):
+                        for rank_i, row in enumerate(bot_freq_list[5:], start=5):
                             _bot_row(rank_i, *row)
-                st.caption(f"※ {MIN_BOT_GAMES}판 이상 플레이한 조합만 집계")
 
         # ── 챔피언 2인조 승률 TOP 10 & 플레이어 2인조 승률 TOP 10 ──
         st.markdown("---")
@@ -2744,7 +2742,7 @@ with tab4:
                 f"<span style='font-size:0.78rem;color:#94A3B8;'> {icon} {b}</span>"
                 f"</div>"
                 f"<span style='font-size:0.75rem;color:#94A3B8;margin-right:8px;'>"
-                f"<span style='font-size:1.0rem;font-weight:800;color:#334155;'>{total}판</span> {wins}승</span>"
+                f"<span style='font-weight:800;color:#334155;'>{total}판</span> {wins}승</span>"
                 f"<span style='font-size:0.88rem;font-weight:700;color:{wr_color};'>"
                 f"{wr*100:.1f}%</span>"
                 f"</div>",
